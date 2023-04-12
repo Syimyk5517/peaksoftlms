@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class PeaksoftlmsB8Application {
 
-    public static void main(String[] args) {
+    public static void main (String[] args) {
         SpringApplication.run(PeaksoftlmsB8Application.class, args);
     }
 
