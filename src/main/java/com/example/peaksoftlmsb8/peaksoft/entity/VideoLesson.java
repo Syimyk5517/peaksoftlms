@@ -1,11 +1,10 @@
 package com.example.peaksoftlmsb8.peaksoft.entity;
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
+import static jakarta.persistence.CascadeType.*;
 @Getter
 @Setter
 @Entity
@@ -14,14 +13,13 @@ import lombok.Setter;
 @AllArgsConstructor
 public class VideoLesson {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "video_lesson_seq")
-    @SequenceGenerator(name = "video_lesson_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "video_lesson_gen")
+    @SequenceGenerator(name = "video_lesson_gen",sequenceName = "video_lesson_seq",allocationSize = 1)
     private Long id;
     private String name;
     private String description;
     private String link;
-
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
+    @ManyToOne(cascade = {PERSIST, MERGE,REFRESH, DETACH})
     @JoinColumn(name = "lesson_id")
     private Lesson lesson;
 

@@ -1,13 +1,11 @@
 package com.example.peaksoftlmsb8.peaksoft.entity;
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 import java.time.LocalDate;
-
+import static jakarta.persistence.CascadeType.*;
 @Getter
 @Setter
 @Entity
@@ -16,14 +14,14 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class Task {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "task_seq")
-    @SequenceGenerator(name = "task_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "task_gen")
+    @SequenceGenerator(name = "task_gen", sequenceName = "task_seq", allocationSize = 1)
     private Long id;
     private String name;
     private String description;
     private String file;
     private LocalDate deadline;
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
+    @ManyToOne(cascade = {PERSIST, MERGE, REFRESH, DETACH})
     @JoinColumn(name = "lesson_id")
     private Lesson lesson;
 

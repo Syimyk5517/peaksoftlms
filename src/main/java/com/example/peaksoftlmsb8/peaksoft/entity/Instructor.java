@@ -1,14 +1,11 @@
 package com.example.peaksoftlmsb8.peaksoft.entity;
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.ArrayList;
 import java.util.List;
-
+import static jakarta.persistence.CascadeType.*;
 @Getter
 @Setter
 @Entity
@@ -17,20 +14,17 @@ import java.util.List;
 @AllArgsConstructor
 public class Instructor {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "instructor_seq")
-    @SequenceGenerator(name = "instructor_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "instructor_gen")
+    @SequenceGenerator(name = "instructor_gen", sequenceName = "instructor_seq", allocationSize = 1)
     private Long id;
     private String special;
-
-
-    @OneToOne(mappedBy = "instructor", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH}, orphanRemoval = true)
+    @OneToOne(mappedBy = "instructor", cascade = {PERSIST, MERGE, REFRESH, DETACH})
     @JoinColumn(name = "user_id")
     private User user;
-
-    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @ManyToMany(cascade = {DETACH, MERGE, PERSIST, REFRESH})
     @JoinTable(name = "course_instructors",
             joinColumns = @JoinColumn(name = "course_id"),
             inverseJoinColumns = @JoinColumn(name = "instructors_id"))
-    private List<Course> courses = new ArrayList<>();
+    private List<Course> courses;
 
 }

@@ -1,16 +1,13 @@
 package com.example.peaksoftlmsb8.peaksoft.entity;
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
+import static jakarta.persistence.CascadeType.*;
 @Getter
 @Setter
 @Entity
@@ -19,28 +16,23 @@ import java.util.Map;
 @AllArgsConstructor
 public class Lesson {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "lesson_seq")
-    @SequenceGenerator(name = "lesson_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "lesson_gen")
+    @SequenceGenerator(name = "lesson_gen", sequenceName = "lesson_seq", allocationSize = 1)
     private Long id;
     private String name;
     private LocalDate createdAt;
     @ElementCollection
     private Map<String, String> link;
-
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
+    @ManyToOne(cascade = {PERSIST, MERGE, REFRESH, DETACH})
     @JoinColumn(name = "course_id")
     private Course course;
-
-    @OneToMany(mappedBy = "lesson", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Presentation> presentations = new ArrayList<>();
-
-    @OneToMany(mappedBy = "lesson", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<VideoLesson> videoLessons = new ArrayList<>();
-
-    @OneToMany(mappedBy = "lesson", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Task> tasks = new ArrayList<>();
-
-    @OneToOne(mappedBy = "lesson", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "lesson", cascade = ALL)
+    private List<Presentation> presentations;
+    @OneToMany(mappedBy = "lesson", cascade = ALL)
+    private List<VideoLesson> videoLessons;
+    @OneToMany(mappedBy = "lesson", cascade = ALL)
+    private List<Task> tasks;
+    @OneToOne(mappedBy = "lesson", cascade = ALL)
     private Test test;
 
 }
