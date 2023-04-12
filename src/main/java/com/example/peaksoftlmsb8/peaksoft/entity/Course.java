@@ -33,7 +33,7 @@ public class Course {
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
     @JoinTable(name = "groups_courses",
             joinColumns = @JoinColumn(name = "group_id"),
-            inverseJoinColumns = @JoinColumn(name = "courses_id"))
+            inverseJoinColumns =  @JoinColumn(name = "courses_id"))
     private List<Group> groups = new ArrayList<>();
 
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
