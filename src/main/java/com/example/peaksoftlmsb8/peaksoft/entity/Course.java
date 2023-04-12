@@ -36,7 +36,7 @@ public class Course {
             inverseJoinColumns =  @JoinColumn(name = "courses_id"))
     private List<Group> groups = new ArrayList<>();
 
-    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany (mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Lesson> lessons = new ArrayList<>();
 
 }
