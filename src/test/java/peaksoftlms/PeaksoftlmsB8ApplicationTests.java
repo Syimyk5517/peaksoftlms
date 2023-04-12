@@ -1,4 +1,4 @@
-package com.example.peaksoftlmsb8;
+package peaksoftlms;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

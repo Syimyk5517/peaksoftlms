@@ -1,10 +1,13 @@
-package com.example.peaksoftlmsb8.peaksoft.entity;
+package peaksoftlms.entity;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 import static jakarta.persistence.CascadeType.*;
+
 @Getter
 @Setter
 @Entity
@@ -14,7 +17,7 @@ import static jakarta.persistence.CascadeType.*;
 public class Option {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "option_gen")
-    @SequenceGenerator(name = "option_gen", sequenceName = "option_seq", allocationSize = 1)
+    @SequenceGenerator(name = "option_gen", sequenceName = "option_seq")
     private Long id;
     private String text;
     private Boolean isTrue;

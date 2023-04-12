@@ -1,12 +1,16 @@
-package com.example.peaksoftlmsb8.peaksoft.entity;
-import com.example.peaksoftlmsb8.peaksoft.enums.OptionType;
+package peaksoftlms.entity;
+
+import peaksoftlms.entity.enums.OptionType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 import java.util.List;
+
 import static jakarta.persistence.CascadeType.*;
+
 @Getter
 @Setter
 @Entity
@@ -16,7 +20,7 @@ import static jakarta.persistence.CascadeType.*;
 public class Question {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "question_gen")
-    @SequenceGenerator(name = "question_gen", sequenceName = "question_seq", allocationSize = 1)
+    @SequenceGenerator(name = "question_gen", sequenceName = "question_seq")
     private Long id;
     private String questionName;
     @Enumerated(EnumType.STRING)

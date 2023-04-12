@@ -1,11 +1,14 @@
-package com.example.peaksoftlmsb8.peaksoft.entity;
-import com.example.peaksoftlmsb8.peaksoft.enums.FormLearning;
+package peaksoftlms.entity;
+
+import peaksoftlms.entity.enums.FormLearning;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 import static jakarta.persistence.CascadeType.*;
+
 @Getter
 @Setter
 @Entity
@@ -15,7 +18,7 @@ import static jakarta.persistence.CascadeType.*;
 public class Student {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "student_gen")
-    @SequenceGenerator(name = "student_gen", sequenceName = "student_seq", allocationSize = 1)
+    @SequenceGenerator(name = "student_gen", sequenceName = "student_seq")
     private Long id;
     @Enumerated(EnumType.STRING)
     private FormLearning formLearning;

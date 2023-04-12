@@ -1,4 +1,5 @@
-package com.example.peaksoftlmsb8.peaksoft.enums;
+package peaksoftlms.entity.enums;
+
 public enum OptionType {
     SINGLETON,
     MULTIPLE

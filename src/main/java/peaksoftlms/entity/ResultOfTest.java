@@ -1,9 +1,11 @@
-package com.example.peaksoftlmsb8.peaksoft.entity;
+package peaksoftlms.entity;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 @Getter
 @Setter
 @Entity
@@ -13,7 +15,7 @@ import lombok.Setter;
 public class ResultOfTest {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "result_of_test_gen")
-    @SequenceGenerator(name = "result_of_test_gen", sequenceName = "result_of_test_seq", allocationSize = 1)
+    @SequenceGenerator(name = "result_of_test_gen", sequenceName = "result_of_test_seq")
     private Long id;
     private int countCorrect;
     private int countInCorrect;

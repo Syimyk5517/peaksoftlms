@@ -1,11 +1,15 @@
-package com.example.peaksoftlmsb8.peaksoft.entity;
+package peaksoftlms.entity;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 import java.util.List;
+
 import static jakarta.persistence.CascadeType.*;
+
 @Getter
 @Setter
 @Entity
@@ -15,7 +19,7 @@ import static jakarta.persistence.CascadeType.*;
 public class Instructor {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "instructor_gen")
-    @SequenceGenerator(name = "instructor_gen", sequenceName = "instructor_seq", allocationSize = 1)
+    @SequenceGenerator(name = "instructor_gen", sequenceName = "instructor_seq")
     private Long id;
     private String special;
     @OneToOne(mappedBy = "instructor", cascade = {PERSIST, MERGE, REFRESH, DETACH})

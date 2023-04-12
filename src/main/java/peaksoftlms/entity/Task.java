@@ -1,11 +1,15 @@
-package com.example.peaksoftlmsb8.peaksoft.entity;
+package peaksoftlms.entity;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 import java.time.LocalDate;
+
 import static jakarta.persistence.CascadeType.*;
+
 @Getter
 @Setter
 @Entity
@@ -15,7 +19,7 @@ import static jakarta.persistence.CascadeType.*;
 public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "task_gen")
-    @SequenceGenerator(name = "task_gen", sequenceName = "task_seq", allocationSize = 1)
+    @SequenceGenerator(name = "task_gen", sequenceName = "task_seq")
     private Long id;
     private String name;
     private String description;
