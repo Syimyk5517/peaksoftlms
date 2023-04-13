@@ -31,3 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Init Properties ###
+/src/main/resources/data_init_application.properties
