@@ -1,4 +1,4 @@
-package peaksoftlms.entity;
+package com.example.peaksoftlmsb8.db.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

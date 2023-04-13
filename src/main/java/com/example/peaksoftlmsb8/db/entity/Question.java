@@ -1,6 +1,6 @@
-package peaksoftlms.entity;
+package com.example.peaksoftlmsb8.db.entity;
 
-import peaksoftlms.entity.enums.OptionType;
+import com.example.peaksoftlmsb8.db.enums.OptionType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,6 +1,6 @@
-package peaksoftlms.entity;
+package com.example.peaksoftlmsb8.db.entity;
 
-import peaksoftlms.entity.enums.Role;
+import com.example.peaksoftlmsb8.db.enums.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,4 +1,4 @@
-package peaksoftlms.entity;
+package com.example.peaksoftlmsb8.db.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -11,17 +11,17 @@ import static jakarta.persistence.CascadeType.*;
 @Getter
 @Setter
 @Entity
-@Table(name = "video_lessons")
-@NoArgsConstructor
+@Table(name = "presentations")
 @AllArgsConstructor
-public class VideoLesson {
+@NoArgsConstructor
+public class Presentation {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "video_lesson_gen")
-    @SequenceGenerator(name = "video_lesson_gen", sequenceName = "video_lesson_seq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "presentation_gen")
+    @SequenceGenerator(name = "presentation_gen", sequenceName = "presentation_seq")
     private Long id;
     private String name;
     private String description;
-    private String link;
+    private String formatPPT;
     @ManyToOne(cascade = {PERSIST, MERGE, REFRESH, DETACH})
     @JoinColumn(name = "lesson_id")
     private Lesson lesson;
