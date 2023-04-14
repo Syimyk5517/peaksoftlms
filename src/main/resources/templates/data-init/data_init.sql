@@ -1,8 +1,3 @@
-CREATE DATABASE peaksoft_lms;
---
-\c peaksoft_lms;
-
---
 INSERT INTO courses(id,
                     created_at,
                     description,
@@ -45,7 +40,6 @@ VALUES (1,
         '2023-06-30',
         'default.img',
         'React');
---
 INSERT INTO groups(id,
                    created_at,
                    description,
@@ -88,7 +82,6 @@ VALUES (1,
         '2023-12-31',
         'default.img',
         'JavaScript - 10');
---
 INSERT INTO instructors(id,
                         special)
 VALUES (1, 'ONLINE'),
@@ -97,7 +90,6 @@ VALUES (1, 'ONLINE'),
        (4, 'ONLINE'),
        (5, 'OFFLINE'),
        (6, 'OFFLINE');
---
 INSERT INTO students(id,
                      form_learning,
                      is_blocked,
@@ -133,7 +125,6 @@ VALUES (1,
         'TRUE',
         5,
         2);
---
 INSERT INTO users(id,
                   first_name,
                   last_name,
@@ -206,7 +197,6 @@ VALUES (1,
         'STUDENT',
         null,
         6);
---
 INSERT INTO lessons(id,
                     created_at,
                     name,
@@ -239,7 +229,6 @@ VALUES (1,
         '2023-01-15',
         'Spring Boot',
         1);
---
 INSERT INTO lesson_link(lesson_id,
                         link,
                         link_key)
@@ -261,7 +250,6 @@ VALUES (1,
        (6,
         'https://youtu.be/j9VNCI9Xo80',
         6);
---
 INSERT INTO video_lessons(id,
                           description,
                           link,
@@ -297,7 +285,6 @@ VALUES (1,
         'https://youtu.be/j9VNCI9Xo80',
         'CSS',
         6);
---
 INSERT INTO presentations(id,
                           description,
                           formatppt,
@@ -333,7 +320,6 @@ VALUES (1,
         'ppt format',
         'Validation presentation',
         6);
---
 INSERT INTO tests(id,
                   date_test,
                   name,
@@ -362,7 +348,6 @@ VALUES (1,
         '2023-04-07',
         'Validation test',
         6);
---
 INSERT INTO questions(id,
                       option_type,
                       question_name,
@@ -391,7 +376,6 @@ VALUES (1,
         'SINGLETON',
         'FrontEnd programmistter kimder?',
         6);
---
 INSERT INTO tasks(id,
                   deadline,
                   description,
@@ -434,7 +418,6 @@ VALUES (1,
         'diagram.file',
         'Postman task',
         5);
---
 INSERT INTO result_of_tests(id,
                             count_correct,
                             count_in_correct,
@@ -470,7 +453,6 @@ VALUES (1,
         0,
         6,
         5);
---
 INSERT INTO options(id,
                     is_true,
                     text,
