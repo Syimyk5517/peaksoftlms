@@ -34,3 +34,4 @@ build/
 
 src/main/resources/application-kanykei.properties
 src/main/resources/application-bekzat.properties
+src/main/resources/application-baiysh.yml

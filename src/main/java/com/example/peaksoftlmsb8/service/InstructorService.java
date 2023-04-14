@@ -1,7 +1,9 @@
 package com.example.peaksoftlmsb8.service;
 
+import com.example.peaksoftlmsb8.dto.request.InstructorRequest;
 import com.example.peaksoftlmsb8.dto.response.InstructorResponse;
-import com.example.peaksoftlmsb8.dto.response.PaginationResponse;
+import com.example.peaksoftlmsb8.dto.response.PaginationResponseForInstructor;
+import com.example.peaksoftlmsb8.dto.response.SimpleResponse;
 
 /**
  * peaksoftlms-b8
@@ -9,7 +11,13 @@ import com.example.peaksoftlmsb8.dto.response.PaginationResponse;
  * macbook_pro
  **/
 public interface InstructorService {
-    PaginationResponse getAllInstructors(int size, int page, String sort, String keyWOrd);
+    PaginationResponseForInstructor getAllInstructors(int size, int page, String sort, String keyWOrd);
 
-    InstructorResponse findByIdInstructor(Long instructorId);
+    InstructorResponse findByInstructorId(Long instructorId);
+
+    SimpleResponse saveInstructor(InstructorRequest instructorRequest);
+
+    SimpleResponse updateInstructor(Long instructorId, InstructorRequest newInstructor);
+
+    SimpleResponse deleteInstructorById(Long instructorId);
 }

@@ -4,8 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
+import org.springframework.http.HttpStatus;
 
 /**
  * peaksoftlms-b8
@@ -13,11 +12,9 @@ import java.util.List;
  * macbook_pro
  **/
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 @Builder
-public class PaginationResponse {
-    private List<InstructorResponse> instructorResponses;
-    private int currentPage;
-    private int pageSize;
+@AllArgsConstructor
+public class SimpleResponse {
+    private HttpStatus httpStatus;
+    private String message;
 }
