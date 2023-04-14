@@ -11,20 +11,22 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ExceptionResponse handleNotFoundException(NotFoundException e){
+    public ExceptionResponse handleNotFoundException(NotFoundException e) {
         return new ExceptionResponse(
                 HttpStatus.NOT_FOUND,
                 e.getClass().getSimpleName(),
                 e.getMessage());
     }
+
     @ExceptionHandler(AlReadyExistException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
-    public ExceptionResponse handleAlReadyExistException(AlReadyExistException e){
+    public ExceptionResponse handleAlReadyExistException(AlReadyExistException e) {
         return new ExceptionResponse(
                 HttpStatus.CONFLICT,
                 e.getClass().getSimpleName(),
                 e.getMessage());
     }
+
     @ExceptionHandler(BadRequestException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ExceptionResponse handleNotBadRequestException(BadRequestException e) {
@@ -34,6 +36,7 @@ public class GlobalExceptionHandler {
                 e.getMessage()
         );
     }
+
     @ExceptionHandler(BadCredentialException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public ExceptionResponse handleNotBadCredentialException(BadCredentialException e) {
