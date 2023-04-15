@@ -11,6 +11,7 @@ import com.example.peaksoftlmsb8.dto.response.SimpleResponse;
 import com.example.peaksoftlmsb8.repository.InstructorRepository;
 import com.example.peaksoftlmsb8.service.InstructorService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -27,6 +28,7 @@ import java.util.List;
  * 2023
  * macbook_pro
  **/
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class InstructorServiceImpl implements InstructorService {
