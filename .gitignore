@@ -33,4 +33,5 @@ build/
 .vscode/
 
 src/main/resources/application-kanykei.properties
+src/main/resources/application-lms.properties
 src/main/resources/application-bekzat.properties
