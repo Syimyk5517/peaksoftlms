@@ -20,7 +20,7 @@ import static jakarta.persistence.CascadeType.*;
 public class Group {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "group_gen")
-    @SequenceGenerator(name = "group_gen", sequenceName = "group_seq")
+    @SequenceGenerator(name = "group_gen", sequenceName = "group_seq",initialValue = 8,allocationSize = 1)
     private Long id;
     private String name;
     private LocalDate createdAt;
