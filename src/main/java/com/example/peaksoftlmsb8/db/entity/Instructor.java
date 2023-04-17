@@ -19,7 +19,7 @@ import static jakarta.persistence.CascadeType.*;
 public class Instructor {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "instructor_gen")
-    @SequenceGenerator(name = "instructor_gen", sequenceName = "instructor_seq")
+    @SequenceGenerator(name = "instructor_gen", sequenceName = "instructor_seq",initialValue = 8,allocationSize = 1)
     private Long id;
     private String special;
     @OneToOne(mappedBy = "instructor", cascade = {PERSIST, MERGE, REFRESH, DETACH})
