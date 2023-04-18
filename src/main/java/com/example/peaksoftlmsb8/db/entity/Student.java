@@ -18,7 +18,7 @@ import static jakarta.persistence.CascadeType.*;
 public class Student {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "student_gen")
-    @SequenceGenerator(name = "student_gen", sequenceName = "student_seq")
+    @SequenceGenerator(name = "student_gen", sequenceName = "student_seq",initialValue = 8,allocationSize = 1)
     private Long id;
     @Enumerated(EnumType.STRING)
     private FormLearning formLearning;
