@@ -11,9 +11,16 @@ import org.springframework.http.HttpStatus;
  * 2023
  * macbook_pro
  **/
+ 
 @Data
 @Builder
 @AllArgsConstructor
+import org.springframework.http.HttpStatus;
+
+@Data
+@Builder
+@AllArgsConstructor
+
 public class SimpleResponse {
     private HttpStatus httpStatus;
     private String message;
