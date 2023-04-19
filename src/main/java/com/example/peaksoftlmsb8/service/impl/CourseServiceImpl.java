@@ -28,10 +28,10 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public CoursePaginationResponse getAllCourse(int size, int page, String word, String sort) {
-        Pageable pageable = PageRequest.of(page -1,size , Sort.by(sort));
-        Page<CourseResponse> coursePage = courseRepository.getAllCourses(pageable,word);
+        Pageable pageable = PageRequest.of(page - 1, size, Sort.by(sort));
+        Page<CourseResponse> coursePage = courseRepository.getAllCourses(pageable, word);
         List<CourseResponse> courseResponseList = new ArrayList<>(coursePage.getContent().stream()
-                .map(c->new CourseResponse(
+                .map(c -> new CourseResponse(
                         c.getId(),
                         c.getName(),
                         c.getImage(),
@@ -49,14 +49,14 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public CourseResponse findByCourseId(Long courseId) {
         return courseRepository.findByCourseId(courseId).
-                orElseThrow(()-> new NotFoundException("Course id: " + courseId + "not found"));
+                orElseThrow(() -> new NotFoundException("Course id: " + courseId + "not found"));
     }
 
     @Override
     public SimpleResponse saveCourse(CourseRequest courseRequest) {
-        if (courseRepository.existsCourseByName(courseRequest.getName())){
+        if (courseRepository.existsCourseByName(courseRequest.getName())) {
             return SimpleResponse.builder().httpStatus(HttpStatus.CONFLICT)
-                    .message(String.format("Course with name :%s already exist",courseRequest.getName())).build();
+                    .message(String.format("Course with name :%s already exist", courseRequest.getName())).build();
         }
         Course course = new Course();
         course.setName(courseRequest.getName());
@@ -66,18 +66,18 @@ public class CourseServiceImpl implements CourseService {
         course.setFinalDate(courseRequest.getFinalDate());
         courseRepository.save(course);
         return SimpleResponse.builder().httpStatus(HttpStatus.OK).message("Course with name" +
-                courseRequest.getName()+"successfully saved!").build();
+                courseRequest.getName() + "successfully saved!").build();
     }
 
     @Override
     public SimpleResponse updateCourse(Long courseId, CourseRequest courseRequest) {
-        if (courseRepository.existsCourseByName(courseRequest.getName())){
+        if (courseRepository.existsCourseByName(courseRequest.getName())) {
             return SimpleResponse.builder()
                     .httpStatus(HttpStatus.CONFLICT)
                     .message(String.format("Course with name :%s already exist", courseRequest.getName())).build();
         }
         Course course = courseRepository.findById(courseId)
-                .orElseThrow(()-> new NotFoundException(String.format("Course with id: "+ courseId+ "not found")));
+                .orElseThrow(() -> new NotFoundException(String.format("Course with id: " + courseId + "not found")));
         course.setName(courseRequest.getName());
         course.setImage(courseRequest.getImage());
         course.setDescription(courseRequest.getDescription());
@@ -90,7 +90,7 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public SimpleResponse deleteCourse(Long courseId) {
         Course course = courseRepository.findById(courseId).orElseThrow(
-                ()-> new NotFoundException(String.format("Course with id: "+courseId+ "not found")));
+                () -> new NotFoundException(String.format("Course with id: " + courseId + "not found")));
         courseRepository.delete(course);
         return SimpleResponse.builder()
                 .httpStatus(HttpStatus.OK)

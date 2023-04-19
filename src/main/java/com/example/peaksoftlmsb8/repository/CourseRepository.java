@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
+
 @Repository
 public interface CourseRepository extends JpaRepository<Course, Long> {
     @Query("select new com.example.peaksoftlmsb8.dto.response.CourseResponse(" +
@@ -20,7 +21,7 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
 
     @Query(value = "select new com.example.peaksoftlmsb8.dto.response.CourseResponse(" +
             "c.id,c.name,c.image,c.description,c.createdAt,c.finalDate) from Course c where c.id = :courseId")
-    Optional<CourseResponse> findByCourseId (Long courseId);
+    Optional<CourseResponse> findByCourseId(Long courseId);
 
     boolean existsCourseByName(String name);
 }
