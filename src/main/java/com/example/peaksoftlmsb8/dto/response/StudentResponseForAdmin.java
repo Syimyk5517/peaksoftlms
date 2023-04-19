@@ -8,11 +8,12 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class StudentResponse {
+public class StudentResponseForAdmin {
     private Long id;
     private String fullName;
     private String phoneNumber;
     private String email;
+    private String password;
     private FormLearning formLearning;
     private String groupName;
 }
