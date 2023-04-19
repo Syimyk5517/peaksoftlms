@@ -15,7 +15,7 @@ import lombok.Setter;
 public class ResultOfTest {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "result_of_test_gen")
-    @SequenceGenerator(name = "result_of_test_gen", sequenceName = "result_of_test_seq")
+    @SequenceGenerator(name = "result_of_test_gen", sequenceName = "result_of_test_seq",initialValue = 8,allocationSize = 1)
     private Long id;
     private int countCorrect;
     private int countInCorrect;
