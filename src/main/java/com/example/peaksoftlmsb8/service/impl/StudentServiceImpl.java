@@ -3,6 +3,7 @@ package com.example.peaksoftlmsb8.service.impl;
 import com.example.peaksoftlmsb8.db.entity.Student;
 import com.example.peaksoftlmsb8.db.entity.User;
 import com.example.peaksoftlmsb8.db.enums.Role;
+import com.example.peaksoftlmsb8.db.exception.BadRequestException;
 import com.example.peaksoftlmsb8.db.exception.NotFoundException;
 import com.example.peaksoftlmsb8.dto.request.StudentRequest;
 import com.example.peaksoftlmsb8.dto.response.*;
@@ -29,16 +30,10 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public SimpleResponse save(StudentRequest studentRequest) {
         if (studentRepository.existsByEmail(studentRequest.getEmail())) {
-            return SimpleResponse.builder()
-                    .httpStatus(HttpStatus.CONFLICT)
-                    .message("Student with Email: " + studentRequest.getEmail() + " is already saved!")
-                    .build();
+            throw new BadRequestException("Student with Email: " + studentRequest.getEmail() + " is already saved!");
         }
         if (studentRepository.existsByPhoneNumber(studentRequest.getPhoneNumber())) {
-            return SimpleResponse.builder()
-                    .httpStatus(HttpStatus.CONFLICT)
-                    .message("Student with Phone number: " + studentRequest.getPhoneNumber() + " is already saved!")
-                    .build();
+            throw new BadRequestException("Student with Phone number: " + studentRequest.getPhoneNumber() + " is already saved!");
         }
         User user = new User();
         user.setFirstName(studentRequest.getFirstName());
@@ -98,7 +93,9 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public SimpleResponse deleteById(Long studentId) {
-        if (studentRepository.existsById(studentId)) {
+        if (!studentRepository.existsById(studentId)) {
+            throw new BadRequestException("Student with ID: " + studentId + " is not found!");
+        } else {
             studentRepository.deleteById(studentId);
         }
         return SimpleResponse.builder()
@@ -120,20 +117,14 @@ public class StudentServiceImpl implements StudentService {
         }
         if (!newStudentRequest.getEmail().equals(user.getEmail())) {
             if (studentRepository.existsByEmail(newStudentRequest.getEmail())) {
-                return SimpleResponse.builder()
-                        .httpStatus(HttpStatus.CONFLICT)
-                        .message("Student with Email: " + newStudentRequest.getEmail() + " is already saved!")
-                        .build();
+                throw new BadRequestException("Student with Email: " + newStudentRequest.getEmail() + " is already saved!");
             }
             user.setEmail(newStudentRequest.getEmail());
         }
         user.setPassword(passwordEncoder.encode(newStudentRequest.getPassword()));
         if (!newStudentRequest.getPhoneNumber().equals(user.getPhoneNumber())) {
             if (studentRepository.existsByPhoneNumber(newStudentRequest.getPhoneNumber())) {
-                return SimpleResponse.builder()
-                        .httpStatus(HttpStatus.CONFLICT)
-                        .message("Student with Phone number: " + newStudentRequest.getPhoneNumber() + " is already saved!")
-                        .build();
+                throw new BadRequestException("Student with Phone number: " + newStudentRequest.getPhoneNumber() + " is already saved!");
             }
             user.setPhoneNumber(newStudentRequest.getPhoneNumber());
         }
