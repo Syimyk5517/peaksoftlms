@@ -35,7 +35,7 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public SimpleResponse importExcel(Long groupId, MultipartFile multipartFile) throws IOException {
         Group group = groupRepository.findById(groupId).orElseThrow(
-                () -> new NotFoundException("Group with id" + groupId + "not found!")
+                () -> new NotFoundException("Group with id " + groupId + " not found!")
         );
         if (!multipartFile.isEmpty()) {
 
@@ -43,8 +43,7 @@ public class StudentServiceImpl implements StudentService {
             InputStream inputStream = multipartFile.getInputStream();
             List<StudentExcelRequest> excelRequests = Poiji.fromExcel(inputStream, PoijiExcelType.XLSX, StudentExcelRequest.class, poijiOptions);
             for (StudentExcelRequest excelRequest : excelRequests) {
-                boolean exists = userRepository.existsByEmail(excelRequest.getEmail());
-                if (exists) {
+                if (userRepository.existsByEmail(excelRequest.getEmail())) {
                     throw new AlReadyExistException("Student with " + excelRequest.getEmail() + "exists!");
                 }
 
