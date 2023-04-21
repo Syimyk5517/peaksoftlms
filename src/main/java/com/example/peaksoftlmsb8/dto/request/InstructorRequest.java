@@ -5,11 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/**
- * peaksoftlms-b8
- * 2023
- * macbook_pro
- **/
 @Data
 @Builder
 @AllArgsConstructor

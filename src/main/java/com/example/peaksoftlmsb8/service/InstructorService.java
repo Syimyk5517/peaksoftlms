@@ -5,11 +5,6 @@ import com.example.peaksoftlmsb8.dto.response.InstructorResponse;
 import com.example.peaksoftlmsb8.dto.response.PaginationResponseForInstructor;
 import com.example.peaksoftlmsb8.dto.response.SimpleResponse;
 
-/**
- * peaksoftlms-b8
- * 2023
- * macbook_pro
- **/
 public interface InstructorService {
     PaginationResponseForInstructor getAllInstructors(int size, int page, String sort, String keyWOrd);
 
