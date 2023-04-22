@@ -54,7 +54,7 @@ public class StudentApi {
     }
 
     @Operation(summary = "This method can update Student with ID", description = "You can update Student with ID")
-    @PostMapping("/update")
+    @PutMapping
     @PreAuthorize("hasAnyAuthority('ADMIN,INSTRUCTOR')")
     public SimpleResponse update(@RequestParam Long studentId,
                                  @RequestBody StudentRequest newStudentRequest) {
