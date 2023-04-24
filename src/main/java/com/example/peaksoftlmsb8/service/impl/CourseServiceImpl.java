@@ -4,18 +4,26 @@ import com.example.peaksoftlmsb8.db.entity.Course;
 import com.example.peaksoftlmsb8.db.entity.Instructor;
 import com.example.peaksoftlmsb8.db.exception.NotFoundException;
 import com.example.peaksoftlmsb8.dto.request.AssignRequest;
+import com.example.peaksoftlmsb8.dto.request.CourseRequest;
+import com.example.peaksoftlmsb8.dto.response.CoursePaginationResponse;
+import com.example.peaksoftlmsb8.dto.response.CourseResponse;
 import com.example.peaksoftlmsb8.dto.response.SimpleResponse;
 import com.example.peaksoftlmsb8.repository.CourseRepository;
 import com.example.peaksoftlmsb8.repository.InstructorRepository;
 import com.example.peaksoftlmsb8.service.CourseService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class CourseServiceImpl implements CourseService {
     private final CourseRepository courseRepository;
     private final InstructorRepository instructorRepository;
@@ -38,31 +46,6 @@ public class CourseServiceImpl implements CourseService {
         }
 
     }
-}
-import com.example.peaksoftlmsb8.db.exception.NotFoundException;
-import com.example.peaksoftlmsb8.dto.request.CourseRequest;
-import com.example.peaksoftlmsb8.dto.response.CoursePaginationResponse;
-import com.example.peaksoftlmsb8.dto.response.CourseResponse;
-import com.example.peaksoftlmsb8.dto.response.SimpleResponse;
-import com.example.peaksoftlmsb8.repository.CourseRepository;
-import com.example.peaksoftlmsb8.service.CourseService;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
-
-@Service
-@Slf4j
-@RequiredArgsConstructor
-public class CourseServiceImpl implements CourseService {
-    private final CourseRepository courseRepository;
 
     @Override
     public CoursePaginationResponse getAllCourse(int size, int page, String word, String sort) {
