@@ -8,6 +8,7 @@ import com.example.peaksoftlmsb8.dto.response.GroupResponse;
 import com.example.peaksoftlmsb8.dto.response.SimpleResponse;
 import com.example.peaksoftlmsb8.repository.GroupRepository;
 import com.example.peaksoftlmsb8.service.GroupService;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,6 +26,7 @@ import java.util.List;
 @AllArgsConstructor
 public class GroupServiceImpl implements GroupService {
     private final GroupRepository groupRepository;
+
     @Override
     public SimpleResponse saveGroup(GroupRequest groupRequest) {
         if (groupRepository.existsGroupByName(groupRequest.getName())) {
@@ -40,6 +42,7 @@ public class GroupServiceImpl implements GroupService {
         groupRepository.save(group);
         return SimpleResponse.builder().httpStatus(HttpStatus.OK).message("Group with name" + groupRequest.getName() + "successfully saved").build();
     }
+
     @Override
     public GroupPaginationResponse getAllGroups(int size, int page, String word, String sort) {
         Pageable pageable = PageRequest.of(page - 1, size, Sort.by(sort));
@@ -58,11 +61,14 @@ public class GroupServiceImpl implements GroupService {
         groupPaginationResponse.setCurrentPage(groupPage.getSize());
         return groupPaginationResponse;
     }
+
     @Override
     public GroupResponse getGroupById(Long groupId) {
         return groupRepository.getGroupById(groupId).orElseThrow(() -> new NotFoundException(String.format("Group id:" + groupId + " not found")));
     }
+
     @Override
+    @Transactional
     public SimpleResponse updateGroup(Long groupId, GroupRequest groupRequest) {
         if (groupRepository.existsGroupByName(groupRequest.getName())) {
             return SimpleResponse.builder().httpStatus(HttpStatus.CONFLICT).
@@ -77,6 +83,7 @@ public class GroupServiceImpl implements GroupService {
         groupRepository.save(group);
         return SimpleResponse.builder().httpStatus(HttpStatus.OK).message("Successfully updated").build();
     }
+
     @Override
     public SimpleResponse deleteGroup(Long groupId) {
         Group group = groupRepository.findById(groupId).orElseThrow(() ->

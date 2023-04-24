@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static jakarta.persistence.CascadeType.*;
@@ -19,7 +20,7 @@ import static jakarta.persistence.CascadeType.*;
 public class Instructor {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "instructor_gen")
-    @SequenceGenerator(name = "instructor_gen", sequenceName = "instructor_seq",initialValue = 8,allocationSize = 1)
+    @SequenceGenerator(name = "instructor_gen", sequenceName = "instructor_seq", initialValue = 8, allocationSize = 1)
     private Long id;
     private String special;
     @OneToOne(mappedBy = "instructor", cascade = {PERSIST, MERGE, REFRESH, DETACH})
@@ -30,5 +31,13 @@ public class Instructor {
             joinColumns = @JoinColumn(name = "course_id"),
             inverseJoinColumns = @JoinColumn(name = "instructors_id"))
     private List<Course> courses;
+
+    public void addCourse(Course course) {
+        if (courses == null) {
+            courses = new ArrayList<>();
+        }
+        courses.add(course);
+    }
+
 
 }
