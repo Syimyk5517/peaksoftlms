@@ -18,24 +18,24 @@ public class GroupApi {
     public SimpleResponse saveGroup(@RequestBody @Valid GroupRequest groupRequest) {
         return groupService.saveGroup(groupRequest);
     }
-    @GetMapping("/{sort}")
+    @GetMapping("/pagination")
     public GroupPaginationResponse getAllGroups(@RequestParam int size,
                                                 @RequestParam int page,
-                                                @PathVariable String sort,
+                                                @RequestParam String sort,
                                                 @RequestBody String word) {
         return groupService.getAllGroups(size, page, sort, word);
     }
-    @GetMapping("/{groupId}")
-    public GroupResponse getGroupById(@PathVariable Long groupId) {
+    @GetMapping("/getById")
+    public GroupResponse getGroupById(@RequestParam Long groupId) {
 
         return groupService.getGroupById(groupId);
     }
-    @PutMapping("/{groupId}")
-    public SimpleResponse updateGroup(@PathVariable Long groupId, @RequestBody @Valid GroupRequest groupRequest) {
+    @PutMapping()
+    public SimpleResponse updateGroup(@RequestParam Long groupId, @RequestBody @Valid GroupRequest groupRequest) {
         return groupService.updateGroup(groupId, groupRequest);
     }
-    @DeleteMapping("/{groupId}")
-    public SimpleResponse deleteGroup(@PathVariable Long groupId) {
+    @DeleteMapping()
+    public SimpleResponse deleteGroup(@RequestParam Long groupId) {
         return groupService.deleteGroup(groupId);
     }
 }
