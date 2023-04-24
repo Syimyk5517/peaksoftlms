@@ -12,13 +12,14 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("/api/student")
+@RequestMapping("/api/students")
 @RequiredArgsConstructor
 public class StudentApi {
     private final StudentService studentService;
     @PostMapping()
-    public SimpleResponse importExcel(@RequestParam("id")Long id,@RequestParam(name = "file") MultipartFile multipartFile) throws IOException {
+    public SimpleResponse importExcel(@RequestParam Long id,@RequestParam(name = "file") MultipartFile multipartFile) throws IOException {
         return studentService.importExcel(id,multipartFile);
     }
+
 }
 

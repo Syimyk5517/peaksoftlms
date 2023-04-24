@@ -44,8 +44,9 @@ public class StudentServiceImpl implements StudentService {
             List<StudentExcelRequest> excelRequests = Poiji.fromExcel(inputStream, PoijiExcelType.XLSX, StudentExcelRequest.class, poijiOptions);
             for (StudentExcelRequest excelRequest : excelRequests) {
                 if (userRepository.existsByEmail(excelRequest.getEmail())) {
-                    throw new AlReadyExistException("Student with " + excelRequest.getEmail() + "exists!");
+                    throw new AlReadyExistException("Student with " + excelRequest.getEmail() + " exists!");
                 }
+
 
                 User user = User.builder()
                         .firstName(excelRequest.getFirstNAme())
@@ -71,5 +72,6 @@ public class StudentServiceImpl implements StudentService {
         return SimpleResponse.builder().httpStatus(HttpStatus.OK)
                 .message("Students successfully uploaded").build();
     }
+
 
 }

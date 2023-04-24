@@ -8,6 +8,8 @@ import com.example.peaksoftlmsb8.dto.response.AuthenticationResponse;
 import com.example.peaksoftlmsb8.repository.UserRepository;
 import com.example.peaksoftlmsb8.service.AuthenticationService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -21,6 +23,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final AuthenticationManager manager;
     private final UserRepository userRepository;
     private final JwtService jwtService;
+    private final JavaMailSender mailSender;
 
     @Override
     public AuthenticationResponse sigIn(AuthenticationRequest request) {
@@ -39,6 +42,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .email(user.getEmail())
                 .role(user.getRole())
                 .build();
+
     }
 
 }
