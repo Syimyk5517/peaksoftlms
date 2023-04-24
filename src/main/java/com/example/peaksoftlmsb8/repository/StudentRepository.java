@@ -37,3 +37,4 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
             "from Student s join User u on s.id=u.student.id")
     List<StudentResponseForAdmin> allStudents();
 }
+
