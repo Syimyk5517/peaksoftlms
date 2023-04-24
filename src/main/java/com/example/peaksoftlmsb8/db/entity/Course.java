@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import static jakarta.persistence.CascadeType.*;
@@ -20,7 +21,7 @@ import static jakarta.persistence.CascadeType.*;
 public class Course {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "course_gen")
-    @SequenceGenerator(name = "course_gen", sequenceName = "course_seq",initialValue = 8,allocationSize = 1)
+    @SequenceGenerator(name = "course_gen", sequenceName = "course_seq", initialValue = 8, allocationSize = 1)
     private Long id;
     private String name;
     private String image;
@@ -36,6 +37,10 @@ public class Course {
     private List<Group> groups;
     @OneToMany(mappedBy = "course", cascade = ALL)
     private List<Lesson> lessons;
-
-
+    public void assignCourse(Group group){
+        if (groups==null){
+            groups = new ArrayList<>();
+        }
+        groups.add(group);
+    }
 }

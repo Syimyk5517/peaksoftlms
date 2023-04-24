@@ -6,7 +6,7 @@ import com.example.peaksoftlmsb8.dto.response.CourseResponse;
 import com.example.peaksoftlmsb8.dto.response.SimpleResponse;
 
 public interface CourseService {
-    CoursePaginationResponse getAllCourse(int size, int page, String word, String sort);
+    CoursePaginationResponse getAllCourse(int size, int page, String search, String sort);
 
     CourseResponse findByCourseId(Long courseId);
 

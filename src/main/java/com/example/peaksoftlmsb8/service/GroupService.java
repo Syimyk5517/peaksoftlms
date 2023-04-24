@@ -16,4 +16,6 @@ public interface GroupService {
     SimpleResponse updateGroup(Long groupId, GroupRequest groupRequest);
 
     SimpleResponse deleteGroup(Long groupId);
+
+    SimpleResponse assignGroupToCourse(Long groupId, Long courseId);
 }
