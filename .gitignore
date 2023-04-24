@@ -35,4 +35,4 @@ build/
 src/main/resources/application-kanykei.properties
 src/main/resources/application-lms.properties
 src/main/resources/application-bekzat.properties
-src/main/resources/application-gulnur.properties
+src/main/resources/application-data_init.properties

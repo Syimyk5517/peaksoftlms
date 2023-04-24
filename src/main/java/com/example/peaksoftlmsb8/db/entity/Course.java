@@ -20,7 +20,7 @@ import static jakarta.persistence.CascadeType.*;
 public class Course {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "course_gen")
-    @SequenceGenerator(name = "course_gen", sequenceName = "course_seq")
+    @SequenceGenerator(name = "course_gen", sequenceName = "course_seq",initialValue = 8,allocationSize = 1)
     private Long id;
     private String name;
     private String image;

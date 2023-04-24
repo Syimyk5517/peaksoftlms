@@ -21,7 +21,7 @@ import static jakarta.persistence.CascadeType.*;
 public class Lesson {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "lesson_gen")
-    @SequenceGenerator(name = "lesson_gen", sequenceName = "lesson_seq")
+    @SequenceGenerator(name = "lesson_gen", sequenceName = "lesson_seq",initialValue = 8,allocationSize = 1)
     private Long id;
     private String name;
     private LocalDate createdAt;
