@@ -65,19 +65,8 @@ public class StudentServiceImpl implements StudentService {
     public StudentPaginationResponse findAllPagination(int size, int page, String search, String sort) {
         Pageable pageable = PageRequest.of(page - 1, size, Sort.by(sort));
         Page<StudentResponse> studentResponsePage = studentRepository.findAllStudents(pageable, search);
-        List<StudentResponse> studentResponseList = new ArrayList<>(studentResponsePage
-                .getContent()
-                .stream()
-                .map(studentResponse -> new StudentResponse(
-                        studentResponse.getId(),
-                        studentResponse.getFullName(),
-                        studentResponse.getPhoneNumber(),
-                        studentResponse.getEmail(),
-                        studentResponse.getFormLearning(),
-                        studentResponse.getGroupName()))
-                .toList());
         StudentPaginationResponse studentPaginationResponse = new StudentPaginationResponse();
-        studentPaginationResponse.setStudentResponses(studentResponseList);
+        studentPaginationResponse.setStudentResponses(studentResponsePage.getContent());
         studentPaginationResponse.setPageSize(studentResponsePage.getNumber());
         studentPaginationResponse.setCurrentPage(studentResponsePage.getSize());
         return studentPaginationResponse;
@@ -95,9 +84,8 @@ public class StudentServiceImpl implements StudentService {
     public SimpleResponse deleteById(Long studentId) {
         if (!studentRepository.existsById(studentId)) {
             throw new BadRequestException("Student with ID: " + studentId + " is not found!");
-        } else {
-            studentRepository.deleteById(studentId);
         }
+        studentRepository.deleteById(studentId);
         return SimpleResponse.builder()
                 .httpStatus(HttpStatus.OK)
                 .message("Student with ID: " + studentId + " is successfully deleted!")
