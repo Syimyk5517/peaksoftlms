@@ -12,6 +12,7 @@ import static jakarta.persistence.CascadeType.*;
 @Table(name = "students")
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @EqualsAndHashCode
 public class Student {
     @Id
