@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 @Data
 @Builder
 @AllArgsConstructor
-
 public class SimpleResponse {
     private HttpStatus httpStatus;
     private String message;
