@@ -52,7 +52,21 @@ public class VideoLessonServiceImpl implements VideoLessonService {
 
     @Override
     public List<VideoLessonResponse> findAllVideos() {
+        if (videoLessonRepository.findAllVideos().isEmpty()) {
+            throw new NotFoundException("Videos not found...");
+        }
         return videoLessonRepository.findAllVideos();
+    }
+
+    @Override
+    public List<VideoLessonResponse> findByLessonId(Long lessonId) {
+        if (!lessonRepository.existsById(lessonId)){
+            throw new NotFoundException("Not found Lesson with ID: "+lessonId);
+        }
+        if (videoLessonRepository.findByLessonId(lessonId).isEmpty()) {
+            throw new NotFoundException("Videos not found with Lesson's ID:" + lessonId);
+        }
+        return videoLessonRepository.findByLessonId(lessonId);
     }
 
     @Override

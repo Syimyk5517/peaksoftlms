@@ -28,16 +28,23 @@ public class VideoLessonApi {
 
     @Operation(summary = "This method gets video with ID", description = "You can get Video with ID")
     @GetMapping("/getById")
-    @PreAuthorize("hasAnyAuthority('ADMIN,INSTRUCTOR')")
+    @PreAuthorize("permitAll()")
     public VideoLessonResponse findById(@RequestParam Long videoId) {
         return videoLessonService.getVideoLessonById(videoId);
     }
 
     @Operation(summary = "This method gets all Videos", description = "You can get all Videos")
     @GetMapping("/findAll")
-    @PreAuthorize("hasAnyAuthority('ADMIN,INSTRUCTOR')")
+    @PreAuthorize("permitAll()")
     public List<VideoLessonResponse> findAllVideos() {
         return videoLessonService.findAllVideos();
+    }
+
+    @Operation(summary = "This method gets all Videos with Lesson's ID", description = "You can get all Videos")
+    @GetMapping("/findByLessonId")
+    @PreAuthorize("permitAll()")
+    public List<VideoLessonResponse> findByLessonId(@RequestParam Long lessonId) {
+        return videoLessonService.findByLessonId(lessonId);
     }
 
     @Operation(summary = "This method updates the Video with ID", description = "You can update Video with ID")

@@ -24,4 +24,9 @@ public interface VideoLessonRepository extends JpaRepository<VideoLesson, Long> 
             "(v.name,v.description,v.link) " +
             "from VideoLesson v join Lesson l on v.lesson.id=l.id")
     List<VideoLessonResponse> findAllVideos();
+
+    @Query("select new com.example.peaksoftlmsb8.dto.response.VideoLessonResponse" +
+            "(v.name,v.description,v.link) " +
+            "from VideoLesson v join Lesson l on v.lesson.id=l.id where l.id=:lessonId")
+    List<VideoLessonResponse> findByLessonId(Long lessonId);
 }

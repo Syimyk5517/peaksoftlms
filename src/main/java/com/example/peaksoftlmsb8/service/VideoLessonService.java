@@ -12,6 +12,7 @@ public interface VideoLessonService {
     VideoLessonResponse getVideoLessonById(Long videoLessonId);
 
     List<VideoLessonResponse> findAllVideos();
+    List<VideoLessonResponse> findByLessonId(Long lessonId);
 
     SimpleResponse update(Long videoLessonId, VideoLessonRequest videoLessonRequest);
 
