@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/instructor")
+@RequestMapping("/api/instructors")
 @RequiredArgsConstructor
 public class InstructorAPI {
     private final InstructorService instructorService;
@@ -18,8 +18,8 @@ public class InstructorAPI {
     public PaginationResponseForInstructor getAll(@RequestParam int size,
                                                   @RequestParam int page,
                                                   @RequestParam String sort,
-                                                  @RequestBody String keyWOrd) {
-        return instructorService.getAllInstructors(size, page, sort, keyWOrd);
+                                                  @RequestBody String keyWord) {
+        return instructorService.getAllInstructors(size, page, sort, keyWord);
     }
 
     @GetMapping("/findById")

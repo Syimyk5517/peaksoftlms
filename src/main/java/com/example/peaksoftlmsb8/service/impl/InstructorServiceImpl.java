@@ -36,17 +36,8 @@ public class InstructorServiceImpl implements InstructorService {
     public PaginationResponseForInstructor getAllInstructors(int size, int page, String sort, String keyWOrd) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
         Page<InstructorResponse> pageInstructor = instructorRepository.getAll(pageable, keyWOrd);
-        List<InstructorResponse> instructorResponses = new ArrayList<>(pageInstructor.getContent().stream()
-                .map(i -> new InstructorResponse(
-                        i.getId(),
-                        i.getFullName(),
-                        i.getSpecial(),
-                        i.getPhoneNumber(),
-                        i.getEmail(),
-                        i.getPassword()
-                )).toList());
         PaginationResponseForInstructor paginationResponse = new PaginationResponseForInstructor();
-        paginationResponse.setInstructorResponses(instructorResponses);
+        paginationResponse.setInstructorResponses(pageInstructor.getContent());
         paginationResponse.setPageSize(pageInstructor.getNumber());
         paginationResponse.setCurrentPage(pageInstructor.getSize());
         return paginationResponse;
