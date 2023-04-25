@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
+
 @Repository
 public interface CourseRepository extends JpaRepository<Course, Long> {
     @Query("select new com.example.peaksoftlmsb8.dto.response.CourseResponse(" +

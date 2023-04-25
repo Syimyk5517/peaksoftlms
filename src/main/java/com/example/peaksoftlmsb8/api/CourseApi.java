@@ -1,19 +1,28 @@
 package com.example.peaksoftlmsb8.api;
 
+import com.example.peaksoftlmsb8.dto.request.AssignRequest;
+import com.example.peaksoftlmsb8.dto.response.SimpleResponse;
+import com.example.peaksoftlmsb8.service.CourseService;
 import com.example.peaksoftlmsb8.dto.request.CourseRequest;
 import com.example.peaksoftlmsb8.dto.response.CoursePaginationResponse;
 import com.example.peaksoftlmsb8.dto.response.CourseResponse;
-import com.example.peaksoftlmsb8.dto.response.SimpleResponse;
-import com.example.peaksoftlmsb8.service.CourseService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/course")
+@RequestMapping("/api/courses")
 public class CourseApi {
     private final CourseService courseService;
+
+    @PostMapping("/assign")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public SimpleResponse assignInstructorToCourse(@RequestParam Boolean isAssigned, @RequestBody AssignRequest assignRequest) {
+        return courseService.assignInstructorToCourse(isAssigned, assignRequest);
+    }
+
 
     @PostMapping("/save")
     public SimpleResponse saveCourse(@RequestBody CourseRequest courseRequest) {
@@ -41,5 +50,6 @@ public class CourseApi {
     @DeleteMapping("/{courseId}")
     public SimpleResponse deleteCourse(@PathVariable Long courseId) {
         return courseService.deleteCourse(courseId);
+
     }
 }
