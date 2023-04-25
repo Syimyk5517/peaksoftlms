@@ -77,7 +77,7 @@ public class InstructorServiceImpl implements InstructorService {
     @Override
     public SimpleResponse updateInstructor(Long instructorId, InstructorRequest newInstructor) {
         Instructor instructor = instructorRepository.findById(instructorId)
-                .orElseThrow(() -> new NotFoundException("this id = " + instructorId + " not found !"));
+                .orElseThrow(() -> new NotFoundException("this id = " + instructorId + " not found!"));
         instructor.getUser().setFirstName(newInstructor.getFirstName());
         instructor.getUser().setLastName(newInstructor.getLastName());
         instructor.getUser().setPassword(passwordEncoder.encode(newInstructor.getPassword()));
