@@ -76,9 +76,6 @@ public class InstructorServiceImpl implements InstructorService {
 
     @Override
     public SimpleResponse updateInstructor(Long instructorId, InstructorRequest newInstructor) {
-        if (userRepository.existsByEmail(newInstructor.getEmail())) {
-            throw new AlReadyExistException("This email " + newInstructor.getEmail() + " already exists !");
-        }
         Instructor instructor = instructorRepository.findById(instructorId)
                 .orElseThrow(() -> new NotFoundException("this id = " + instructorId + " not found !"));
         instructor.getUser().setFirstName(newInstructor.getFirstName());
