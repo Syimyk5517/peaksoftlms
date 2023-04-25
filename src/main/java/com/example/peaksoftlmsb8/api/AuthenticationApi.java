@@ -17,10 +17,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthenticationApi {
     private final AuthenticationService authenticationService;
 
+
     @PostMapping("/login")
     public ResponseEntity<AuthenticationResponse> authenticate(
             @RequestBody @Valid AuthenticationRequest authenticationRequest
     ) {
         return ResponseEntity.ok(authenticationService.sigIn(authenticationRequest));
     }
+
 }

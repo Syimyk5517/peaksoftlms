@@ -2,10 +2,7 @@ package com.example.peaksoftlmsb8.db.entity;
 
 import com.example.peaksoftlmsb8.db.enums.FormLearning;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import static jakarta.persistence.CascadeType.*;
 
@@ -15,6 +12,8 @@ import static jakarta.persistence.CascadeType.*;
 @Table(name = "students")
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
+@EqualsAndHashCode
 public class Student {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "student_gen")
