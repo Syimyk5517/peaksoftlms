@@ -28,6 +28,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/students")
 @RequiredArgsConstructor
+
 @Tag(name = "Students")
 public class StudentApi {
     private final StudentService studentService;
@@ -82,4 +83,4 @@ public class StudentApi {
         return studentService.deleteById(studentId);
     }
 }
-}
+

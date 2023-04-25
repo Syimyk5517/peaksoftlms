@@ -8,6 +8,7 @@ import com.example.peaksoftlmsb8.dto.response.CoursePaginationResponse;
 import com.example.peaksoftlmsb8.dto.response.CourseResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -17,6 +18,7 @@ public class CourseApi {
     private final CourseService courseService;
 
     @PostMapping("/assign")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public SimpleResponse assignInstructorToCourse(@RequestParam Boolean isAssigned, @RequestBody AssignRequest assignRequest) {
         return courseService.assignInstructorToCourse(isAssigned, assignRequest);
     }

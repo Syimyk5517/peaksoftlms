@@ -38,6 +38,4 @@ public class Instructor {
         }
         courses.add(course);
     }
-
-
 }

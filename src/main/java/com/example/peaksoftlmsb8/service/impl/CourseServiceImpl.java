@@ -31,8 +31,7 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public SimpleResponse assignInstructorToCourse(Boolean isAssigned, AssignRequest assignRequest) {
         Course course = courseRepository.findById(assignRequest.getCourseId()).orElseThrow(() ->
-                new NotFoundException(String.format("Course with id:" + assignRequest.getCourseId() +
-                        "not found")));
+                new NotFoundException(String.format("Course with id : " + assignRequest.getCourseId() + " not found")));
         List<Instructor> instructors = instructorRepository.findAllById(assignRequest.getInstructorIds());
         if (isAssigned.equals(true)) {
             for (Instructor instructor : instructors) {
@@ -44,7 +43,6 @@ public class CourseServiceImpl implements CourseService {
         } else {
             return SimpleResponse.builder().httpStatus(HttpStatus.OK).message("Not assigned ").build();
         }
-
     }
 
     @Override
