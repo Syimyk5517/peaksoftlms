@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/group")
+@RequestMapping("/api/groups")
 @RequiredArgsConstructor
 public class GroupApi {
     private final GroupService groupService;
