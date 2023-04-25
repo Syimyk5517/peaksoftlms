@@ -22,8 +22,8 @@ public class InstructorAPI {
         return instructorService.getAllInstructors(size, page, sort, keyWOrd);
     }
 
-    @GetMapping("/{instructorId}")
-    public InstructorResponse findByInstructorId(@PathVariable Long instructorId) {
+    @GetMapping("/findById")
+    public InstructorResponse findByInstructorId(@RequestParam Long instructorId) {
         return instructorService.findByInstructorId(instructorId);
     }
 
@@ -32,14 +32,14 @@ public class InstructorAPI {
         return instructorService.saveInstructor(instructorRequest);
     }
 
-    @PutMapping("/{instructorId}")
-    public SimpleResponse updateInstructor(@PathVariable Long instructorId,
+    @PutMapping
+    public SimpleResponse updateInstructor(@RequestParam Long instructorId,
                                            @RequestBody InstructorRequest newInstructor) {
         return instructorService.updateInstructor(instructorId, newInstructor);
     }
 
-    @DeleteMapping("/{instructorId}")
-    public SimpleResponse deleteInstructorById(@PathVariable Long instructorId) {
+    @DeleteMapping
+    public SimpleResponse deleteInstructorById(@RequestParam Long instructorId) {
         return instructorService.deleteInstructorById(instructorId);
     }
 }
