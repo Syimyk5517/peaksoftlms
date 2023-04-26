@@ -34,10 +34,12 @@ public class Group {
     private List<Course> courses;
 
     public void AddCourse(Course course) {
+
+    public void assignCourse(Course course) {
+
         if (courses == null) {
             courses = new ArrayList<>();
         }
         courses.add(course);
     }
-
 }

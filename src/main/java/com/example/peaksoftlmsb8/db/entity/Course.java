@@ -47,6 +47,10 @@ public class Course {
 
     @OneToMany(mappedBy = "course", cascade = ALL)
     private List<Lesson> lessons;
-
-
+    public void assignCourse(Group group){
+        if (groups==null){
+            groups = new ArrayList<>();
+        }
+        groups.add(group);
+    }
 }

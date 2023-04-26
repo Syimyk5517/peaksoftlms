@@ -30,6 +30,7 @@ import java.util.List;
 public class GroupServiceImpl implements GroupService {
     private final CourseRepository courseRepository;
     private final GroupRepository groupRepository;
+    private final CourseRepository courseRepository;
 
     @Override
     public SimpleResponse saveGroup(GroupRequest groupRequest) {
@@ -107,6 +108,15 @@ public class GroupServiceImpl implements GroupService {
         return SimpleResponse.builder()
                 .httpStatus(HttpStatus.OK)
                 .message("Successfully saved!")
+
+                .orElseThrow(() -> new NotFoundException(String.format("Group with id:" + groupId + "not found")));
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new NotFoundException("Course not found with id " + courseId));
+        group.assignCourse(course);
+        groupRepository.save(group);
+        return SimpleResponse.builder()
+                .httpStatus(HttpStatus.OK)
+                .message("Successfully saved !")
                 .build();
     }
 }
