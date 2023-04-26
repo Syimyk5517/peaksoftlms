@@ -7,6 +7,7 @@ import com.example.peaksoftlmsb8.dto.response.SimpleResponse;
 import com.example.peaksoftlmsb8.service.GroupService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -42,6 +43,15 @@ public class GroupApi {
     @DeleteMapping()
     public SimpleResponse deleteGroup(@RequestParam Long groupId) {
         return groupService.deleteGroup(groupId);
+    }
+
+    @PostMapping("/assign/{groupId}/{courseId}")
+    public SimpleResponse assignGroupToCourse(@PathVariable Long groupId, @PathVariable Long courseId) {
+        groupService.assignGroupToCourse(groupId, courseId);
+        return SimpleResponse.builder()
+                .httpStatus(HttpStatus.OK)
+                .message("Successfully saved!")
+                .build();
     }
 }
 
