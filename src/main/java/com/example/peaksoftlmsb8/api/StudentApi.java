@@ -1,15 +1,5 @@
 package com.example.peaksoftlmsb8.api;
 
-import com.example.peaksoftlmsb8.dto.response.SimpleResponse;
-import com.example.peaksoftlmsb8.service.StudentService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
 import com.example.peaksoftlmsb8.dto.request.StudentRequest;
 import com.example.peaksoftlmsb8.dto.response.SimpleResponse;
 import com.example.peaksoftlmsb8.dto.response.StudentPaginationResponse;
@@ -17,12 +7,14 @@ import com.example.peaksoftlmsb8.dto.response.StudentResponse;
 import com.example.peaksoftlmsb8.dto.response.StudentResponseForAdmin;
 import com.example.peaksoftlmsb8.service.StudentService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -38,7 +30,7 @@ public class StudentApi {
     }
 
     @Operation(summary = "This method can save Students", description = "You can save Students in Database")
-    @PostMapping
+    @PostMapping("/saveStudent")
     @PreAuthorize("hasAnyAuthority('ADMIN,INSTRUCTOR')")
     public SimpleResponse saveStudent(@RequestBody @Valid StudentRequest studentRequest) {
         return studentService.save(studentRequest);
