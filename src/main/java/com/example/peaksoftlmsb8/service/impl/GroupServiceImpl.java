@@ -1,15 +1,17 @@
 package com.example.peaksoftlmsb8.service.impl;
 
+import com.example.peaksoftlmsb8.db.entity.Course;
 import com.example.peaksoftlmsb8.db.entity.Group;
 import com.example.peaksoftlmsb8.db.exception.NotFoundException;
+import com.example.peaksoftlmsb8.dto.request.CourseRequest;
 import com.example.peaksoftlmsb8.dto.request.GroupRequest;
 import com.example.peaksoftlmsb8.dto.response.GroupPaginationResponse;
 import com.example.peaksoftlmsb8.dto.response.GroupResponse;
 import com.example.peaksoftlmsb8.dto.response.SimpleResponse;
+import com.example.peaksoftlmsb8.repository.CourseRepository;
 import com.example.peaksoftlmsb8.repository.GroupRepository;
 import com.example.peaksoftlmsb8.service.GroupService;
 import jakarta.transaction.Transactional;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.domain.Page;
@@ -27,6 +29,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class GroupServiceImpl implements GroupService {
+    private final CourseRepository courseRepository;
     private final GroupRepository groupRepository;
 
     @Override
@@ -92,5 +95,19 @@ public class GroupServiceImpl implements GroupService {
                 new NotFoundException(String.format("Group with id:" + groupId + "not found")));
         groupRepository.delete(group);
         return SimpleResponse.builder().httpStatus(HttpStatus.OK).message("Successfully deleted").build();
+    }
+
+    @Override
+    public SimpleResponse assignGroupToCourse(Long groupId, Long courseId) {
+        Group group = groupRepository.findById(groupId)
+                .orElseThrow(() -> new NotFoundException("Group with id:" + groupId + "not found"));
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new NotFoundException("Course with id:" + courseId + "not found"));
+        group.AddCourse(course);
+        groupRepository.save(group);
+        return SimpleResponse.builder()
+                .httpStatus(HttpStatus.OK)
+                .message("Successfully saved!")
+                .build();
     }
 }
