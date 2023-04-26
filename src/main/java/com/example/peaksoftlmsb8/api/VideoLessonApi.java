@@ -28,14 +28,12 @@ public class VideoLessonApi {
 
     @Operation(summary = "This method gets video with ID", description = "You can get Video with ID")
     @GetMapping("/getById")
-    @PreAuthorize("permitAll()")
     public VideoLessonResponse findById(@RequestParam Long videoId) {
         return videoLessonService.getVideoLessonById(videoId);
     }
 
     @Operation(summary = "This method gets all Videos", description = "You can get all Videos")
     @GetMapping("/findAll")
-    @PreAuthorize("permitAll()")
     public List<VideoLessonResponse> findAllVideos() {
         return videoLessonService.findAllVideos();
     }

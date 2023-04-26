@@ -60,8 +60,8 @@ public class VideoLessonServiceImpl implements VideoLessonService {
 
     @Override
     public List<VideoLessonResponse> findByLessonId(Long lessonId) {
-        if (!lessonRepository.existsById(lessonId)){
-            throw new NotFoundException("Not found Lesson with ID: "+lessonId);
+        if (!lessonRepository.existsById(lessonId)) {
+            throw new NotFoundException("Not found Lesson with ID: " + lessonId);
         }
         if (videoLessonRepository.findByLessonId(lessonId).isEmpty()) {
             throw new NotFoundException("Videos not found with Lesson's ID:" + lessonId);
@@ -97,7 +97,7 @@ public class VideoLessonServiceImpl implements VideoLessonService {
     @Override
     public SimpleResponse delete(Long videoLessonId) {
         if (!videoLessonRepository.existsById(videoLessonId)) {
-            throw new BadRequestException("Video with ID: " + videoLessonId + " is not found!");
+            throw new NotFoundException("Video with ID: " + videoLessonId + " is not found!");
         }
         videoLessonRepository.deleteById(videoLessonId);
         return SimpleResponse.builder()
