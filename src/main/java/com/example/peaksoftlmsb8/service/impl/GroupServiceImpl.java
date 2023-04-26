@@ -10,7 +10,10 @@ import com.example.peaksoftlmsb8.dto.response.SimpleResponse;
 import com.example.peaksoftlmsb8.repository.CourseRepository;
 import com.example.peaksoftlmsb8.repository.GroupRepository;
 import com.example.peaksoftlmsb8.service.GroupService;
+import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -70,6 +73,7 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
+    @Transactional
     public SimpleResponse updateGroup(Long groupId, GroupRequest groupRequest) {
         if (groupRepository.existsGroupByName(groupRequest.getName())) {
             return SimpleResponse.builder().httpStatus(HttpStatus.CONFLICT).

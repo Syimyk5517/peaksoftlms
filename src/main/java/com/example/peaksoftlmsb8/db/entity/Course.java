@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,11 +31,20 @@ public class Course {
     private LocalDate finalDate;
     @ManyToMany(mappedBy = "courses", cascade = {PERSIST, MERGE, REFRESH, DETACH})
     private List<Instructor> instructors;
+
+    public void addInstructor(Instructor instructor) {
+        if (instructors == null) {
+            instructors = new ArrayList<>();
+        }
+        instructors.add(instructor);
+    }
+
     @ManyToMany(cascade = {PERSIST, MERGE, REFRESH, DETACH})
     @JoinTable(name = "groups_courses",
             joinColumns = @JoinColumn(name = "group_id"),
             inverseJoinColumns = @JoinColumn(name = "courses_id"))
     private List<Group> groups;
+
     @OneToMany(mappedBy = "course", cascade = ALL)
     private List<Lesson> lessons;
     public void assignCourse(Group group){
