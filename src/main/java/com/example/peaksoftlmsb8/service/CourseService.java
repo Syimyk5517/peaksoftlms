@@ -8,6 +8,7 @@ import com.example.peaksoftlmsb8.dto.response.SimpleResponse;
 
 
 public interface CourseService {
+    CoursePaginationResponse getAllCourse(int size, int page, String search, String sort);
     SimpleResponse assignInstructorToCourse(Boolean isAssigned, AssignRequest assignRequest);
 
     CoursePaginationResponse getAllCourse(int size, int page, String word, String sort);
