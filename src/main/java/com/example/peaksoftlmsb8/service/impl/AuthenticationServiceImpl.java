@@ -61,7 +61,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage);
         mimeMessageHelper.setSubject("Password reset request");
-        mimeMessageHelper.setFrom("peaksoftLMS@g,ail.com");
+        mimeMessageHelper.setFrom("peaksoftLMS@gmail.com");
         mimeMessageHelper.setTo(email);
         mimeMessageHelper.setText(link + "/" + user.getId(), true);
         mailSender.send(mimeMessage);
