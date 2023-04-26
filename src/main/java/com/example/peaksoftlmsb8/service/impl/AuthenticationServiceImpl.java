@@ -3,6 +3,7 @@ package com.example.peaksoftlmsb8.service.impl;
 import com.example.peaksoftlmsb8.config.JwtService;
 import com.example.peaksoftlmsb8.db.entity.User;
 import com.example.peaksoftlmsb8.db.exception.BadCredentialException;
+import com.example.peaksoftlmsb8.db.exception.NotFoundException;
 import com.example.peaksoftlmsb8.dto.request.AuthenticationRequest;
 import com.example.peaksoftlmsb8.dto.response.AuthenticationResponse;
 import com.example.peaksoftlmsb8.repository.UserRepository;
@@ -13,6 +14,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -23,19 +25,20 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final AuthenticationManager manager;
     private final UserRepository userRepository;
     private final JwtService jwtService;
-    private final JavaMailSender mailSender;
+    private final PasswordEncoder encoder;
 
     @Override
     public AuthenticationResponse sigIn(AuthenticationRequest request) {
-        Authentication authentication = manager.authenticate(
+        User user = userRepository.findByEmail(request.getEmail()).orElseThrow(
+                ()->  new NotFoundException("User with email: " + request.getEmail() + " not found!")
+        );
+        manager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getEmail(),
                         request.getPassword()
                 )
         );
-        User user = userRepository.findByEmail(authentication.getName()).orElseThrow(
-                () -> new BadCredentialException("Wrong data")
-        );
+
         String jwtToken = jwtService.generateToken(user);
         return AuthenticationResponse.builder()
                 .token(jwtToken)
