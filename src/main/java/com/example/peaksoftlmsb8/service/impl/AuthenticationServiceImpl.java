@@ -2,18 +2,15 @@ package com.example.peaksoftlmsb8.service.impl;
 
 import com.example.peaksoftlmsb8.config.JwtService;
 import com.example.peaksoftlmsb8.db.entity.User;
-import com.example.peaksoftlmsb8.db.exception.BadCredentialException;
+import com.example.peaksoftlmsb8.db.exception.BadRequestException;
 import com.example.peaksoftlmsb8.db.exception.NotFoundException;
 import com.example.peaksoftlmsb8.dto.request.AuthenticationRequest;
 import com.example.peaksoftlmsb8.dto.response.AuthenticationResponse;
 import com.example.peaksoftlmsb8.repository.UserRepository;
 import com.example.peaksoftlmsb8.service.AuthenticationService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +29,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         User user = userRepository.findByEmail(request.getEmail()).orElseThrow(
                 ()->  new NotFoundException("User with email: " + request.getEmail() + " not found!")
         );
+        if (!encoder.matches(request.getPassword(), user.getPassword())){
+            throw new BadRequestException("Wrong password!");
+        }
         manager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getEmail(),
