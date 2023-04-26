@@ -46,10 +46,18 @@ public class GroupApi {
         return groupService.deleteGroup(groupId);
     }
 
+
     @PostMapping("/assign")
     @PreAuthorize("hasAuthority('ADMIN')")
     public SimpleResponse assignGroupToCourse(@RequestParam Long groupId, @RequestParam Long courseId) {
         return groupService.assignGroupToCourse(groupId, courseId);
+    @PostMapping("/assign/{groupId}/{courseId}")
+    public SimpleResponse assignGroupToCourse(@PathVariable Long groupId, @PathVariable Long courseId) {
+        groupService.assignGroupToCourse(groupId, courseId);
+        return SimpleResponse.builder()
+                .httpStatus(HttpStatus.OK)
+                .message("Successfully saved!")
+                .build();
     }
 }
 

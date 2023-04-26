@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/courses")
 public class CourseApi {
     private final CourseService courseService;
-
     @PostMapping("/assign")
     @PreAuthorize("hasAuthority('ADMIN')")
     public SimpleResponse assignInstructorToCourse(@RequestParam Boolean isAssigned, @RequestBody AssignRequest assignRequest) {
@@ -29,12 +28,12 @@ public class CourseApi {
         return courseService.saveCourse(courseRequest);
     }
 
-    @GetMapping("/{sort}")
+    @GetMapping("/pagination")
     public CoursePaginationResponse getAllCourses(@RequestParam int size,
                                                   @RequestParam int page,
-                                                  @PathVariable String sort,
-                                                  @RequestBody String word) {
-        return courseService.getAllCourse(size, page, sort, word);
+                                                  @RequestParam String sort,
+                                                  @RequestBody String search) {
+        return courseService.getAllCourse(size, page, sort, search);
     }
 
     @GetMapping("/{courseId}")
