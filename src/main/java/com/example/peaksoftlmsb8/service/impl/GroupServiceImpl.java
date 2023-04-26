@@ -3,7 +3,6 @@ package com.example.peaksoftlmsb8.service.impl;
 import com.example.peaksoftlmsb8.db.entity.Course;
 import com.example.peaksoftlmsb8.db.entity.Group;
 import com.example.peaksoftlmsb8.db.exception.NotFoundException;
-import com.example.peaksoftlmsb8.dto.request.CourseRequest;
 import com.example.peaksoftlmsb8.dto.request.GroupRequest;
 import com.example.peaksoftlmsb8.dto.response.GroupPaginationResponse;
 import com.example.peaksoftlmsb8.dto.response.GroupResponse;
