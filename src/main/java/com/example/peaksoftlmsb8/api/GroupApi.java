@@ -14,10 +14,12 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class GroupApi {
     private final GroupService groupService;
+
     @PostMapping
     public SimpleResponse saveGroup(@RequestBody @Valid GroupRequest groupRequest) {
         return groupService.saveGroup(groupRequest);
     }
+
     @GetMapping("/pagination")
     public GroupPaginationResponse getAllGroups(@RequestParam int size,
                                                 @RequestParam int page,
@@ -25,15 +27,18 @@ public class GroupApi {
                                                 @RequestBody String word) {
         return groupService.getAllGroups(size, page, sort, word);
     }
+
     @GetMapping("/getById")
     public GroupResponse getGroupById(@RequestParam Long groupId) {
 
         return groupService.getGroupById(groupId);
     }
+
     @PutMapping()
     public SimpleResponse updateGroup(@RequestParam Long groupId, @RequestBody @Valid GroupRequest groupRequest) {
         return groupService.updateGroup(groupId, groupRequest);
     }
+
     @DeleteMapping()
     public SimpleResponse deleteGroup(@RequestParam Long groupId) {
         return groupService.deleteGroup(groupId);
