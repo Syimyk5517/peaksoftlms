@@ -32,7 +32,7 @@ import java.util.List;
 @Tag(name = "Students")
 public class StudentApi {
     private final StudentService studentService;
-    @PostMapping()
+    @PostMapping("/import")
     public SimpleResponse importExcel(@RequestParam Long id,@RequestParam(name = "file") MultipartFile multipartFile) throws IOException {
         return studentService.importExcel(id,multipartFile);
     }
