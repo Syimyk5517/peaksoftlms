@@ -6,6 +6,7 @@ import com.example.peaksoftlmsb8.service.CourseService;
 import com.example.peaksoftlmsb8.dto.request.CourseRequest;
 import com.example.peaksoftlmsb8.dto.response.CoursePaginationResponse;
 import com.example.peaksoftlmsb8.dto.response.CourseResponse;
+import jakarta.annotation.security.PermitAll;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
