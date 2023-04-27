@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,9 +25,16 @@ import java.util.List;
 @Tag(name = "Students")
 public class StudentApi {
     private final StudentService studentService;
-    @PostMapping()
-    public SimpleResponse importExcel(@RequestParam Long id,@RequestParam(name = "file") MultipartFile multipartFile) throws IOException {
-        return studentService.importExcel(id,multipartFile);
+
+    @PostMapping(
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            path = "/import")
+    @Operation(summary = "This method import excel file to database",
+            description = "Add students from excel file by administrator")
+    public SimpleResponse importExcel(@RequestParam Long id, @RequestParam(name = "file") MultipartFile multipartFile) throws IOException {
+        return studentService.importExcel(id, multipartFile);
+
     }
 
     @Operation(summary = "This method can save Students", description = "You can save Students in Database")
@@ -75,3 +83,4 @@ public class StudentApi {
         return studentService.deleteById(studentId);
     }
 }
+
