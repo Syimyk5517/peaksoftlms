@@ -19,7 +19,7 @@ services:
       - "5432:5432"
     environment:
       POSTGRES_USER: peaksoftlmsdbuser
-      POSTGRES_PASSWORD: peaksoftlmsdbuser
+      POSTGRES_PASSWORD: peaksoftlmsdb2023
     volumes:
       - db_data:/var/lib/postgresql/data
 volumes:
