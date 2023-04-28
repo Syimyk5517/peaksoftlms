@@ -22,7 +22,7 @@ public class Test {
     private Long id;
     private String name;
     private LocalDate dateTest;
-    @OneToOne(cascade = {PERSIST, MERGE, REFRESH, DETACH})
+    @OneToOne(cascade = {PERSIST, MERGE, REFRESH, DETACH},fetch = FetchType.LAZY)
     @JoinColumn(name = "lesson_id")
     private Lesson lesson;
     @OneToMany(mappedBy = "test", cascade = ALL)
