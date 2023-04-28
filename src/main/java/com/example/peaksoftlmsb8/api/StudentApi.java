@@ -19,9 +19,9 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/api/students")
 @RequiredArgsConstructor
-
 @Tag(name = "Students")
 public class StudentApi {
     private final StudentService studentService;

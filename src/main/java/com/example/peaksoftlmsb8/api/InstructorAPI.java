@@ -5,12 +5,15 @@ import com.example.peaksoftlmsb8.dto.response.InstructorResponse;
 import com.example.peaksoftlmsb8.dto.response.PaginationResponseForInstructor;
 import com.example.peaksoftlmsb8.dto.response.SimpleResponse;
 import com.example.peaksoftlmsb8.service.InstructorService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/api/instructors")
 @RequiredArgsConstructor
+@Tag(name = "Instructors")
 public class InstructorAPI {
     private final InstructorService instructorService;
 

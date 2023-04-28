@@ -5,6 +5,7 @@ import com.example.peaksoftlmsb8.dto.request.PasswordRequest;
 import com.example.peaksoftlmsb8.dto.response.AuthenticationResponse;
 import com.example.peaksoftlmsb8.dto.response.SimpleResponse;
 import com.example.peaksoftlmsb8.service.AuthenticationService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -12,8 +13,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/api/authentication")
 @RequiredArgsConstructor
+@Tag(name = "Authentications")
 public class AuthenticationApi {
     private final AuthenticationService authenticationService;
 
@@ -23,13 +26,15 @@ public class AuthenticationApi {
     ) {
         return ResponseEntity.ok(authenticationService.sigIn(authenticationRequest));
     }
+
     @PostMapping("/forgot_password")
     public SimpleResponse forgotPassword(@RequestParam String email,
                                          @RequestParam String link) throws MessagingException {
         return authenticationService.forgotPassword(email, link);
     }
+
     @PostMapping("/reset_password")
-    public SimpleResponse resetPassword(@RequestParam PasswordRequest newPassword){
+    public SimpleResponse resetPassword(@RequestParam PasswordRequest newPassword) {
         return authenticationService.resetPassword(newPassword);
     }
 }

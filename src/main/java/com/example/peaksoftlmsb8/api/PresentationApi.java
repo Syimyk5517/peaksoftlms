@@ -4,6 +4,7 @@ import com.example.peaksoftlmsb8.dto.request.PresentationRequest;
 import com.example.peaksoftlmsb8.dto.response.PresentationResponse;
 import com.example.peaksoftlmsb8.dto.response.SimpleResponse;
 import com.example.peaksoftlmsb8.service.PresentationService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -12,8 +13,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/api/presentations")
 @RequiredArgsConstructor
+@Tag(name = "Presentations")
 public class PresentationApi {
     private final PresentationService presentationService;
 
