@@ -91,6 +91,8 @@ public class StudentServiceImpl implements StudentService {
         if (studentRepository.existsByPhoneNumber(studentRequest.getPhoneNumber())) {
             throw new BadRequestException("Student with Phone number: " + studentRequest.getPhoneNumber() + " is already saved!");
         }
+        Group group = groupRepository.findById(studentRequest.getGroupId()).orElseThrow(
+                () -> new NotFoundException("Group with id : " + studentRequest.getGroupId() + "not found !"));
         User user = new User();
         user.setFirstName(studentRequest.getFirstName());
         user.setLastName(studentRequest.getLastName());
@@ -101,7 +103,8 @@ public class StudentServiceImpl implements StudentService {
         Student student = new Student();
         student.setFormLearning(studentRequest.getFormLearning());
         student.setIsBlocked(false);
-        student.setGroup(studentRequest.getGroup());
+        student.setGroup(group);
+        group.setStudents(List.of(student));
         student.setUser(user);
         user.setStudent(student);
         studentRepository.save(student);
@@ -152,6 +155,8 @@ public class StudentServiceImpl implements StudentService {
     public SimpleResponse update(StudentRequest newStudentRequest, Long studentId) {
         Student student = studentRepository.findById(studentId).orElseThrow(
                 () -> new NotFoundException("Student with ID: " + studentId + " is not found!"));
+        Group group = groupRepository.findById(newStudentRequest.getGroupId()).orElseThrow(
+                () -> new NotFoundException("Group with id : " + newStudentRequest.getGroupId() + "not found !"));
         User user = student.getUser();
         if (!newStudentRequest.getFirstName().equals(user.getFirstName())) {
             user.setFirstName(newStudentRequest.getFirstName());
@@ -175,9 +180,10 @@ public class StudentServiceImpl implements StudentService {
         if (!newStudentRequest.getFormLearning().equals(student.getFormLearning())) {
             student.setFormLearning(newStudentRequest.getFormLearning());
         }
-        if (!newStudentRequest.getGroup().equals(student.getGroup())) {
-            student.setGroup(newStudentRequest.getGroup());
-        }
+
+            student.setGroup(group);
+            group.setStudents(List.of(student));
+
         if (!student.getUser().equals(user)) {
             student.setUser(user);
         }
