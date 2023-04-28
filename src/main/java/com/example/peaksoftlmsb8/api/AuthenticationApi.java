@@ -17,7 +17,8 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/authentication")
 @RequiredArgsConstructor
 @Tag(name = "Authentications")
-public class AuthenticationApi {
+public class  AuthenticationApi {
+
     private final AuthenticationService authenticationService;
 
     @PostMapping("/login")

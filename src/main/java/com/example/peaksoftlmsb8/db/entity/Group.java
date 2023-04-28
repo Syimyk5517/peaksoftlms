@@ -33,7 +33,8 @@ public class Group {
     @ManyToMany(mappedBy = "groups", cascade = {PERSIST, MERGE, REFRESH, DETACH})
     private List<Course> courses;
 
-    public void assignCourse(Course course) {
+    public void addCourse(Course course) {
+
         if (courses == null) {
             courses = new ArrayList<>();
         }
