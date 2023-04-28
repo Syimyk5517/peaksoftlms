@@ -11,7 +11,6 @@ import com.example.peaksoftlmsb8.repository.CourseRepository;
 import com.example.peaksoftlmsb8.repository.GroupRepository;
 import com.example.peaksoftlmsb8.service.GroupService;
 import jakarta.transaction.Transactional;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.domain.Page;
@@ -29,8 +28,8 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class GroupServiceImpl implements GroupService {
-    private final GroupRepository groupRepository;
     private final CourseRepository courseRepository;
+    private final GroupRepository groupRepository;
 
     @Override
     public SimpleResponse saveGroup(GroupRequest groupRequest) {
@@ -100,14 +99,14 @@ public class GroupServiceImpl implements GroupService {
     @Override
     public SimpleResponse assignGroupToCourse(Long groupId, Long courseId) {
         Group group = groupRepository.findById(groupId)
-                .orElseThrow(() -> new NotFoundException(String.format("Group with id:" + groupId + "not found")));
+                .orElseThrow(() -> new NotFoundException("Group with id:" + groupId + "not found"));
         Course course = courseRepository.findById(courseId)
-                .orElseThrow(() -> new NotFoundException("Course not found with id " + courseId));
-        group.assignCourse(course);
+                .orElseThrow(() -> new NotFoundException("Course with id:" + courseId + "not found"));
+        group.addCourse(course);
         groupRepository.save(group);
         return SimpleResponse.builder()
                 .httpStatus(HttpStatus.OK)
-                .message("Successfully saved !")
+                .message("Successfully saved!")
                 .build();
     }
 }
