@@ -12,18 +12,14 @@ import com.example.peaksoftlmsb8.repository.GroupRepository;
 import com.example.peaksoftlmsb8.service.GroupService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
-
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -51,16 +47,8 @@ public class GroupServiceImpl implements GroupService {
     public GroupPaginationResponse getAllGroups(int size, int page, String word, String sort) {
         Pageable pageable = PageRequest.of(page - 1, size, Sort.by(sort));
         Page<GroupResponse> groupPage = groupRepository.getAllGroups(pageable, word);
-        List<GroupResponse> groupResponseList = new ArrayList<>(groupPage.getContent().stream()
-                .map(g -> new GroupResponse(
-                        g.getId(),
-                        g.getName(),
-                        g.getDescription(),
-                        g.getImage(),
-                        g.getFinalDate()
-                )).toList());
         GroupPaginationResponse groupPaginationResponse = new GroupPaginationResponse();
-        groupPaginationResponse.setGroupResponses(groupResponseList);
+        groupPaginationResponse.setGroupResponses(groupPage.getContent());
         groupPaginationResponse.setPageSize(groupPage.getNumber());
         groupPaginationResponse.setCurrentPage(groupPage.getSize());
         return groupPaginationResponse;
