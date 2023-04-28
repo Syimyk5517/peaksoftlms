@@ -5,6 +5,7 @@ import com.example.peaksoftlmsb8.dto.response.SimpleResponse;
 import com.example.peaksoftlmsb8.dto.response.VideoLessonResponse;
 import com.example.peaksoftlmsb8.service.VideoLessonService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -13,8 +14,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/api/videos")
 @RequiredArgsConstructor
+@Tag(name = "VideoLessons")
 public class VideoLessonApi {
     private final VideoLessonService videoLessonService;
 
