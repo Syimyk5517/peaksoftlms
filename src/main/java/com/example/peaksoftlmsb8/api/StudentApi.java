@@ -17,22 +17,25 @@ import com.example.peaksoftlmsb8.dto.response.StudentResponse;
 import com.example.peaksoftlmsb8.dto.response.StudentResponseForAdmin;
 import com.example.peaksoftlmsb8.service.StudentService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/api/students")
 @RequiredArgsConstructor
-
 @Tag(name = "Students")
 public class StudentApi {
     private final StudentService studentService;
-    @PostMapping("/import")
+    @PostMapping()
     public SimpleResponse importExcel(@RequestParam Long id,@RequestParam(name = "file") MultipartFile multipartFile) throws IOException {
         return studentService.importExcel(id,multipartFile);
     }

@@ -1,12 +1,18 @@
 package com.example.peaksoftlmsb8.service.impl;
+
 import com.example.peaksoftlmsb8.db.entity.Group;
 import com.example.peaksoftlmsb8.db.entity.Student;
 import com.example.peaksoftlmsb8.db.entity.User;
 import com.example.peaksoftlmsb8.db.enums.Role;
 import com.example.peaksoftlmsb8.db.exception.AlReadyExistException;
+import com.example.peaksoftlmsb8.db.exception.BadRequestException;
 import com.example.peaksoftlmsb8.db.exception.NotFoundException;
 import com.example.peaksoftlmsb8.dto.request.StudentExcelRequest;
+import com.example.peaksoftlmsb8.dto.request.StudentRequest;
 import com.example.peaksoftlmsb8.dto.response.SimpleResponse;
+import com.example.peaksoftlmsb8.dto.response.StudentPaginationResponse;
+import com.example.peaksoftlmsb8.dto.response.StudentResponse;
+import com.example.peaksoftlmsb8.dto.response.StudentResponseForAdmin;
 import com.example.peaksoftlmsb8.repository.GroupRepository;
 import com.example.peaksoftlmsb8.repository.StudentRepository;
 import com.example.peaksoftlmsb8.repository.UserRepository;
@@ -15,23 +21,6 @@ import com.poiji.bind.Poiji;
 import com.poiji.exception.PoijiExcelType;
 import com.poiji.option.PoijiOptions;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
-import com.example.peaksoftlmsb8.db.entity.Student;
-import com.example.peaksoftlmsb8.db.entity.User;
-import com.example.peaksoftlmsb8.db.enums.Role;
-import com.example.peaksoftlmsb8.db.exception.BadRequestException;
-import com.example.peaksoftlmsb8.db.exception.NotFoundException;
-import com.example.peaksoftlmsb8.dto.request.StudentRequest;
-import com.example.peaksoftlmsb8.dto.response.*;
-import com.example.peaksoftlmsb8.repository.StudentRepository;
-import com.example.peaksoftlmsb8.service.StudentService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -39,8 +28,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 @Service
 @RequiredArgsConstructor
@@ -100,6 +91,8 @@ public class StudentServiceImpl implements StudentService {
         if (studentRepository.existsByPhoneNumber(studentRequest.getPhoneNumber())) {
             throw new BadRequestException("Student with Phone number: " + studentRequest.getPhoneNumber() + " is already saved!");
         }
+        Group group = groupRepository.findById(studentRequest.getGroupId()).orElseThrow(
+                () -> new NotFoundException("Group with id : " + studentRequest.getGroupId() + "not found !"));
         User user = new User();
         user.setFirstName(studentRequest.getFirstName());
         user.setLastName(studentRequest.getLastName());
@@ -110,7 +103,8 @@ public class StudentServiceImpl implements StudentService {
         Student student = new Student();
         student.setFormLearning(studentRequest.getFormLearning());
         student.setIsBlocked(false);
-        student.setGroup(studentRequest.getGroup());
+        student.setGroup(group);
+        group.setStudents(List.of(student));
         student.setUser(user);
         user.setStudent(student);
         studentRepository.save(student);
@@ -161,6 +155,8 @@ public class StudentServiceImpl implements StudentService {
     public SimpleResponse update(StudentRequest newStudentRequest, Long studentId) {
         Student student = studentRepository.findById(studentId).orElseThrow(
                 () -> new NotFoundException("Student with ID: " + studentId + " is not found!"));
+        Group group = groupRepository.findById(newStudentRequest.getGroupId()).orElseThrow(
+                () -> new NotFoundException("Group with id : " + newStudentRequest.getGroupId() + "not found !"));
         User user = student.getUser();
         if (!newStudentRequest.getFirstName().equals(user.getFirstName())) {
             user.setFirstName(newStudentRequest.getFirstName());
@@ -184,9 +180,10 @@ public class StudentServiceImpl implements StudentService {
         if (!newStudentRequest.getFormLearning().equals(student.getFormLearning())) {
             student.setFormLearning(newStudentRequest.getFormLearning());
         }
-        if (!newStudentRequest.getGroup().equals(student.getGroup())) {
-            student.setGroup(newStudentRequest.getGroup());
-        }
+
+            student.setGroup(group);
+            group.setStudents(List.of(student));
+
         if (!student.getUser().equals(user)) {
             student.setUser(user);
         }
