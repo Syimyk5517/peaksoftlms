@@ -35,10 +35,10 @@ import java.util.List;
 @Tag(name = "Students")
 public class StudentApi {
     private final StudentService studentService;
-    @PostMapping()
-    public SimpleResponse importExcel(@RequestParam Long id,@RequestParam(name = "file") MultipartFile multipartFile) throws IOException {
-        return studentService.importExcel(id,multipartFile);
-    }
+//    @PostMapping()
+//    public SimpleResponse importExcel(@RequestParam Long id,@RequestParam(name = "file") MultipartFile multipartFile) throws IOException {
+//        return studentService.importExcel(id,multipartFile);
+//    }
 
     @Operation(summary = "This method can save Students", description = "You can save Students in Database")
     @PostMapping

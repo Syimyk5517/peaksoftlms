@@ -18,7 +18,7 @@ import static jakarta.persistence.CascadeType.*;
 public class Test {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "test_gen")
-    @SequenceGenerator(name = "test_gen", sequenceName = "test_seq",initialValue = 8,allocationSize = 1)
+    @SequenceGenerator(name = "test_gen", sequenceName = "test_seq",initialValue = 7,allocationSize = 1)
     private Long id;
     private String name;
     private LocalDate dateTest;

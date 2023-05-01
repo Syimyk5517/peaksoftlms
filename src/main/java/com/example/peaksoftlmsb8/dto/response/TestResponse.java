@@ -1,12 +1,14 @@
 package com.example.peaksoftlmsb8.dto.response;
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.util.List;
-@Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
 public class TestResponse {
     private Long LessonId;
     private String lessonName;

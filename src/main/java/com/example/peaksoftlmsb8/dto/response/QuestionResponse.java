@@ -2,13 +2,15 @@ package com.example.peaksoftlmsb8.dto.response;
 
 import com.example.peaksoftlmsb8.db.entity.Option;
 import com.example.peaksoftlmsb8.db.enums.OptionType;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
 @Builder
 public class QuestionResponse {
     private Long questionId;

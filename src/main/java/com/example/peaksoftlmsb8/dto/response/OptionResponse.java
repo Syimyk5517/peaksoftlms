@@ -1,9 +1,11 @@
 package com.example.peaksoftlmsb8.dto.response;
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class OptionResponse {
     private Long optionId;
