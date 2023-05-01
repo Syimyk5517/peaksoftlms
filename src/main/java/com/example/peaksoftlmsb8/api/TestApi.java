@@ -34,7 +34,7 @@ public class TestApi {
     }
 
     @PutMapping
-    public SimpleResponse updateTest(@RequestParam Long testId, TestUpdateRequest testUpdateRequest) {
+    public SimpleResponse updateTest(@RequestParam Long testId, @RequestBody TestUpdateRequest testUpdateRequest) {
         return testService.updateTest(testId, testUpdateRequest);
     }
 

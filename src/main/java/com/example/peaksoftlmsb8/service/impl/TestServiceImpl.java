@@ -1,9 +1,6 @@
 package com.example.peaksoftlmsb8.service.impl;
 
-import com.example.peaksoftlmsb8.db.entity.Lesson;
-import com.example.peaksoftlmsb8.db.entity.Option;
-import com.example.peaksoftlmsb8.db.entity.Question;
-import com.example.peaksoftlmsb8.db.entity.Test;
+import com.example.peaksoftlmsb8.db.entity.*;
 import com.example.peaksoftlmsb8.db.enums.OptionType;
 import com.example.peaksoftlmsb8.db.exception.AlReadyExistException;
 import com.example.peaksoftlmsb8.db.exception.BadRequestException;
@@ -13,10 +10,7 @@ import com.example.peaksoftlmsb8.dto.response.OptionResponse;
 import com.example.peaksoftlmsb8.dto.response.QuestionResponse;
 import com.example.peaksoftlmsb8.dto.response.SimpleResponse;
 import com.example.peaksoftlmsb8.dto.response.TestResponse;
-import com.example.peaksoftlmsb8.repository.LessonRepository;
-import com.example.peaksoftlmsb8.repository.OptionRepository;
-import com.example.peaksoftlmsb8.repository.QuestionRepository;
-import com.example.peaksoftlmsb8.repository.TestRepository;
+import com.example.peaksoftlmsb8.repository.*;
 import com.example.peaksoftlmsb8.service.TestService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -37,6 +31,7 @@ public class TestServiceImpl implements TestService {
     private final QuestionRepository questionRepository;
     private final OptionRepository optionRepository;
     private final JdbcTemplate jdbcTemplate;
+    private final ResultOfTestRepository resultOfTestRepository;
 
     @Override
     public List<TestResponse> findAll() {
@@ -188,7 +183,7 @@ public class TestServiceImpl implements TestService {
             test.setQuestions(questions);
             testRepository.save(test);
         } else {
-            throw new AlReadyExistException("Uje v etom lessone task ect");
+            throw new AlReadyExistException("There is already a test in this lesson !");
         }
 
         return SimpleResponse.builder()
@@ -226,6 +221,9 @@ public class TestServiceImpl implements TestService {
         for (QuestionUpdateRequest questionUpdateRequest : testUpdateRequest.getQuestionRequests()) {
             Question question = questionRepository.findById(questionUpdateRequest.getQuestionId()).orElseThrow(
                     () -> new NotFoundException("Question with id : " + questionUpdateRequest.getQuestionId() + "not found !"));
+            question.setTest(test);
+            question.setQuestionName(questionUpdateRequest.getQuestionName());
+            question.setOptionType(questionUpdateRequest.getOptionType());
             int counter1 = 0;
             if (question.getOptionType().equals(questionUpdateRequest.getOptionType()) && question.getQuestionName().equals(questionUpdateRequest.getQuestionName())) {
                 counter1++;
@@ -235,7 +233,7 @@ public class TestServiceImpl implements TestService {
             for (OptionUpdateRequest optionUpdateRequest : questionUpdateRequest.getOptionRequests()) {
                 if (questionUpdateRequest.getOptionType().equals(OptionType.SINGLETON)) {
                     if (counter1 > 0) {
-                        throw new BadRequestException("SKJA");
+                        throw new BadRequestException("You can't change the options until the question is changed");
                     }
 
                     if (optionUpdateRequest.getIsTrue().equals(true)) {
@@ -283,6 +281,8 @@ public class TestServiceImpl implements TestService {
     public SimpleResponse deleteById(Long testId) {
         Test test = testRepository.findById(testId).orElseThrow(
                 () -> new NotFoundException("Test with id : " + testId + " not found !"));
+        ResultOfTest result = resultOfTestRepository.findResultOfTestById(test.getId());
+        resultOfTestRepository.delete(result);
         testRepository.delete(test);
         return SimpleResponse.builder()
                 .httpStatus(HttpStatus.OK)
