@@ -229,14 +229,13 @@ public class TestServiceImpl implements TestService {
 
     @Override
     public TestResponseForStudent findByTestById(Long testId) {
-        TestResponseForStudent test = new TestResponseForStudent();
         String testSql = """
-                select l.id as lesson_id ,
-                       l.name as lesson_name,
+                select t.lesson_id as lesson_id ,
+                       t.name as lesson_name,
                        t.id as test_id,
                        t.name as test_name,
                        t.date_test as date_test
-                       from lessons l join tests t on l.id = t.lesson_id
+                       from tests t where t.id = ?
                 """;
         TestResponseForStudent testResponseForStudent1 = jdbcTemplate.query(testSql, (resulSet, i) -> {
             TestResponseForStudent testResponseForStudent = new TestResponseForStudent();
@@ -244,8 +243,7 @@ public class TestServiceImpl implements TestService {
             testResponseForStudent.setTestId(resulSet.getLong("test_id"));
             testResponseForStudent.setTestName(resulSet.getString("test_name"));
             return testResponseForStudent;
-        }).stream().findAny().orElseThrow(() -> new NotFoundException("NOt found"));
-
+        }, testId).stream().findAny().orElseThrow(() -> new NotFoundException("NOt found"));
 
 
         String questionSql = """
@@ -261,7 +259,7 @@ public class TestServiceImpl implements TestService {
             questionResponse.setOptionType(OptionType.valueOf(resultSet.getString("option_type")));
 
             return questionResponse;
-        }, test.getTestId());
+        }, testResponseForStudent1.getTestId());
 
         List<QuestionResponseForStudent> questionResponses = new ArrayList<>();
         for (QuestionResponseForStudent questionR : questionQuery) {
@@ -270,18 +268,16 @@ public class TestServiceImpl implements TestService {
                            o.text as text
                     from options o where question_id=?
                     """;
-            List<OptionResponseForStudent> optionQuery = jdbcTemplate.query(optionSql, (resulSet, i) -> {
-                OptionResponseForStudent optionResponseForStudent = new OptionResponseForStudent();
-                optionResponseForStudent.setOptionId(resulSet.getLong("option_id"));
-                optionResponseForStudent.setText(resulSet.getString("text"));
-                return optionResponseForStudent;
-            }, questionR.getQuestionId());
+            List<OptionResponseForStudent> optionQuery = jdbcTemplate.query(optionSql, (resulSet, i) ->
+                            new OptionResponseForStudent(resulSet.getLong("id"),
+                                    resulSet.getString("text")),
+                    questionR.getQuestionId());
             questionR.setOptionResponses(optionQuery);
             questionResponses.add(questionR);
         }
 
-        test.setQuestionResponses(questionResponses);
-        return test;
+        testResponseForStudent1.setQuestionResponses(questionResponses);
+        return testResponseForStudent1;
     }
 
     private List<QuestionResponse> questionResponses(List<Question> questions) {

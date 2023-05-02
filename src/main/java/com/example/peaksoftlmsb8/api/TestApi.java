@@ -43,7 +43,7 @@ public class TestApi {
     }
 
     @GetMapping("/findByTestById")
-    @Operation(summary = "This method returns test by id from by instructor",
+    @Operation(summary = "This method returns test by id from by student",
             description = "This method return test find by id ")
     public TestResponseForStudent findByTestId(@RequestParam Long testId){
         return testService.findByTestById(testId);
