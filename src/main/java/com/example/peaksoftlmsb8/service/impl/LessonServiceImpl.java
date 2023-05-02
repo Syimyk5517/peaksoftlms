@@ -42,10 +42,10 @@ public class LessonServiceImpl implements LessonService {
     }
 
     @Override
-    public LessonPaginationResponse getAllLessonsByCourseId(Long courseId, int size, int page, String word, String
+    public LessonPaginationResponse getAllLessonsByCourseId(Long courseId, int size, int page, String search, String
             sort) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
-        Page<LessonResponse> pageLesson = lessonRepository.getAllLessonsByCourseId(pageable, word, courseId);
+        Page<LessonResponse> pageLesson = lessonRepository.getAllLessonsByCourseId(pageable, search, courseId);
         LessonPaginationResponse paginationResponse = new LessonPaginationResponse();
         paginationResponse.setLessonResponses(pageLesson.getContent());
         paginationResponse.setPageSize(pageLesson.getNumber());

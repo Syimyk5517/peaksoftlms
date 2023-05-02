@@ -28,12 +28,12 @@ public class LessonApi {
                                                             @RequestParam int size,
                                                             @RequestParam int page,
                                                             @RequestParam String sort,
-                                                            @RequestBody String word) {
-        return lessonService.getAllLessonsByCourseId(courseId, size, page, sort, word);
+                                                            @RequestBody String search) {
+        return lessonService.getAllLessonsByCourseId(courseId, size, page, sort, search);
     }
 
-    @GetMapping("/getById")
-    public LessonResponse getLessonById(@RequestParam Long lessonId) {
+    @GetMapping("/{lessonId}")
+    public LessonResponse getLessonById(@PathVariable Long lessonId) {
         return lessonService.findByLessonId(lessonId);
     }
 
@@ -43,9 +43,9 @@ public class LessonApi {
         return lessonService.updateLesson(lessonId, lessonRequest);
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{lessonId}")
     @PreAuthorize("hasAnyAuthority('ADMIN','INSTRUCTOR')")
-    public SimpleResponse deleteLesson(@RequestParam Long lessonId) {
+    public SimpleResponse deleteLesson(@PathVariable Long lessonId) {
         return lessonService.deleteLesson(lessonId);
     }
 }

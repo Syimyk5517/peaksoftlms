@@ -7,10 +7,9 @@ import com.example.peaksoftlmsb8.dto.response.*;
 public interface LessonService {
     SimpleResponse saveLessons(LessonRequest lessonRequest);
 
-    LessonPaginationResponse getAllLessonsByCourseId(Long courseId, int size, int page, String word, String sort);
+    LessonPaginationResponse getAllLessonsByCourseId(Long courseId, int size, int page, String search, String sort);
 
     LessonResponse findByLessonId(Long lessonId);
-
 
     SimpleResponse updateLesson(Long lessonId, LessonRequest lessonRequest);
 
