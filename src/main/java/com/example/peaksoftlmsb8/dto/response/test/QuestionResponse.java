@@ -1,6 +1,5 @@
-package com.example.peaksoftlmsb8.dto.response;
+package com.example.peaksoftlmsb8.dto.response.test;
 
-import com.example.peaksoftlmsb8.db.entity.Option;
 import com.example.peaksoftlmsb8.db.enums.OptionType;
 import lombok.*;
 

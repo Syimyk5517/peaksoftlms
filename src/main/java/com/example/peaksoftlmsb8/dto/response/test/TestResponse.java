@@ -1,4 +1,4 @@
-package com.example.peaksoftlmsb8.dto.response;
+package com.example.peaksoftlmsb8.dto.response.test;
 
 import lombok.*;
 
@@ -10,7 +10,7 @@ import java.util.List;
 @Getter
 @Setter
 public class TestResponse {
-    private Long LessonId;
+    private Long lessonId;
     private String lessonName;
     private Long testId;
     private String testName;

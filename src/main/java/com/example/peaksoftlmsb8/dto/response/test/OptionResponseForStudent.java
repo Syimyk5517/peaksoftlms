@@ -1,4 +1,4 @@
-package com.example.peaksoftlmsb8.dto.response;
+package com.example.peaksoftlmsb8.dto.response.test;
 
 import lombok.*;
 
@@ -7,8 +7,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class OptionResponse {
+public class OptionResponseForStudent {
     private Long optionId;
     private String text;
-    private Boolean isTrue;
 }

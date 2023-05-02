@@ -6,10 +6,8 @@ import com.example.peaksoftlmsb8.db.exception.AlReadyExistException;
 import com.example.peaksoftlmsb8.db.exception.BadRequestException;
 import com.example.peaksoftlmsb8.db.exception.NotFoundException;
 import com.example.peaksoftlmsb8.dto.request.*;
-import com.example.peaksoftlmsb8.dto.response.OptionResponse;
-import com.example.peaksoftlmsb8.dto.response.QuestionResponse;
+import com.example.peaksoftlmsb8.dto.response.test.*;
 import com.example.peaksoftlmsb8.dto.response.SimpleResponse;
-import com.example.peaksoftlmsb8.dto.response.TestResponse;
 import com.example.peaksoftlmsb8.repository.*;
 import com.example.peaksoftlmsb8.service.TestService;
 import lombok.RequiredArgsConstructor;
@@ -55,13 +53,13 @@ public class TestServiceImpl implements TestService {
         });
 
         for (TestResponse testR : query) {
-            String sql2 = """
+            String questionSql = """
                     select q.id as question_id,
                            q.question_name as question_name,
                            q.option_type as option_type
                     from questions q where q.test_id=?
                     """;
-            List<QuestionResponse> optionQuery = jdbcTemplate.query(sql2, (resultSet, i) -> {
+            List<QuestionResponse> questionQuery = jdbcTemplate.query(questionSql, (resultSet, i) -> {
                 QuestionResponse questionResponse = new QuestionResponse();
                 questionResponse.setQuestionId(resultSet.getLong("question_id"));
                 questionResponse.setQuestionName(resultSet.getString("question_name"));
@@ -69,7 +67,7 @@ public class TestServiceImpl implements TestService {
 
                 return questionResponse;
             }, testR.getTestId());
-            testR.setQuestionResponses(optionQuery);
+            testR.setQuestionResponses(questionQuery);
             testResponseList.add(testR);
         }
 
@@ -77,13 +75,17 @@ public class TestServiceImpl implements TestService {
         for (TestResponse test : testResponseList) {
             List<QuestionResponse> questionResponses = new ArrayList<>();
             for (QuestionResponse questionR : test.getQuestionResponses()) {
-                String sql3 = """
+                String optionSql = """
                         select o.id as id,
                                o.text as text,
                                o.is_true as is_true
                         from options o where question_id=?
                         """;
-                List<OptionResponse> optionQuery = jdbcTemplate.query(sql3, (resulSet, i) -> new OptionResponse(resulSet.getLong("id"), resulSet.getString("text"), resulSet.getBoolean("is_true")), questionR.getQuestionId());
+                List<OptionResponse> optionQuery = jdbcTemplate.query(optionSql, (resulSet, i) ->
+                                new OptionResponse(resulSet.getLong("id"),
+                                        resulSet.getString("text"),
+                                        resulSet.getBoolean("is_true")),
+                        questionR.getQuestionId());
                 questionR.setOptionResponses(optionQuery);
                 questionResponses.add(questionR);
             }
@@ -151,7 +153,7 @@ public class TestServiceImpl implements TestService {
     public TestResponse findById(Long id) {
         Test test = testRepository.findById(id).orElseThrow(() -> new NotFoundException("Test with id : " + id + " not found !"));
         List<QuestionResponse> questionResponses = questionResponses(test.getQuestions());
-        return TestResponse.builder().LessonId(test.getLesson().getId()).lessonName(test.getLesson().getName()).testId(test.getId()).testName(test.getName()).dateTest(test.getDateTest()).questionResponses(questionResponses).build();
+        return TestResponse.builder().lessonId(test.getLesson().getId()).lessonName(test.getLesson().getName()).testId(test.getId()).testName(test.getName()).dateTest(test.getDateTest()).questionResponses(questionResponses).build();
 
     }
 
@@ -223,6 +225,63 @@ public class TestServiceImpl implements TestService {
         resultOfTestRepository.delete(result);
         testRepository.delete(test);
         return SimpleResponse.builder().httpStatus(HttpStatus.OK).message(String.format("Test with id  : %s successfully deleted !", testId)).build();
+    }
+
+    @Override
+    public TestResponseForStudent findByTestById(Long testId) {
+        TestResponseForStudent test = new TestResponseForStudent();
+        String testSql = """
+                select l.id as lesson_id ,
+                       l.name as lesson_name,
+                       t.id as test_id,
+                       t.name as test_name,
+                       t.date_test as date_test
+                       from lessons l join tests t on l.id = t.lesson_id
+                """;
+        TestResponseForStudent testResponseForStudent1 = jdbcTemplate.query(testSql, (resulSet, i) -> {
+            TestResponseForStudent testResponseForStudent = new TestResponseForStudent();
+            testResponseForStudent.setLessonId(resulSet.getLong("lesson_id"));
+            testResponseForStudent.setTestId(resulSet.getLong("test_id"));
+            testResponseForStudent.setTestName(resulSet.getString("test_name"));
+            return testResponseForStudent;
+        }).stream().findAny().orElseThrow(() -> new NotFoundException("NOt found"));
+
+
+
+        String questionSql = """
+                select q.id as question_id,
+                       q.question_name as question_name,
+                       q.option_type as option_type
+                from questions q where q.test_id=?
+                """;
+        List<QuestionResponseForStudent> questionQuery = jdbcTemplate.query(questionSql, (resultSet, i) -> {
+            QuestionResponseForStudent questionResponse = new QuestionResponseForStudent();
+            questionResponse.setQuestionId(resultSet.getLong("question_id"));
+            questionResponse.setQuestionName(resultSet.getString("question_name"));
+            questionResponse.setOptionType(OptionType.valueOf(resultSet.getString("option_type")));
+
+            return questionResponse;
+        }, test.getTestId());
+
+        List<QuestionResponseForStudent> questionResponses = new ArrayList<>();
+        for (QuestionResponseForStudent questionR : questionQuery) {
+            String optionSql = """
+                    select o.id as id,
+                           o.text as text
+                    from options o where question_id=?
+                    """;
+            List<OptionResponseForStudent> optionQuery = jdbcTemplate.query(optionSql, (resulSet, i) -> {
+                OptionResponseForStudent optionResponseForStudent = new OptionResponseForStudent();
+                optionResponseForStudent.setOptionId(resulSet.getLong("option_id"));
+                optionResponseForStudent.setText(resulSet.getString("text"));
+                return optionResponseForStudent;
+            }, questionR.getQuestionId());
+            questionR.setOptionResponses(optionQuery);
+            questionResponses.add(questionR);
+        }
+
+        test.setQuestionResponses(questionResponses);
+        return test;
     }
 
     private List<QuestionResponse> questionResponses(List<Question> questions) {

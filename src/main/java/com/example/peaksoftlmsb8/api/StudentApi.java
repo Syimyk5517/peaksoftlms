@@ -35,7 +35,13 @@ import java.util.List;
 @Tag(name = "Students")
 public class StudentApi {
     private final StudentService studentService;
-    @PostMapping()
+
+    @PostMapping(
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            path = "/import")
+    @Operation(summary = "This method import excel file to database",
+            description = "Add students from excel file by administrator")
     public SimpleResponse importExcel(@RequestParam Long id,@RequestParam(name = "file") MultipartFile multipartFile) throws IOException {
         return studentService.importExcel(id,multipartFile);
     }
