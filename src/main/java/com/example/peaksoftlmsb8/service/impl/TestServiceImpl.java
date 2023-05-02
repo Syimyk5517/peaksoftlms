@@ -53,13 +53,13 @@ public class TestServiceImpl implements TestService {
             testResponse.setDateTest(resulSet.getDate("date_test").toLocalDate());
             return testResponse;
         });
-        //QuestionResponses
+
         for (TestResponse testR : query) {
             String sql2 = """
                     select q.id as question_id,
                            q.question_name as question_name,
                            q.option_type as option_type
-                    from questions q where q.test_id=? 
+                    from questions q where q.test_id=?
                     """;
             List<QuestionResponse> optionQuery = jdbcTemplate.query(sql2, (resultSet, i) -> {
                 QuestionResponse questionResponse = new QuestionResponse();
@@ -72,7 +72,7 @@ public class TestServiceImpl implements TestService {
             testR.setQuestionResponses(optionQuery);
             testResponseList.add(testR);
         }
-//              Option responses
+
         List<TestResponse> testResponses = new ArrayList<>();
         for (TestResponse test : testResponseList) {
             List<QuestionResponse> questionResponses = new ArrayList<>();
@@ -83,11 +83,7 @@ public class TestServiceImpl implements TestService {
                                o.is_true as is_true
                         from options o where question_id=?
                         """;
-                List<OptionResponse> optionQuery = jdbcTemplate.query(sql3, (resulSet, i) -> new OptionResponse(
-                        resulSet.getLong("id"),
-                        resulSet.getString("text"),
-                        resulSet.getBoolean("is_true")
-                ), questionR.getQuestionId());
+                List<OptionResponse> optionQuery = jdbcTemplate.query(sql3, (resulSet, i) -> new OptionResponse(resulSet.getLong("id"), resulSet.getString("text"), resulSet.getBoolean("is_true")), questionR.getQuestionId());
                 questionR.setOptionResponses(optionQuery);
                 questionResponses.add(questionR);
             }
@@ -96,75 +92,35 @@ public class TestServiceImpl implements TestService {
             testResponses.add(test);
 
         }
-//            testResponse.setQuestionResponses(query2);
-//            questionResponse.setOptionResponses(query1);
-
-//        List<Test> testList = testRepository.findAll();
-//        List<TestResponse> testResponses = new ArrayList<>();
-//        for (Test test : testList) {
-//            List<QuestionResponse> questionResponses = questionResponses(test.getQuestions());
-//            TestResponse testResponse = TestResponse.builder()
-//                    .LessonId(test.getLesson().getId())
-//                    .lessonName(test.getLesson().getName())
-//                    .testId(test.getId())
-//                    .testName(test.getName())
-//                    .dateTest(test.getDateTest())
-//                    .questionResponses(questionResponses)
-//                    .build();
-//            testResponses.add(testResponse);
-//        }
-//        return testResponses;
         return testResponses;
     }
 
 
     @Override
     public SimpleResponse saveTest(TestRequest request) {
-        Lesson lesson = lessonRepository.findById(request.getLessonId()).orElseThrow(
-                () -> new NotFoundException("Lesson with id : " + request.getLessonId() + " not found !")
-        );
+        Lesson lesson = lessonRepository.findById(request.getLessonId()).orElseThrow(() -> new NotFoundException("Lesson with id : " + request.getLessonId() + " not found !"));
         if (lesson.getTest() == null) {
             Test test = new Test();
             List<Question> questions = new ArrayList<>();
             for (QuestionRequest questionRequest : request.getQuestionRequests()) {
-                Question question = Question.builder()
-                        .questionName(questionRequest.getQuestionName())
-                        .test(test)
-                        .optionType(questionRequest.getOptionType())
-                        .build();
+                Question question = Question.builder().questionName(questionRequest.getQuestionName()).test(test).optionType(questionRequest.getOptionType()).build();
                 int counter = 0;
 
-                if (questionRequest.getOptionType().equals(OptionType.SINGLETON)) {
-                    for (OptionRequest o : questionRequest.getOptionRequests()) {
-                        Option option = Option.builder()
-                                .text(o.getText())
-                                .question(question)
-                                .isTrue(o.getIsTrue())
-                                .build();
-
-                        question.setOptions(List.of(option));
+                for (OptionRequest o : questionRequest.getOptionRequests()) {
+                    if (questionRequest.getOptionType().equals(OptionType.SINGLETON)) {
 
                         if (o.getIsTrue().equals(true)) {
                             ++counter;
                         }
-                    }
-                    if (counter < 1) {
-                        throw new BadRequestException("You must choose one correct answer !");
-                    }
-                    if (counter > 1) {
-                        throw new BadRequestException("You can only choose one correct answer !");
-                    }
-                } else {
-                    for (OptionRequest optionRequest : questionRequest.getOptionRequests()) {
-                        Option option = Option.builder()
-                                .text(optionRequest.getText())
-                                .question(question)
-                                .isTrue(optionRequest.getIsTrue())
-                                .build();
+                        if (counter < 1) {
+                            throw new BadRequestException("You must choose one correct answer !");
+                        }
+                        if (counter > 1) {
+                            throw new BadRequestException("You can only choose one correct answer !");
+                        }
+                    } else {
 
-                        question.addOption(option);
-
-                        if (optionRequest.getIsTrue().equals(true)) {
+                        if (o.getIsTrue().equals(true)) {
                             counter++;
                         }
                         if (counter < 1) {
@@ -175,6 +131,8 @@ public class TestServiceImpl implements TestService {
                         }
 
                     }
+                    Option option = Option.builder().text(o.getText()).question(question).isTrue(o.getIsTrue()).build();
+                    question.setOptions(List.of(option));
                 }
                 questions.add(question);
             }
@@ -186,41 +144,26 @@ public class TestServiceImpl implements TestService {
             throw new AlReadyExistException("There is already a test in this lesson !");
         }
 
-        return SimpleResponse.builder()
-                .httpStatus(HttpStatus.OK)
-                .message(String.format("Test with name: %s successfully saved !", request.getTestName()))
-                .build();
+        return SimpleResponse.builder().httpStatus(HttpStatus.OK).message(String.format("Test with name: %s successfully saved !", request.getTestName())).build();
     }
 
     @Override
     public TestResponse findById(Long id) {
-        Test test = testRepository.findById(id).orElseThrow(
-                () -> new NotFoundException("Test with id : " + id + " not found !"));
+        Test test = testRepository.findById(id).orElseThrow(() -> new NotFoundException("Test with id : " + id + " not found !"));
         List<QuestionResponse> questionResponses = questionResponses(test.getQuestions());
-        return TestResponse.builder()
-                .LessonId(test.getLesson().getId())
-                .lessonName(test.getLesson().getName())
-                .testId(test.getId())
-                .testName(test.getName())
-                .dateTest(test.getDateTest())
-                .questionResponses(questionResponses)
-                .build();
+        return TestResponse.builder().LessonId(test.getLesson().getId()).lessonName(test.getLesson().getName()).testId(test.getId()).testName(test.getName()).dateTest(test.getDateTest()).questionResponses(questionResponses).build();
 
     }
 
     @Override
     public SimpleResponse updateTest(Long testId, TestUpdateRequest testUpdateRequest) {
-        Test test = testRepository.findById(testId).orElseThrow(
-                () -> new NotFoundException("Test with id : " + testId + " not found !"));
+        Test test = testRepository.findById(testId).orElseThrow(() -> new NotFoundException("Test with id : " + testId + " not found !"));
 
-        Lesson lesson = lessonRepository.findById(testUpdateRequest.getLessonId()).orElseThrow(
-                () -> new NotFoundException("Lesson with id : " + testUpdateRequest.getLessonId() + " not found!")
-        );
+        Lesson lesson = lessonRepository.findById(testUpdateRequest.getLessonId()).orElseThrow(() -> new NotFoundException("Lesson with id : " + testUpdateRequest.getLessonId() + " not found!"));
 
         List<Question> questions = new ArrayList<>();
         for (QuestionUpdateRequest questionUpdateRequest : testUpdateRequest.getQuestionRequests()) {
-            Question question = questionRepository.findById(questionUpdateRequest.getQuestionId()).orElseThrow(
-                    () -> new NotFoundException("Question with id : " + questionUpdateRequest.getQuestionId() + "not found !"));
+            Question question = questionRepository.findById(questionUpdateRequest.getQuestionId()).orElseThrow(() -> new NotFoundException("Question with id : " + questionUpdateRequest.getQuestionId() + "not found !"));
             question.setTest(test);
             question.setQuestionName(questionUpdateRequest.getQuestionName());
             question.setOptionType(questionUpdateRequest.getOptionType());
@@ -257,8 +200,7 @@ public class TestServiceImpl implements TestService {
                     }
 
                 }
-                Option option = optionRepository.findById(optionUpdateRequest.getOptionId()).orElseThrow(
-                        () -> new NotFoundException("Option with id : " + optionUpdateRequest.getOptionId() + "not found !"));
+                Option option = optionRepository.findById(optionUpdateRequest.getOptionId()).orElseThrow(() -> new NotFoundException("Option with id : " + optionUpdateRequest.getOptionId() + "not found !"));
                 option.setText(optionUpdateRequest.getText());
                 option.setQuestion(question);
                 option.setIsTrue(optionUpdateRequest.getIsTrue());
@@ -271,38 +213,24 @@ public class TestServiceImpl implements TestService {
         test.setLesson(lesson);
         test.setQuestions(questions);
         testRepository.save(test);
-        return SimpleResponse.builder()
-                .httpStatus(HttpStatus.OK)
-                .message(String.format("Test with name : %s successfully updated !", test.getName()))
-                .build();
+        return SimpleResponse.builder().httpStatus(HttpStatus.OK).message(String.format("Test with name : %s successfully updated !", test.getName())).build();
     }
 
     @Override
     public SimpleResponse deleteById(Long testId) {
-        Test test = testRepository.findById(testId).orElseThrow(
-                () -> new NotFoundException("Test with id : " + testId + " not found !"));
+        Test test = testRepository.findById(testId).orElseThrow(() -> new NotFoundException("Test with id : " + testId + " not found !"));
         ResultOfTest result = resultOfTestRepository.findResultOfTestById(test.getId());
         resultOfTestRepository.delete(result);
         testRepository.delete(test);
-        return SimpleResponse.builder()
-                .httpStatus(HttpStatus.OK)
-                .message(String.format("Test with id  : %s successfully deleted !", testId))
-                .build();
+        return SimpleResponse.builder().httpStatus(HttpStatus.OK).message(String.format("Test with id  : %s successfully deleted !", testId)).build();
     }
 
     private List<QuestionResponse> questionResponses(List<Question> questions) {
         List<QuestionResponse> questionResponses = new ArrayList<>();
         for (Question q : questions) {
-            QuestionResponse questionResponse = QuestionResponse.builder()
-                    .questionId(q.getId())
-                    .questionName(q.getQuestionName())
-                    .build();
+            QuestionResponse questionResponse = QuestionResponse.builder().questionId(q.getId()).questionName(q.getQuestionName()).build();
             for (Option option : q.getOptions()) {
-                OptionResponse optionResponse = OptionResponse.builder()
-                        .optionId(option.getId())
-                        .isTrue(option.getIsTrue())
-                        .text(option.getText())
-                        .build();
+                OptionResponse optionResponse = OptionResponse.builder().optionId(option.getId()).isTrue(option.getIsTrue()).text(option.getText()).build();
                 questionResponse.addOption(optionResponse);
             }
             questionResponses.add(questionResponse);
