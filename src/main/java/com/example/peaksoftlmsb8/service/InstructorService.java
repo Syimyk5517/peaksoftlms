@@ -6,7 +6,7 @@ import com.example.peaksoftlmsb8.dto.response.PaginationResponseForInstructor;
 import com.example.peaksoftlmsb8.dto.response.SimpleResponse;
 
 public interface InstructorService {
-    PaginationResponseForInstructor getAllInstructors(int size, int page, String sort, String keyWOrd);
+    PaginationResponseForInstructor getAllInstructors(int size, int page, String sort,String sortDirection, String keyWOrd);
 
     InstructorResponse findByInstructorId(Long instructorId);
 

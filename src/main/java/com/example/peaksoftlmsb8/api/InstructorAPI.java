@@ -20,9 +20,10 @@ public class InstructorAPI {
     @GetMapping
     public PaginationResponseForInstructor getAll(@RequestParam int size,
                                                   @RequestParam int page,
-                                                  @RequestParam String sort,
-                                                  @RequestBody String keyWord) {
-        return instructorService.getAllInstructors(size, page, sort, keyWord);
+                                                  @RequestParam(required = false) String sort,
+                                                  @RequestParam(required = false) String sortDirection,
+                                                  @RequestParam(required = false) String search) {
+        return instructorService.getAllInstructors(size, page, sort, sortDirection, search);
     }
 
     @GetMapping("/findById")
