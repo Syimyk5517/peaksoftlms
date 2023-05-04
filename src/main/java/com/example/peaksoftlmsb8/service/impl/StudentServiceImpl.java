@@ -7,8 +7,8 @@ import com.example.peaksoftlmsb8.db.enums.Role;
 import com.example.peaksoftlmsb8.db.exception.AlReadyExistException;
 import com.example.peaksoftlmsb8.db.exception.BadRequestException;
 import com.example.peaksoftlmsb8.db.exception.NotFoundException;
-import com.example.peaksoftlmsb8.dto.request.StudentExcelRequest;
-import com.example.peaksoftlmsb8.dto.request.StudentRequest;
+import com.example.peaksoftlmsb8.dto.request.student.StudentExcelRequest;
+import com.example.peaksoftlmsb8.dto.request.student.StudentRequest;
 import com.example.peaksoftlmsb8.dto.response.SimpleResponse;
 import com.example.peaksoftlmsb8.dto.response.StudentPaginationResponse;
 import com.example.peaksoftlmsb8.dto.response.StudentResponse;
@@ -20,6 +20,7 @@ import com.example.peaksoftlmsb8.service.StudentService;
 import com.poiji.bind.Poiji;
 import com.poiji.exception.PoijiExcelType;
 import com.poiji.option.PoijiOptions;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -34,6 +35,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class StudentServiceImpl implements StudentService {
     private final StudentRepository studentRepository;
@@ -121,9 +123,9 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public StudentPaginationResponse findAllPagination(int size, int page, String search, String sort) {
-        Pageable pageable = PageRequest.of(page - 1, size, Sort.by(sort));
-        Page<StudentResponse> studentResponsePage = studentRepository.findAllStudents(pageable, search);
+    public StudentPaginationResponse findAllPagination(int size, int page, String search,String sort) {
+        Pageable pageable = PageRequest.of(page - 1, size);
+        Page<StudentResponse> studentResponsePage = studentRepository.findAllStudents(pageable, search,sort);
         StudentPaginationResponse studentPaginationResponse = new StudentPaginationResponse();
         studentPaginationResponse.setStudentResponses(studentResponsePage.getContent());
         studentPaginationResponse.setPageSize(studentResponsePage.getNumber());
@@ -141,10 +143,10 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public SimpleResponse deleteById(Long studentId) {
-        if (!studentRepository.existsById(studentId)) {
-            throw new BadRequestException("Student with ID: " + studentId + " is not found!");
-        }
-        studentRepository.deleteById(studentId);
+        Student student = studentRepository.findById(studentId).orElseThrow(
+                () -> new NotFoundException("Student with ID: " + studentId + " is not found!"));
+        userRepository.deleteUserByStudentId(student.getId());
+        studentRepository.delete(student);
         return SimpleResponse.builder()
                 .httpStatus(HttpStatus.OK)
                 .message("Student with ID: " + studentId + " is successfully deleted!")

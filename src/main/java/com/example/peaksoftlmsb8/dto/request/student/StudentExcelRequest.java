@@ -1,4 +1,4 @@
-package com.example.peaksoftlmsb8.dto.request;
+package com.example.peaksoftlmsb8.dto.request.student;
 
 import com.example.peaksoftlmsb8.db.enums.FormLearning;
 import com.poiji.annotation.ExcelCellName;

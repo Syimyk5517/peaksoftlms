@@ -29,8 +29,10 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
             "s.id,concat(u.firstName,' ',u.lastName),u.phoneNumber,u.email,s.formLearning,s.group.name) " +
             "from Student s join User u on s.id=u.student.id where u.firstName ilike concat('%', :search, '%')" +
             "or u.lastName ilike concat('%', :search, '%') or u.email ilike concat('%', :search, '%')" +
-            "or u.phoneNumber ilike concat('%', :search, '%')")
-    Page<StudentResponse> findAllStudents(Pageable pageable, String search);
+            "or u.phoneNumber ilike concat('%', :search, '%') " +
+            "order by case when :sort ='id_asc' then u.id end asc," +
+            "case when :sort = 'id_desc' then u.id end desc ")
+    Page<StudentResponse> findAllStudents(Pageable pageable, String search,String sort);
 
     @Query("select new com.example.peaksoftlmsb8.dto.response.StudentResponseForAdmin(" +
             "s.id,concat(u.firstName,' ',u.lastName),u.phoneNumber,u.email,u.password,s.formLearning,s.group.name) " +

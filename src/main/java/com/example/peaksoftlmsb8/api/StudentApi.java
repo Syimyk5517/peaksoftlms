@@ -1,6 +1,6 @@
 package com.example.peaksoftlmsb8.api;
 
-import com.example.peaksoftlmsb8.dto.request.StudentRequest;
+import com.example.peaksoftlmsb8.dto.request.student.StudentRequest;
 import com.example.peaksoftlmsb8.dto.response.SimpleResponse;
 import com.example.peaksoftlmsb8.dto.response.StudentPaginationResponse;
 import com.example.peaksoftlmsb8.dto.response.StudentResponse;
@@ -51,7 +51,7 @@ public class StudentApi {
                                                     @RequestParam int page,
                                                     @RequestParam String sort,
                                                     @RequestParam String search) {
-        return studentService.findAllPagination(size, page, sort, search);
+        return studentService.findAllPagination(size, page, search,sort);
     }
 
     @Operation(summary = "This method for Admin, can get Students", description = "Admin can get all Students with Password")
