@@ -6,6 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import static jakarta.persistence.CascadeType.*;
+import static jakarta.persistence.CascadeType.DETACH;
+
 @Getter
 @Setter
 @Entity
@@ -19,10 +22,10 @@ public class ResultOfTest {
     private Long id;
     private int countCorrect;
     private int countInCorrect;
-    @OneToOne
+    @OneToOne (cascade = {PERSIST, MERGE, REFRESH, DETACH})
     @JoinColumn(name = "student_id")
     private Student student;
-    @OneToOne
+    @OneToOne(cascade = {PERSIST, MERGE, REFRESH, DETACH})
     @JoinColumn(name = "test_id")
     private Test test;
 
