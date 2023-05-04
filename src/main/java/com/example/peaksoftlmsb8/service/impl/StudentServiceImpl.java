@@ -34,6 +34,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -41,7 +42,7 @@ public class StudentServiceImpl implements StudentService {
     private final StudentRepository studentRepository;
     private final GroupRepository groupRepository;
     private final UserRepository userRepository;
-     private final PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public SimpleResponse importExcel(Long groupId, MultipartFile multipartFile) throws IOException {
@@ -123,9 +124,9 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public StudentPaginationResponse findAllPagination(int size, int page, String search,String sort) {
+    public StudentPaginationResponse findAllPagination(int size, int page, String search, String sort) {
         Pageable pageable = PageRequest.of(page - 1, size);
-        Page<StudentResponse> studentResponsePage = studentRepository.findAllStudents(pageable, search,sort);
+        Page<StudentResponse> studentResponsePage = studentRepository.findAllStudents(pageable, search, sort);
         StudentPaginationResponse studentPaginationResponse = new StudentPaginationResponse();
         studentPaginationResponse.setStudentResponses(studentResponsePage.getContent());
         studentPaginationResponse.setPageSize(studentResponsePage.getNumber());
@@ -159,39 +160,19 @@ public class StudentServiceImpl implements StudentService {
                 () -> new NotFoundException("Student with ID: " + studentId + " is not found!"));
         Group group = groupRepository.findById(newStudentRequest.getGroupId()).orElseThrow(
                 () -> new NotFoundException("Group with id : " + newStudentRequest.getGroupId() + "not found !"));
-        User user = student.getUser();
-        if (!newStudentRequest.getFirstName().equals(user.getFirstName())) {
-            user.setFirstName(newStudentRequest.getFirstName());
+        if (studentRepository.existsByEmail(newStudentRequest.getEmail())) {
+            throw new BadRequestException("Student with Email: " + newStudentRequest.getEmail() + " is already saved!");
         }
-        if (!newStudentRequest.getLastName().equals(user.getLastName())) {
-            user.setLastName(newStudentRequest.getLastName());
+        student.getUser().setFirstName(newStudentRequest.getFirstName());
+        student.getUser().setLastName(newStudentRequest.getLastName());
+        student.getUser().setEmail(newStudentRequest.getEmail());
+        student.getUser().setPassword(passwordEncoder.encode(newStudentRequest.getPassword()));
+        if (studentRepository.existsByPhoneNumber(newStudentRequest.getPhoneNumber())) {
+            throw new BadRequestException("Student with Phone number: " + newStudentRequest.getPhoneNumber() + " is already saved!");
         }
-        if (!newStudentRequest.getEmail().equals(user.getEmail())) {
-            if (studentRepository.existsByEmail(newStudentRequest.getEmail())) {
-                throw new BadRequestException("Student with Email: " + newStudentRequest.getEmail() + " is already saved!");
-            }
-            user.setEmail(newStudentRequest.getEmail());
-        }
-        user.setPassword(passwordEncoder.encode(newStudentRequest.getPassword()));
-        if (!newStudentRequest.getPhoneNumber().equals(user.getPhoneNumber())) {
-            if (studentRepository.existsByPhoneNumber(newStudentRequest.getPhoneNumber())) {
-                throw new BadRequestException("Student with Phone number: " + newStudentRequest.getPhoneNumber() + " is already saved!");
-            }
-            user.setPhoneNumber(newStudentRequest.getPhoneNumber());
-        }
-        if (!newStudentRequest.getFormLearning().equals(student.getFormLearning())) {
-            student.setFormLearning(newStudentRequest.getFormLearning());
-        }
-
-            student.setGroup(group);
-            group.setStudents(List.of(student));
-
-        if (!student.getUser().equals(user)) {
-            student.setUser(user);
-        }
-        if (!student.equals(user.getStudent())) {
-            user.setStudent(student);
-        }
+        student.getUser().setPhoneNumber(newStudentRequest.getPhoneNumber());
+        student.setFormLearning(newStudentRequest.getFormLearning());
+        student.setGroup(group);
         studentRepository.save(student);
         return SimpleResponse.builder()
                 .httpStatus(HttpStatus.OK)
