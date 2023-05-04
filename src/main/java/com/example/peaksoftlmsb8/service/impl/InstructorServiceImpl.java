@@ -33,7 +33,7 @@ public class InstructorServiceImpl implements InstructorService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public PaginationResponseForInstructor getAllInstructors(int size, int page, String sort, String keyWOrd) {
+    public PaginationResponseForInstructor  getAllInstructors(int size, int page, String sort, String keyWOrd) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
         Page<InstructorResponse> pageInstructor = instructorRepository.getAll(pageable, keyWOrd);
         PaginationResponseForInstructor paginationResponse = new PaginationResponseForInstructor();
