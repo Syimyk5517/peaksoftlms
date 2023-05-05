@@ -9,7 +9,7 @@ import com.example.peaksoftlmsb8.dto.response.SimpleResponse;
 public interface GroupService {
     SimpleResponse saveGroup(GroupRequest groupRequest);
 
-    GroupPaginationResponse getAllGroups(int size, int page, String word, String sort);
+    GroupPaginationResponse getAllGroups(int size, int page);
 
     GroupResponse getGroupById(Long groupId);
 

@@ -7,4 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 public interface ResultOfTestRepository extends JpaRepository<ResultOfTest, Long> {
     @Query("select r from ResultOfTest r where  r.test.id =?1")
     ResultOfTest findResultOfTestById(Long testId);
+
+    void deleteByStudentId(Long studentId);
 }

@@ -39,7 +39,7 @@ public class Course {
         instructors.add(instructor);
     }
 
-    @ManyToMany(cascade = {PERSIST, MERGE, REFRESH, DETACH})
+    @ManyToMany(cascade = ALL)
     @JoinTable(name = "groups_courses",
             joinColumns = @JoinColumn(name = "group_id"),
             inverseJoinColumns = @JoinColumn(name = "courses_id"))
@@ -47,8 +47,9 @@ public class Course {
 
     @OneToMany(mappedBy = "course", cascade = ALL)
     private List<Lesson> lessons;
-    public void assignCourse(Group group){
-        if (groups==null){
+
+    public void assignCourse(Group group) {
+        if (groups == null) {
             groups = new ArrayList<>();
         }
         groups.add(group);
