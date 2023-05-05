@@ -30,7 +30,7 @@ public class Group {
     private LocalDate finalDate;
     @OneToMany(mappedBy = "group", cascade = ALL)
     private List<Student> students;
-    @ManyToMany(mappedBy = "groups", cascade = {PERSIST, MERGE, REFRESH, DETACH})
+    @ManyToMany(mappedBy = "groups", cascade = {PERSIST, MERGE, REFRESH, DETACH}, fetch = FetchType.LAZY)
     private List<Course> courses;
 
     public void addCourse(Course course) {

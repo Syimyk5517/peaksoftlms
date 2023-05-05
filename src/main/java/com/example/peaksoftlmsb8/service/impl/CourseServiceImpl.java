@@ -2,6 +2,8 @@ package com.example.peaksoftlmsb8.service.impl;
 
 import com.example.peaksoftlmsb8.db.entity.Course;
 import com.example.peaksoftlmsb8.db.entity.Instructor;
+import com.example.peaksoftlmsb8.db.entity.Lesson;
+import com.example.peaksoftlmsb8.db.entity.Test;
 import com.example.peaksoftlmsb8.db.exception.NotFoundException;
 import com.example.peaksoftlmsb8.dto.request.AssignRequest;
 import com.example.peaksoftlmsb8.dto.request.CourseRequest;
@@ -10,23 +12,27 @@ import com.example.peaksoftlmsb8.dto.response.CourseResponse;
 import com.example.peaksoftlmsb8.dto.response.SimpleResponse;
 import com.example.peaksoftlmsb8.repository.CourseRepository;
 import com.example.peaksoftlmsb8.repository.InstructorRepository;
+import com.example.peaksoftlmsb8.repository.ResultOfTestRepository;
 import com.example.peaksoftlmsb8.service.CourseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class CourseServiceImpl implements CourseService {
     private final CourseRepository courseRepository;
     private final InstructorRepository instructorRepository;
+    private final ResultOfTestRepository resultOfTestRepository;
 
     @Override
     public SimpleResponse assignInstructorToCourse(Boolean isAssigned, AssignRequest assignRequest) {
@@ -47,8 +53,8 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public CoursePaginationResponse getAllCourse(int size, int page, String search, String sort) {
-        Pageable pageable = PageRequest.of(page - 1, size, Sort.by(sort));
-        Page<CourseResponse> coursePage = courseRepository.getAllCourses(pageable, search);
+        Pageable pageable = PageRequest.of(page - 1, size);
+        Page<CourseResponse> coursePage = courseRepository.getAllCourses(pageable, search, sort);
         List<CourseResponse> courseResponseList = new ArrayList<>(coursePage.getContent().stream()
                 .map(c -> new CourseResponse(
                         c.getId(),
@@ -109,7 +115,13 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public SimpleResponse deleteCourse(Long courseId) {
         Course course = courseRepository.findById(courseId).orElseThrow(
-                () -> new NotFoundException(String.format("Course with id: " + courseId + "not found")));
+                () -> new NotFoundException(String.format("Course with id: " + courseId + " not found")));
+        for (Lesson lesson : course.getLessons()) {
+            Test test = lesson.getTest();
+            if (test != null) {
+                resultOfTestRepository.deleteAll(resultOfTestRepository.findResultOfTestByTestId(test.getId()));
+            }
+        }
         courseRepository.delete(course);
         return SimpleResponse.builder()
                 .httpStatus(HttpStatus.OK)

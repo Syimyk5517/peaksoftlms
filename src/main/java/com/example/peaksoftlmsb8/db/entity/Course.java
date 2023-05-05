@@ -29,17 +29,9 @@ public class Course {
     private String description;
     private LocalDate createdAt;
     private LocalDate finalDate;
-    @ManyToMany(mappedBy = "courses", cascade = {PERSIST, MERGE, REFRESH, DETACH})
+    @ManyToMany(mappedBy = "courses", cascade = {PERSIST, MERGE, REFRESH, DETACH},fetch = FetchType.LAZY)
     private List<Instructor> instructors;
-
-    public void addInstructor(Instructor instructor) {
-        if (instructors == null) {
-            instructors = new ArrayList<>();
-        }
-        instructors.add(instructor);
-    }
-
-    @ManyToMany(cascade = {PERSIST, MERGE, REFRESH, DETACH})
+    @ManyToMany(cascade = {ALL})
     @JoinTable(name = "groups_courses",
             joinColumns = @JoinColumn(name = "group_id"),
             inverseJoinColumns = @JoinColumn(name = "courses_id"))
@@ -47,10 +39,17 @@ public class Course {
 
     @OneToMany(mappedBy = "course", cascade = ALL)
     private List<Lesson> lessons;
+
     public void assignCourse(Group group){
         if (groups==null){
             groups = new ArrayList<>();
         }
         groups.add(group);
+    }
+    public void addInstructor(Instructor instructor) {
+        if (instructors == null) {
+            instructors = new ArrayList<>();
+        }
+        instructors.add(instructor);
     }
 }
