@@ -1,18 +1,13 @@
 package com.example.peaksoftlmsb8.service.impl;
 
-import com.example.peaksoftlmsb8.db.entity.Course;
-import com.example.peaksoftlmsb8.db.entity.Instructor;
-import com.example.peaksoftlmsb8.db.entity.Lesson;
-import com.example.peaksoftlmsb8.db.entity.Test;
+import com.example.peaksoftlmsb8.db.entity.*;
 import com.example.peaksoftlmsb8.db.exception.NotFoundException;
 import com.example.peaksoftlmsb8.dto.request.AssignRequest;
 import com.example.peaksoftlmsb8.dto.request.CourseRequest;
 import com.example.peaksoftlmsb8.dto.response.CoursePaginationResponse;
 import com.example.peaksoftlmsb8.dto.response.CourseResponse;
 import com.example.peaksoftlmsb8.dto.response.SimpleResponse;
-import com.example.peaksoftlmsb8.repository.CourseRepository;
-import com.example.peaksoftlmsb8.repository.InstructorRepository;
-import com.example.peaksoftlmsb8.repository.ResultOfTestRepository;
+import com.example.peaksoftlmsb8.repository.*;
 import com.example.peaksoftlmsb8.service.CourseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -20,7 +15,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +26,9 @@ import java.util.List;
 public class CourseServiceImpl implements CourseService {
     private final CourseRepository courseRepository;
     private final InstructorRepository instructorRepository;
-    private final ResultOfTestRepository resultOfTestRepository;
+    private final TestRepository testRepository;
+    private final LessonRepository lessonRepository;
+    private final GroupRepository groupRepository;
 
     @Override
     public SimpleResponse assignInstructorToCourse(Boolean isAssigned, AssignRequest assignRequest) {
@@ -71,7 +70,7 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public CourseResponse findByCourseId(Long courseId) {
         return courseRepository.findByCourseId(courseId).
-                orElseThrow(() -> new NotFoundException("Course id: " + courseId + "not found"));
+                orElseThrow(() -> new NotFoundException("Course id: " + courseId + " not found"));
     }
 
     @Override
@@ -84,45 +83,51 @@ public class CourseServiceImpl implements CourseService {
         course.setName(courseRequest.getName());
         course.setImage(courseRequest.getImage());
         course.setDescription(courseRequest.getDescription());
-        course.setCreatedAt(courseRequest.getCreatedAt());
-        course.setFinalDate(courseRequest.getFinalDate());
+        course.setCreatedAt(LocalDate.now());
+        course.setFinishDate(courseRequest.getFinishDate());
         courseRepository.save(course);
         return SimpleResponse.builder().httpStatus(HttpStatus.OK).message("Course with name" +
                 courseRequest.getName() + "successfully saved!").build();
     }
 
     @Override
-    public SimpleResponse updateCourse(Long courseId, CourseRequest courseRequest) {
+    public SimpleResponse updateCourse(CourseRequest courseRequest) {
         if (courseRepository.existsCourseByName(courseRequest.getName())) {
             return SimpleResponse.builder()
                     .httpStatus(HttpStatus.CONFLICT)
                     .message(String.format("Course with name :%s already exist", courseRequest.getName())).build();
         }
-        Course course = courseRepository.findById(courseId)
-                .orElseThrow(() -> new NotFoundException(String.format("Course with id: " + courseId + "not found")));
+        Course course = courseRepository.findById(courseRequest.getId())
+                .orElseThrow(() -> new NotFoundException(String.format("Course with id: " + courseRequest.getId() + " not found")));
         course.setName(courseRequest.getName());
         course.setImage(courseRequest.getImage());
         course.setDescription(courseRequest.getDescription());
         course.setCreatedAt(courseRequest.getCreatedAt());
-        course.setFinalDate(courseRequest.getFinalDate());
+        course.setFinishDate(courseRequest.getFinishDate());
         courseRepository.save(course);
         return SimpleResponse.builder().httpStatus(HttpStatus.OK).message("Successfully updated!").build();
     }
 
     @Override
+    @Transactional
     public SimpleResponse deleteCourse(Long courseId) {
-        Course course = courseRepository.findById(courseId).orElseThrow(
-                () -> new NotFoundException(String.format("Course with id: " + courseId + " not found")));
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new NotFoundException("Course with id: " + courseId + " not found"));
         for (Lesson lesson : course.getLessons()) {
             Test test = lesson.getTest();
             if (test != null) {
-                resultOfTestRepository.deleteAll(resultOfTestRepository.findResultOfTestByTestId(test.getId()));
+                testRepository.delete(test);
             }
+            lessonRepository.delete(lesson);
+        }
+        for (Group group : course.getGroups()) {
+            group.getCourses().remove(course);
+            groupRepository.save(group);
         }
         courseRepository.delete(course);
         return SimpleResponse.builder()
                 .httpStatus(HttpStatus.OK)
-                .message("Successfully delete!")
+                .message("Successfully deleted!")
                 .build();
     }
 }

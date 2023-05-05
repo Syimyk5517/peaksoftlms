@@ -17,7 +17,7 @@ public interface CourseService {
 
     SimpleResponse saveCourse(CourseRequest courseRequest);
 
-    SimpleResponse updateCourse(Long courseId, CourseRequest courseRequest);
+    SimpleResponse updateCourse(CourseRequest courseRequest);
 
     SimpleResponse deleteCourse(Long courseId);
 

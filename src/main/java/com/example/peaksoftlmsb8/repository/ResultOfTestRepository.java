@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ResultOfTestRepository extends JpaRepository<ResultOfTest, Long> {
 
@@ -13,6 +14,6 @@ public interface ResultOfTestRepository extends JpaRepository<ResultOfTest, Long
     @Query("delete from ResultOfTest where test.id = ?1")
     void deleteByTest_Id(Long testId);
 
-    List<ResultOfTest> findResultOfTestByTestId(Long testId);
+    Optional<ResultOfTest> findResultOfTestById(Long testId);
 
 }

@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +29,7 @@ public class Course {
     private String image;
     private String description;
     private LocalDate createdAt;
-    private LocalDate finalDate;
+    private LocalDate finishDate;
     @ManyToMany(mappedBy = "courses", cascade = {PERSIST, MERGE, REFRESH, DETACH},fetch = FetchType.LAZY)
     private List<Instructor> instructors;
     @ManyToMany(cascade = {ALL})

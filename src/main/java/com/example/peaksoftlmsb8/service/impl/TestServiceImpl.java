@@ -221,7 +221,8 @@ public class TestServiceImpl implements TestService {
     @Override
     public SimpleResponse deleteById(Long testId) {
         Test test = testRepository.findById(testId).orElseThrow(() -> new NotFoundException("Test with id : " + testId + " not found !"));
-        ResultOfTest result = resultOfTestRepository.findResultOfTestById(test.getId());
+        ResultOfTest result = resultOfTestRepository.findResultOfTestById(test.getId()).orElseThrow(
+                () -> new NotFoundException("Test with id:"+ testId + "not found"));
         resultOfTestRepository.delete(result);
         testRepository.delete(test);
         return SimpleResponse.builder().httpStatus(HttpStatus.OK).message(String.format("Test with id  : %s successfully deleted !", testId)).build();
