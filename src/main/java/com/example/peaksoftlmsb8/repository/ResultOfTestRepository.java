@@ -14,4 +14,5 @@ public interface ResultOfTestRepository extends JpaRepository<ResultOfTest, Long
     void deleteByTest_Id(Long testId);
 
     List<ResultOfTest> findResultOfTestByTestId(Long testId);
+
 }
