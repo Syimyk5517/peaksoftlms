@@ -14,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -42,10 +41,9 @@ public class LessonServiceImpl implements LessonService {
     }
 
     @Override
-    public LessonPaginationResponse getAllLessonsByCourseId(Long courseId, int size, int page, String search, String
-            sort) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
-        Page<LessonResponse> pageLesson = lessonRepository.getAllLessonsByCourseId(pageable, search, courseId);
+    public LessonPaginationResponse getAllLessonsByCourseId(Long courseId, int size, int page) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<LessonResponse> pageLesson = lessonRepository.getAllLessonsByCourseId(pageable, courseId);
         LessonPaginationResponse paginationResponse = new LessonPaginationResponse();
         paginationResponse.setLessonResponses(pageLesson.getContent());
         paginationResponse.setPageSize(pageLesson.getNumber());

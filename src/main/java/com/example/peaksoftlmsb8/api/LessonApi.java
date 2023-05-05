@@ -26,10 +26,8 @@ public class LessonApi {
     @GetMapping
     public LessonPaginationResponse getAllLessonsByCourseId(@RequestParam Long courseId,
                                                             @RequestParam int size,
-                                                            @RequestParam int page,
-                                                            @RequestParam String sort,
-                                                            @RequestBody String search) {
-        return lessonService.getAllLessonsByCourseId(courseId, size, page, sort, search);
+                                                            @RequestParam int page) {
+        return lessonService.getAllLessonsByCourseId(courseId, size, page);
     }
 
     @GetMapping("/{lessonId}")

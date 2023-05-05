@@ -1,5 +1,6 @@
 package com.example.peaksoftlmsb8.dto.request;
 
+import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,5 +20,6 @@ public class GroupRequest {
     private String description;
     @NotBlank(message = " Image should not be null")
     private String image;
+    @Future(message = "Final date should be future date")
     private LocalDate finalDate;
 }

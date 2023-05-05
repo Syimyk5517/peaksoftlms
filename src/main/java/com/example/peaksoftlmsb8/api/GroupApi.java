@@ -20,37 +20,39 @@ public class GroupApi {
     private final GroupService groupService;
 
     @PostMapping
+    @PreAuthorize("hasAuthority('ADMIN')")
     public SimpleResponse saveGroup(@RequestBody @Valid GroupRequest groupRequest) {
         return groupService.saveGroup(groupRequest);
     }
 
     @GetMapping("/pagination")
+    @PreAuthorize("hasAnyAuthority('ADMIN','INSTRUCTOR')")
     public GroupPaginationResponse getAllGroups(@RequestParam int size,
-                                                @RequestParam int page,
-                                                @RequestParam String sort,
-                                                @RequestBody String word) {
-        return groupService.getAllGroups(size, page, sort, word);
+                                                @RequestParam int page) {
+        return groupService.getAllGroups(size, page);
     }
 
     @GetMapping("/getById")
+    @PreAuthorize("hasAnyAuthority('ADMIN','INSTRUCTOR')")
     public GroupResponse getGroupById(@RequestParam Long groupId) {
-
         return groupService.getGroupById(groupId);
     }
 
     @PutMapping()
+    @PreAuthorize("hasAuthority('ADMIN')")
     public SimpleResponse updateGroup(@RequestParam Long groupId, @RequestBody @Valid GroupRequest groupRequest) {
         return groupService.updateGroup(groupId, groupRequest);
     }
 
     @DeleteMapping()
+    @PreAuthorize("hasAuthority('ADMIN')")
     public SimpleResponse deleteGroup(@RequestParam Long groupId) {
         return groupService.deleteGroup(groupId);
     }
 
 
     @PostMapping("/assign")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ADMIN','INSTRUCTOR')")
     public SimpleResponse assignGroupToCourse(@RequestParam Long groupId, @RequestParam Long courseId) {
         return groupService.assignGroupToCourse(groupId, courseId);
     }
