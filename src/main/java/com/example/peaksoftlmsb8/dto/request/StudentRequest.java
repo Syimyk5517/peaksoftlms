@@ -27,8 +27,8 @@ public class StudentRequest {
     @Size(min = 5, max = 100, message = "Password must be at least 4 characters!")
     @NotBlank(message = "Password can't be empty!")
     private String password;
-
+//    @Pattern(regexp = "\\d+")
     private Long groupId;
-    @NotBlank(message = "Form learning should not be null")
+//    @NotBlank(message = "Form learning should not be null")
     private FormLearning formLearning;
 }

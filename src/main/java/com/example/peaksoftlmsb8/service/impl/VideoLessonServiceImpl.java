@@ -38,6 +38,7 @@ public class VideoLessonServiceImpl implements VideoLessonService {
                 () -> new NotFoundException("Lesson with ID: " + lessonId + " is not found!"));
         videoLesson.setLesson(lesson);
         lesson.getVideoLessons().add(videoLesson);
+        videoLessonRepository.save(videoLesson);
         return SimpleResponse.builder()
                 .httpStatus(HttpStatus.OK)
                 .message("Lesson's Video with name: " + videoLessonRequest.getName() + " is successfully saved!")
@@ -88,6 +89,7 @@ public class VideoLessonServiceImpl implements VideoLessonService {
             }
             videoLesson.setLink(videoLessonRequest.getVideoLink());
         }
+        videoLessonRepository.save(videoLesson);
         return SimpleResponse.builder()
                 .httpStatus(HttpStatus.OK)
                 .message("Video with ID: " + videoLessonId + " is successfully updated!")
