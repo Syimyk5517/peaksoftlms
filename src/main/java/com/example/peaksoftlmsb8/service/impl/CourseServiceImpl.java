@@ -49,9 +49,9 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public CoursePaginationResponse getAllCourse(int size, int page, String search, String sort) {
+    public CoursePaginationResponse getAllCourse(int size, int page) {
         Pageable pageable = PageRequest.of(page - 1, size);
-        Page<CourseResponse> coursePage = courseRepository.getAllCourses(pageable, search, sort);
+        Page<CourseResponse> coursePage = courseRepository.getAllCourses(pageable);
         List<CourseResponse> courseResponseList = new ArrayList<>(coursePage.getContent().stream()
                 .map(c -> new CourseResponse(
                         c.getId(),
