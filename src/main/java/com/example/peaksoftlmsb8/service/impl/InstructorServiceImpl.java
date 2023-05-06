@@ -21,8 +21,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -32,24 +30,31 @@ public class InstructorServiceImpl implements InstructorService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public PaginationResponseForInstructor getAllInstructors(int size, int page, String sortBy, String sortD, String keyWOrd) {
-        Sort.Order nameOrderDesc = Sort.Order.desc("desc");
-        Sort.Order nameOrderAsc = Sort.Order.asc("asc");
-        Sort sort = Sort.by(nameOrderDesc, nameOrderAsc);
-        Pageable pageable = PageRequest.of(size, page , sort);
-        if (keyWOrd != null) {
-            Page<InstructorResponse> pageInstructor = instructorRepository.getAll(pageable, keyWOrd);
-            PaginationResponseForInstructor paginationResponse = new PaginationResponseForInstructor();
-            paginationResponse.setInstructorResponses(pageInstructor.getContent());
-            paginationResponse.setPageSize(pageInstructor.getNumber());
-            paginationResponse.setCurrentPage(pageInstructor.getSize());
-            return paginationResponse;
+    public PaginationResponseForInstructor getAllInstructors(int size, int page, String search, String sortBy) {
+        if (!"name_asc".equals(sortBy) &&
+                !"name_desc".equals(sortBy) &&
+                sortBy != null) {
+            throw new NotFoundException("you wrote the wrong name , write like this name_asc or name_desc");
         }
+        Pageable pageable = PageRequest.of(page - 1, size);
+        Page<InstructorResponse> pageInstructor = instructorRepository.getAll(pageable, search, sortBy);
+        PaginationResponseForInstructor paginationResponse = new PaginationResponseForInstructor();
+        paginationResponse.setInstructorResponses(pageInstructor.getContent());
+        paginationResponse.setCurrentPage(pageInstructor.getNumber() + 1);
+        paginationResponse.setPageSize(pageInstructor.getTotalPages());
+
+        return paginationResponse;
+    }
+
+    @Override
+    public PaginationResponseForInstructor getAllInstructorsAA(int size, int page) {
+        Pageable pageable = PageRequest.of(size, page);
         Page<InstructorResponse> pageInstructor = instructorRepository.getAllPage(pageable);
         PaginationResponseForInstructor paginationResponse = new PaginationResponseForInstructor();
         paginationResponse.setInstructorResponses(pageInstructor.getContent());
+        paginationResponse.setCurrentPage(pageInstructor.getNumber());
         paginationResponse.setPageSize(pageInstructor.getNumber());
-        paginationResponse.setCurrentPage(pageInstructor.getSize());
+
         return paginationResponse;
     }
 
