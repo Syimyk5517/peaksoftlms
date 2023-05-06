@@ -35,9 +35,14 @@ public class S3Service {
         PutObjectRequest por = PutObjectRequest
                 .builder()
                 .bucket(bucketName)
-                .contentType("pdf")
                 .contentType("jpeg")
                 .contentType("png")
+                .contentType("ogg")
+                .contentType("mp3")
+                .contentType("mpeg")
+                .contentType("ogg")
+                .contentType("m4a")
+                .contentType("oga")
                 .contentLength(file.getSize())
                 .key(key)
                 .build();
