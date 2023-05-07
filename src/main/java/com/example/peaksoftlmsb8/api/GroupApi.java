@@ -1,6 +1,7 @@
 package com.example.peaksoftlmsb8.api;
 
 import com.example.peaksoftlmsb8.dto.request.GroupRequest;
+import com.example.peaksoftlmsb8.dto.request.GroupUpdateRequest;
 import com.example.peaksoftlmsb8.dto.response.GroupPaginationResponse;
 import com.example.peaksoftlmsb8.dto.response.GroupResponse;
 import com.example.peaksoftlmsb8.dto.response.SimpleResponse;
@@ -45,8 +46,8 @@ public class GroupApi {
     @PutMapping()
     @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "Update a group", description = "Update a group with the provided groupId using the information provided in the request body")
-    public SimpleResponse updateGroup(@RequestParam Long groupId, @RequestBody @Valid GroupRequest groupRequest) {
-        return groupService.updateGroup(groupId, groupRequest);
+    public SimpleResponse updateGroup( @RequestBody @Valid GroupUpdateRequest groupUpdateRequest) {
+        return groupService.updateGroup(groupUpdateRequest);
     }
 
     @DeleteMapping()

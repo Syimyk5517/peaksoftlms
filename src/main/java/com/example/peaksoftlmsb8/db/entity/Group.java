@@ -27,7 +27,7 @@ public class Group {
     private LocalDate createdAt;
     private String description;
     private String image;
-    private LocalDate finalDate;
+    private LocalDate finishDate;
     @OneToMany(mappedBy = "group", cascade = ALL)
     private List<Student> students;
     @ManyToMany(mappedBy = "groups", cascade = {PERSIST, MERGE, REFRESH, DETACH})

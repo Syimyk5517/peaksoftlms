@@ -1,6 +1,7 @@
 package com.example.peaksoftlmsb8.api;
 
 import com.example.peaksoftlmsb8.dto.request.LessonRequest;
+import com.example.peaksoftlmsb8.dto.request.LessonUpdateRequest;
 import com.example.peaksoftlmsb8.dto.response.*;
 import com.example.peaksoftlmsb8.service.LessonService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -26,10 +27,8 @@ public class LessonApi {
     @GetMapping
     public LessonPaginationResponse getAllLessonsByCourseId(@RequestParam Long courseId,
                                                             @RequestParam int size,
-                                                            @RequestParam int page,
-                                                            @RequestParam String sort,
-                                                            @RequestBody String search) {
-        return lessonService.getAllLessonsByCourseId(courseId, size, page, sort, search);
+                                                            @RequestParam int page) {
+        return lessonService.getAllLessonsByCourseId(courseId, size, page);
     }
 
     @GetMapping("/{lessonId}")
@@ -39,8 +38,8 @@ public class LessonApi {
 
     @PutMapping
     @PreAuthorize("hasAnyAuthority('ADMIN','INSTRUCTOR')")
-    public SimpleResponse updateLesson(@RequestParam Long lessonId, @RequestBody @Valid LessonRequest lessonRequest) {
-        return lessonService.updateLesson(lessonId, lessonRequest);
+    public SimpleResponse updateLesson(@RequestBody @Valid LessonUpdateRequest lessonUpdateRequest) {
+        return lessonService.updateLesson(lessonUpdateRequest);
     }
 
     @DeleteMapping("/{lessonId}")
