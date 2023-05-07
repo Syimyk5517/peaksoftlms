@@ -23,5 +23,4 @@ public interface LessonRepository extends JpaRepository<Lesson, Long> {
 
     @Query("select new com.example.peaksoftlmsb8.dto.response.LessonResponse(l.id,l.name,l.course.id) from Lesson l where l.id=:lessonId")
     Optional<LessonResponse> getLessonById(Long lessonId);
-
 }

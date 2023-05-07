@@ -13,6 +13,7 @@ import com.example.peaksoftlmsb8.repository.CourseRepository;
 import com.example.peaksoftlmsb8.repository.GroupRepository;
 import com.example.peaksoftlmsb8.repository.ResultOfTestRepository;
 import com.example.peaksoftlmsb8.repository.UserRepository;
+import com.example.peaksoftlmsb8.repository.*;
 import com.example.peaksoftlmsb8.service.GroupService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -25,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class GroupServiceImpl implements GroupService {
     private final CourseRepository courseRepository;
@@ -36,7 +38,7 @@ public class GroupServiceImpl implements GroupService {
     public SimpleResponse saveGroup(GroupRequest groupRequest) {
         if (groupRepository.existsGroupByName(groupRequest.getName())) {
             return SimpleResponse.builder().httpStatus(HttpStatus.CONFLICT).
-                    message(String.format("Group with name : " + groupRequest.getName() + " groupRequest.getName()")).build();
+                    message(String.format("Group with name :" + groupRequest.getName() + " already exists")).build();
         }
         Group group = new Group();
         group.setName(groupRequest.getName());
@@ -45,7 +47,7 @@ public class GroupServiceImpl implements GroupService {
         group.setImage(groupRequest.getImage());
         group.setFinishDate(groupRequest.getFinishDate());
         groupRepository.save(group);
-        return SimpleResponse.builder().httpStatus(HttpStatus.OK).message("Group with name: " + groupRequest.getName() + " successfully saved").build();
+        return SimpleResponse.builder().httpStatus(HttpStatus.OK).message("Group with name : " + groupRequest.getName() + " successfully saved").build();
     }
 
     @Override
@@ -78,6 +80,7 @@ public class GroupServiceImpl implements GroupService {
         group.setDescription(groupUpdateRequest.getDescription());
         group.setImage(groupUpdateRequest.getImage());
         group.setFinishDate(groupUpdateRequest.getFinishDate());
+        }
         groupRepository.save(group);
         return SimpleResponse.builder().httpStatus(HttpStatus.OK).message("Successfully updated").build();
     }

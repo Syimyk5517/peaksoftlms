@@ -2,6 +2,8 @@ package com.example.peaksoftlmsb8.service.impl;
 
 import com.example.peaksoftlmsb8.db.entity.Course;
 import com.example.peaksoftlmsb8.db.entity.Lesson;
+import com.example.peaksoftlmsb8.db.entity.ResultOfTest;
+import com.example.peaksoftlmsb8.db.entity.Test;
 import com.example.peaksoftlmsb8.db.exception.AlReadyExistException;
 import com.example.peaksoftlmsb8.db.exception.NotFoundException;
 import com.example.peaksoftlmsb8.dto.request.LessonRequest;
@@ -9,6 +11,8 @@ import com.example.peaksoftlmsb8.dto.request.LessonUpdateRequest;
 import com.example.peaksoftlmsb8.dto.response.*;
 import com.example.peaksoftlmsb8.repository.CourseRepository;
 import com.example.peaksoftlmsb8.repository.LessonRepository;
+import com.example.peaksoftlmsb8.repository.ResultOfTestRepository;
+import com.example.peaksoftlmsb8.repository.TestRepository;
 import com.example.peaksoftlmsb8.service.LessonService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +29,8 @@ import java.time.LocalDate;
 public class LessonServiceImpl implements LessonService {
     private final LessonRepository lessonRepository;
     private final CourseRepository courseRepository;
+    private final TestRepository testRepository;
+    private final ResultOfTestRepository resultOfTestRepository;
 
     @Override
     public SimpleResponse saveLessons(LessonRequest lessonRequest) {
@@ -76,6 +82,11 @@ public class LessonServiceImpl implements LessonService {
     public SimpleResponse deleteLesson(Long lessonId) {
         Lesson lesson = lessonRepository.findById(lessonId).orElseThrow(() ->
                 new NotFoundException(String.format("Lesson with id: " + lessonId + " not found")));
+        Test test = testRepository.findById(lesson.getTest().getId()).orElseThrow(() ->
+                new NotFoundException(String.format("Test with id: " + lesson.getTest().getId() + " not found")));
+        ResultOfTest result = resultOfTestRepository.findResultOfTestById(test.getId());
+        resultOfTestRepository.delete(result);
+        testRepository.delete(test);
         lessonRepository.delete(lesson);
         return SimpleResponse.builder().httpStatus(HttpStatus.OK).message("Successfully deleted").build();
     }

@@ -29,7 +29,7 @@ public class Course {
     private String description;
     private LocalDate createdAt;
     private LocalDate finalDate;
-    @ManyToMany(mappedBy = "courses", cascade = {PERSIST, MERGE, REFRESH, DETACH})
+    @ManyToMany(mappedBy = "courses", cascade = ALL)
     private List<Instructor> instructors;
 
     public void addInstructor(Instructor instructor) {

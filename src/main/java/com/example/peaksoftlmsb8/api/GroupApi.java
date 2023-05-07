@@ -35,7 +35,7 @@ public class GroupApi {
                                                 @RequestParam int page) {
         return groupService.getAllGroups(size, page);
     }
-
+  
     @GetMapping
     @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "Get group by ID", description = "Get the group details for the provided ID")
