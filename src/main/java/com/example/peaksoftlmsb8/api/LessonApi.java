@@ -1,8 +1,10 @@
 package com.example.peaksoftlmsb8.api;
 
-import com.example.peaksoftlmsb8.dto.request.LessonRequest;
-import com.example.peaksoftlmsb8.dto.request.LessonUpdateRequest;
+import com.example.peaksoftlmsb8.dto.request.lesson.LessonRequest;
+import com.example.peaksoftlmsb8.dto.request.lesson.LessonUpdateRequest;
 import com.example.peaksoftlmsb8.dto.response.*;
+import com.example.peaksoftlmsb8.dto.response.lesson.LessonPaginationResponse;
+import com.example.peaksoftlmsb8.dto.response.lesson.LessonResponse;
 import com.example.peaksoftlmsb8.service.LessonService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

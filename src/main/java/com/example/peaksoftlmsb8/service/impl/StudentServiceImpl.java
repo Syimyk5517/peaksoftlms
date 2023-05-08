@@ -10,9 +10,9 @@ import com.example.peaksoftlmsb8.db.exception.NotFoundException;
 import com.example.peaksoftlmsb8.dto.request.student.StudentExcelRequest;
 import com.example.peaksoftlmsb8.dto.request.student.StudentRequest;
 import com.example.peaksoftlmsb8.dto.response.SimpleResponse;
-import com.example.peaksoftlmsb8.dto.response.StudentPaginationResponse;
-import com.example.peaksoftlmsb8.dto.response.StudentResponse;
-import com.example.peaksoftlmsb8.dto.response.StudentResponseForAdmin;
+import com.example.peaksoftlmsb8.dto.response.student.StudentPaginationResponse;
+import com.example.peaksoftlmsb8.dto.response.student.StudentResponse;
+import com.example.peaksoftlmsb8.dto.response.student.StudentResponseForAdmin;
 import com.example.peaksoftlmsb8.repository.GroupRepository;
 import com.example.peaksoftlmsb8.repository.StudentRepository;
 import com.example.peaksoftlmsb8.repository.UserRepository;
@@ -25,7 +25,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -124,9 +123,9 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public StudentPaginationResponse findAllPagination(int size, int page, String search, String sort) {
+    public StudentPaginationResponse findAllPagination(int size, int page, String search, String filter) {
         Pageable pageable = PageRequest.of(page - 1, size);
-        Page<StudentResponse> studentResponsePage = studentRepository.findAllStudents(pageable, search, sort);
+        Page<StudentResponse> studentResponsePage = studentRepository.findAllStudents(pageable, search, filter);
         StudentPaginationResponse studentPaginationResponse = new StudentPaginationResponse();
         studentPaginationResponse.setStudentResponses(studentResponsePage.getContent());
         studentPaginationResponse.setPageSize(studentResponsePage.getNumber());
@@ -134,13 +133,6 @@ public class StudentServiceImpl implements StudentService {
         return studentPaginationResponse;
     }
 
-    @Override
-    public List<StudentResponseForAdmin> allStudents() {
-        if (!studentRepository.allStudents().isEmpty()) {
-            return studentRepository.allStudents();
-        }
-        return null;
-    }
 
     @Override
     public SimpleResponse deleteById(Long studentId) {
