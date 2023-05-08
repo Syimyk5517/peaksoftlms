@@ -30,9 +30,19 @@ public class Course {
     private String description;
     private LocalDate createdAt;
     private LocalDate finishDate;
-    @ManyToMany(mappedBy = "courses", cascade = {PERSIST, MERGE, REFRESH, DETACH},fetch = FetchType.LAZY)
+    
+    @ManyToMany(mappedBy = "courses", cascade = {All},fetch = FetchType.LAZY)
     private List<Instructor> instructors;
     @ManyToMany(cascade = {ALL})
+
+    public void addInstructor(Instructor instructor) {
+        if (instructors == null) {
+            instructors = new ArrayList<>();
+        }
+        instructors.add(instructor);
+    }
+
+    @ManyToMany(cascade = ALL)
     @JoinTable(name = "groups_courses",
             joinColumns = @JoinColumn(name = "group_id"),
             inverseJoinColumns = @JoinColumn(name = "courses_id"))

@@ -16,4 +16,8 @@ public interface ResultOfTestRepository extends JpaRepository<ResultOfTest, Long
 
     Optional<ResultOfTest> findResultOfTestById(Long testId);
 
+    @Query("select r from ResultOfTest r where  r.test.id =?1")
+    ResultOfTest findResultOfTestById(Long testId);
+
+    void deleteByStudentId(Long studentId);
 }
