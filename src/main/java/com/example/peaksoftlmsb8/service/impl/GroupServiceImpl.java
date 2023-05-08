@@ -80,7 +80,7 @@ public class GroupServiceImpl implements GroupService {
         group.setDescription(groupUpdateRequest.getDescription());
         group.setImage(groupUpdateRequest.getImage());
         group.setFinishDate(groupUpdateRequest.getFinishDate());
-        }
+
         groupRepository.save(group);
         return SimpleResponse.builder().httpStatus(HttpStatus.OK).message("Successfully updated").build();
     }
