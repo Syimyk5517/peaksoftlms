@@ -14,7 +14,8 @@ import java.time.LocalDate;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class GroupRequest {
+public class GroupUpdateRequest {
+    private Long groupId;
     @NotNull(message = "Name should not be null")
     @NotBlank(message = "Name can't be empty!")
     private String name;
@@ -27,3 +28,5 @@ public class GroupRequest {
     @Future(message = "Finish date should be future date")
     private LocalDate finishDate;
 }
+
+

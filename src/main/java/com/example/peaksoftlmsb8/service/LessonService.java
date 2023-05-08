@@ -1,6 +1,7 @@
 package com.example.peaksoftlmsb8.service;
 
 import com.example.peaksoftlmsb8.dto.request.LessonRequest;
+import com.example.peaksoftlmsb8.dto.request.LessonUpdateRequest;
 import com.example.peaksoftlmsb8.dto.response.*;
 
 
@@ -11,7 +12,7 @@ public interface LessonService {
 
     LessonResponse findByLessonId(Long lessonId);
 
-    SimpleResponse updateLesson(Long lessonId, LessonRequest lessonRequest);
+    SimpleResponse updateLesson(LessonUpdateRequest lessonUpdateRequest);
 
     SimpleResponse deleteLesson(Long lessonId);
 }

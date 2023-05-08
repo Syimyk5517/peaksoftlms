@@ -43,7 +43,7 @@ VALUES (1,
 INSERT INTO groups(id,
                    created_at,
                    description,
-                   final_date,
+                   finish_date,
                    image,
                    name)
 VALUES (1,

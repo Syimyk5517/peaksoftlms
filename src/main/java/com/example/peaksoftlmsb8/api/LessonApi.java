@@ -1,6 +1,7 @@
 package com.example.peaksoftlmsb8.api;
 
 import com.example.peaksoftlmsb8.dto.request.LessonRequest;
+import com.example.peaksoftlmsb8.dto.request.LessonUpdateRequest;
 import com.example.peaksoftlmsb8.dto.response.*;
 import com.example.peaksoftlmsb8.service.LessonService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -43,9 +44,8 @@ public class LessonApi {
 
     @PutMapping
     @PreAuthorize("hasAnyAuthority('ADMIN','INSTRUCTOR')")
-    @Operation(summary = "Update a lesson", description = "Update a lesson with the provided lessonId using the information provided in the request body.")
-    public SimpleResponse updateLesson(@RequestParam Long lessonId, @RequestBody @Valid LessonRequest lessonRequest) {
-        return lessonService.updateLesson(lessonId, lessonRequest);
+    public SimpleResponse updateLesson(@RequestBody @Valid LessonUpdateRequest lessonUpdateRequest) {
+        return lessonService.updateLesson(lessonUpdateRequest);
     }
 
     @DeleteMapping("/{lessonId}")
