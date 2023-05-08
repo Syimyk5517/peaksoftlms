@@ -21,9 +21,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -33,13 +30,31 @@ public class InstructorServiceImpl implements InstructorService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public PaginationResponseForInstructor getAllInstructors(int size, int page, String sort, String keyWOrd) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
-        Page<InstructorResponse> pageInstructor = instructorRepository.getAll(pageable, keyWOrd);
+    public PaginationResponseForInstructor getAllInstructors(int size, int page, String search, String sortBy) {
+        if (!"name_asc".equals(sortBy) &&
+                !"name_desc".equals(sortBy) &&
+                sortBy != null) {
+            throw new NotFoundException("you wrote the wrong name , write like this name_asc or name_desc");
+        }
+        Pageable pageable = PageRequest.of(page - 1, size);
+        Page<InstructorResponse> pageInstructor = instructorRepository.getAll(pageable, search, sortBy);
         PaginationResponseForInstructor paginationResponse = new PaginationResponseForInstructor();
         paginationResponse.setInstructorResponses(pageInstructor.getContent());
+        paginationResponse.setCurrentPage(pageInstructor.getNumber() + 1);
+        paginationResponse.setPageSize(pageInstructor.getTotalPages());
+
+        return paginationResponse;
+    }
+
+    @Override
+    public PaginationResponseForInstructor getAllInstructorsAA(int size, int page) {
+        Pageable pageable = PageRequest.of(size, page);
+        Page<InstructorResponse> pageInstructor = instructorRepository.getAllPage(pageable);
+        PaginationResponseForInstructor paginationResponse = new PaginationResponseForInstructor();
+        paginationResponse.setInstructorResponses(pageInstructor.getContent());
+        paginationResponse.setCurrentPage(pageInstructor.getNumber());
         paginationResponse.setPageSize(pageInstructor.getNumber());
-        paginationResponse.setCurrentPage(pageInstructor.getSize());
+
         return paginationResponse;
     }
 
@@ -55,13 +70,7 @@ public class InstructorServiceImpl implements InstructorService {
             throw new AlReadyExistException("This email " + instructorRequest.getEmail() + " already exists !");
         }
         Instructor instructor = new Instructor();
-        instructor.getUser().setFirstName(instructorRequest.getFirstName());
-        instructor.getUser().setLastName(instructorRequest.getLastName());
-        instructor.getUser().setPassword(passwordEncoder.encode(instructorRequest.getPassword()));
-        instructor.getUser().setEmail(instructorRequest.getEmail());
-        instructor.getUser().setPhoneNumber(instructorRequest.getPhoneNumber());
-        instructor.setSpecial(instructorRequest.getSpecial());
-        instructorRepository.save(instructor);
+        universalMethod(instructorRequest, instructor);
         return new SimpleResponse(HttpStatus.OK, "This " + instructor.getUser().getFirstName() + " saved...");
     }
 
@@ -69,13 +78,7 @@ public class InstructorServiceImpl implements InstructorService {
     public SimpleResponse updateInstructor(Long instructorId, InstructorRequest newInstructor) {
         Instructor instructor = instructorRepository.findById(instructorId)
                 .orElseThrow(() -> new NotFoundException("this id = " + instructorId + " not found!"));
-        instructor.getUser().setFirstName(newInstructor.getFirstName());
-        instructor.getUser().setLastName(newInstructor.getLastName());
-        instructor.getUser().setPassword(passwordEncoder.encode(newInstructor.getPassword()));
-        instructor.getUser().setEmail(newInstructor.getEmail());
-        instructor.getUser().setPhoneNumber(newInstructor.getPhoneNumber());
-        instructor.setSpecial(newInstructor.getSpecial());
-        instructorRepository.save(instructor);
+        universalMethod(newInstructor, instructor);
         return new SimpleResponse(HttpStatus.OK, "This " +
                 instructor.getUser().getFirstName() + " updated on " +
                 newInstructor.getFirstName());
@@ -90,5 +93,15 @@ public class InstructorServiceImpl implements InstructorService {
         }
         instructorRepository.delete(instructor);
         return new SimpleResponse(HttpStatus.OK, "This " + instructor.getUser().getFirstName() + " deleted...");
+    }
+
+    private void universalMethod(InstructorRequest instructorRequest, Instructor instructor) {
+        instructor.getUser().setFirstName(instructorRequest.getFirstName());
+        instructor.getUser().setLastName(instructorRequest.getLastName());
+        instructor.getUser().setPassword(passwordEncoder.encode(instructorRequest.getPassword()));
+        instructor.getUser().setEmail(instructorRequest.getEmail());
+        instructor.getUser().setPhoneNumber(instructorRequest.getPhoneNumber());
+        instructor.setSpecial(instructorRequest.getSpecial());
+        instructorRepository.save(instructor);
     }
 }

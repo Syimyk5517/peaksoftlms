@@ -36,8 +36,8 @@ public class CourseApi {
     public CoursePaginationResponse getAllCourses(@RequestParam int size,
                                                   @RequestParam int page,
                                                   @RequestParam String sort,
-                                                  @RequestBody String search) {
-        return courseService.getAllCourse(size, page, sort, search);
+                                                  @RequestParam String search) {
+        return courseService.getAllCourse(size, page, search, sort);
     }
 
     @GetMapping("/{courseId}")
