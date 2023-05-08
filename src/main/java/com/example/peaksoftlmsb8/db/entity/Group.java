@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static jakarta.persistence.CascadeType.*;
+import static jakarta.persistence.FetchType.LAZY;
 
 @Getter
 @Setter
@@ -27,10 +28,10 @@ public class Group {
     private LocalDate createdAt;
     private String description;
     private String image;
-    private LocalDate finalDate;
+    private LocalDate finishDate;
     @OneToMany(mappedBy = "group", cascade = ALL)
     private List<Student> students;
-    @ManyToMany(mappedBy = "groups", cascade = {PERSIST, MERGE, REFRESH, DETACH})
+    @ManyToMany(mappedBy = "groups", cascade = {MERGE, PERSIST, REFRESH, DETACH}, fetch = LAZY)
     private List<Course> courses;
 
     public void addCourse(Course course) {

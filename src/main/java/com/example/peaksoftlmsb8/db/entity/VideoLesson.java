@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import static jakarta.persistence.CascadeType.*;
 
+
 @Getter
 @Setter
 @Entity
@@ -17,7 +18,7 @@ import static jakarta.persistence.CascadeType.*;
 public class VideoLesson {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "video_lesson_gen")
-    @SequenceGenerator(name = "video_lesson_gen", sequenceName = "video_lesson_seq",initialValue = 8,allocationSize = 1)
+    @SequenceGenerator(name = "video_lesson_gen", sequenceName = "video_lesson_seq", initialValue = 8, allocationSize = 1)
     private Long id;
     private String name;
     private String description;

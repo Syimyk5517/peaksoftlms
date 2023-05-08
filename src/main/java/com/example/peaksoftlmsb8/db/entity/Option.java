@@ -1,10 +1,7 @@
 package com.example.peaksoftlmsb8.db.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import static jakarta.persistence.CascadeType.*;
 
@@ -14,6 +11,7 @@ import static jakarta.persistence.CascadeType.*;
 @Table(name = "options")
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Option {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "option_gen")
