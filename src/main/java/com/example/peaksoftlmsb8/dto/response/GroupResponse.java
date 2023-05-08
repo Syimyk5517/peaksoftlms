@@ -16,5 +16,6 @@ public class GroupResponse {
     private String name;
     private String description;
     private String image;
-    private LocalDate finalDate;
+    private LocalDate finishDate;
+    private LocalDate createdAt;
 }

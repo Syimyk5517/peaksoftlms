@@ -43,7 +43,7 @@ VALUES (1,
 INSERT INTO groups(id,
                    created_at,
                    description,
-                   final_date,
+                   finish_date,
                    image,
                    name)
 VALUES (1,
@@ -84,12 +84,12 @@ VALUES (1,
         'JavaScript - 10');
 INSERT INTO instructors(id,
                         special)
-VALUES (1, 'ONLINE'),
-       (2, 'OFFLINE'),
-       (3, 'ONLINE'),
-       (4, 'ONLINE'),
-       (5, 'OFFLINE'),
-       (6, 'OFFLINE');
+VALUES (1, 'java'),
+       (2, 'java scrip'),
+       (3, 'python'),
+       (4, 'english'),
+       (5, 'soft skills'),
+       (6, 'C#');
 INSERT INTO students(id,
                      form_learning,
                      is_blocked,
