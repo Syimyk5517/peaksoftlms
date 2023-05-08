@@ -1,4 +1,4 @@
-package com.example.peaksoftlmsb8.dto.request;
+package com.example.peaksoftlmsb8.dto.request.test;
 
 import com.example.peaksoftlmsb8.db.enums.OptionType;
 import lombok.Builder;
@@ -9,6 +9,6 @@ import java.util.List;
 @Builder
 public class QuestionRequest {
     private String questionName;
-    private List<OptionRequest> optionRequests;
     private OptionType optionType;
+    private List<OptionRequest> optionRequests;
 }

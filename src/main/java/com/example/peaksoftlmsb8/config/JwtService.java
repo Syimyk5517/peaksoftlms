@@ -1,21 +1,30 @@
 package com.example.peaksoftlmsb8.config;
 
+import com.example.peaksoftlmsb8.db.entity.User;
+import com.example.peaksoftlmsb8.repository.UserRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.webjars.NotFoundException;
 
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
-
 @Service
+@Slf4j
+@RequiredArgsConstructor
 public class JwtService {
+   private final UserRepository userRepository;
 
     private static final String SECRET_KEY = "645367566B5970337336763979244226452948404D6351665468576D5A713474";
 
@@ -41,7 +50,7 @@ public class JwtService {
                 .setClaims(extraClaims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000000 * 60 * 24))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
@@ -72,5 +81,15 @@ public class JwtService {
     private Key getSignInKey() {
         byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
         return Keys.hmacShaKeyFor(keyBytes);
+    }
+
+    public User getAccountInToken() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String login = authentication.getName();
+        log.info("Token has been taken!");
+        return userRepository.findByEmail(login).orElseThrow(() -> {
+            log.error("User not found!");
+            throw new NotFoundException("User not found!");
+        });
     }
 }

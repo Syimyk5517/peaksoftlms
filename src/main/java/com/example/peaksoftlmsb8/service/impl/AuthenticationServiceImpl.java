@@ -58,6 +58,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     }
 
+
     @Override
     public SimpleResponse forgotPassword(String email, String link) throws MessagingException {
         User user = userRepository.findByEmail(email)
