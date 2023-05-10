@@ -20,6 +20,6 @@ public interface GroupRepository extends JpaRepository<Group, Long> {
             "from Group g  order  by g.id desc ")
     Page<GroupResponse> getAllGroups(Pageable pageable);
 
-    @Query("select new com.example.peaksoftlmsb8.dto.response.GroupResponse(g.id,g.name,g.description,g.image,g.finishDate) from Group g where g.id=:groupId")
+    @Query("select new com.example.peaksoftlmsb8.dto.response.GroupResponse(g.id,g.name,g.description,g.image,g.finishDate,g.createdAt) from Group g where g.id=:groupId")
     Optional<GroupResponse> getGroupById(Long groupId);
 }
