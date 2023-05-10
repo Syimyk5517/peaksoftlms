@@ -1,6 +1,8 @@
 package com.example.peaksoftlmsb8.dto.request;
 
+import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,11 +15,15 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class GroupRequest {
-    @NotBlank(message = "Name should not be null")
+    @NotNull(message = "Name should not be null")
+    @NotBlank(message = "Name can't be empty!")
     private String name;
     @NotBlank(message = "Description should not be null")
+    @NotNull(message = "Description can't be empty")
     private String description;
     @NotBlank(message = " Image should not be null")
+    @NotNull(message = "Image can't be empty")
     private String image;
-    private LocalDate finalDate;
+    @Future(message = "Finish date should be future date")
+    private LocalDate finishDate;
 }

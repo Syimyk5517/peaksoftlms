@@ -2,11 +2,9 @@ package com.example.peaksoftlmsb8.db.entity;
 
 import com.example.peaksoftlmsb8.db.enums.OptionType;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static jakarta.persistence.CascadeType.*;
@@ -17,6 +15,7 @@ import static jakarta.persistence.CascadeType.*;
 @Table(name = "questions")
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Question {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "question_gen")
@@ -29,6 +28,10 @@ public class Question {
     @JoinColumn(name = "test_id")
     private Test test;
     @OneToMany(mappedBy = "question", cascade = ALL)
-    private List<Option> options;
+    private List<Option> options = new ArrayList<>();
+
+    public void addOption(Option option){
+        options.add(option);
+    }
 
 }

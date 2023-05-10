@@ -15,5 +15,4 @@ public class InstructorResponse {
     private String special;
     private String phoneNumber;
     private String email;
-    private String password;
 }

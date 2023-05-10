@@ -16,12 +16,11 @@ public interface LessonRepository extends JpaRepository<Lesson, Long> {
 
     @Query("select new com.example.peaksoftlmsb8.dto.response.LessonResponse(" +
             "l.id,l.name,l.course.id) " +
-            "from Lesson l where l.course.id=:courseId and l.name ilike concat('%', :search, '%')")
-    Page<LessonResponse> getAllLessonsByCourseId(Pageable pageable, String search, Long courseId);
+            "from Lesson l where l.course.id=:courseId order by l.id desc ")
+    Page<LessonResponse> getAllLessonsByCourseId(Pageable pageable, Long courseId);
 
     Boolean existsLessonByName(String name);
 
     @Query("select new com.example.peaksoftlmsb8.dto.response.LessonResponse(l.id,l.name,l.course.id) from Lesson l where l.id=:lessonId")
     Optional<LessonResponse> getLessonById(Long lessonId);
-
 }
