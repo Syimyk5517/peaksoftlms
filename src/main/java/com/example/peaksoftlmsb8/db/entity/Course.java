@@ -8,7 +8,6 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,17 +30,8 @@ public class Course {
     private LocalDate createdAt;
     private LocalDate finishDate;
     
-    @ManyToMany(mappedBy = "courses", cascade = {All},fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "courses", cascade = {ALL},fetch = FetchType.LAZY)
     private List<Instructor> instructors;
-    @ManyToMany(cascade = {ALL})
-
-    public void addInstructor(Instructor instructor) {
-        if (instructors == null) {
-            instructors = new ArrayList<>();
-        }
-        instructors.add(instructor);
-    }
-
     @ManyToMany(cascade = ALL)
     @JoinTable(name = "groups_courses",
             joinColumns = @JoinColumn(name = "group_id"),
@@ -63,4 +53,5 @@ public class Course {
         }
         instructors.add(instructor);
     }
+
 }
