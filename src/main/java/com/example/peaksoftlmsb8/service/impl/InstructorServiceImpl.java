@@ -25,8 +25,11 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class InstructorServiceImpl implements InstructorService {
+
     private final UserRepository userRepository;
+
     private final InstructorRepository instructorRepository;
+
     private final PasswordEncoder passwordEncoder;
 
     @Override
