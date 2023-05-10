@@ -15,8 +15,8 @@ import static jakarta.persistence.CascadeType.*;
 @NoArgsConstructor
 public class Content {
     @Id
-    @SequenceGenerator(name = "content_seq", sequenceName = "content_seq", allocationSize = 1, initialValue = 10)
-    @GeneratedValue(generator = "content_seq", strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(name = "content_gen",sequenceName = "content_seq", allocationSize = 1, initialValue = 8)
+    @GeneratedValue(generator = "content_gen", strategy = GenerationType.SEQUENCE)
     private Long id;
     private String contentName;
     @Enumerated(EnumType.STRING)

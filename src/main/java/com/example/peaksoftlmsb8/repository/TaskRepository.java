@@ -3,7 +3,11 @@ package com.example.peaksoftlmsb8.repository;
 import com.example.peaksoftlmsb8.db.entity.Task;
 import com.example.peaksoftlmsb8.dto.response.TaskResponse;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface TaskRepository extends JpaRepository<Task, Long> {

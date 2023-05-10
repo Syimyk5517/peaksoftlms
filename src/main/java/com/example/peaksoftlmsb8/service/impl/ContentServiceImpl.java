@@ -23,16 +23,24 @@ public class ContentServiceImpl implements ContentService {
     private final TaskRepository taskRepository;
 
     @Override
-    public SimpleResponse create(Long taskId, ContentRequest contentRequest) {
+    public SimpleResponse sendTaskAnswer(Long taskId, ContentRequest contentRequest) {
         Task task = taskRepository.findById(taskId).orElseThrow(
                 () -> new NotFoundException("Task with ID: " + taskId + " is not found !"));
+        if (!task.getContents().isEmpty()){
+            throw new BadRequestException("This task have answer you can not add new answer");
+        }
         Content content = new Content();
+        if (contentRequest.getContentName().equals("") || contentRequest.getContentName() == null){
+            throw new BadRequestException("Content name can not be null");
+        }
+        if (contentRequest.getContentValue().equals("") || contentRequest.getContentValue() == null){
+            throw new BadRequestException("Content value can not be null");
+        }
         content.setContentName(contentRequest.getContentName());
         content.setContentFormat(contentRequest.getContentFormat());
         content.setContentValue(contentRequest.getContentValue());
         content.setTask(task);
-        task.getContents().add(content);
-        taskRepository.save(task);
+        task.setContents(List.of(content));
         contentRepository.save(content);
         return SimpleResponse.builder()
                 .httpStatus(HttpStatus.OK)

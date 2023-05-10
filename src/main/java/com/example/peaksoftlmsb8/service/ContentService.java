@@ -7,7 +7,7 @@ import com.example.peaksoftlmsb8.dto.response.SimpleResponse;
 import java.util.List;
 
 public interface ContentService {
-    SimpleResponse create(Long taskId, ContentRequest contentRequest);
+    SimpleResponse sendTaskAnswer(Long taskId, ContentRequest contentRequest);
 
     SimpleResponse update(Long contentId, ContentRequest contentRequest);
 
