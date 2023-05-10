@@ -27,7 +27,7 @@ public class Lesson {
     private LocalDate createdAt;
     @ElementCollection
     private Map<String, String> link;
-    @ManyToOne(cascade = {PERSIST, MERGE, REFRESH, DETACH})
+    @ManyToOne(cascade = {PERSIST, MERGE, REFRESH, DETACH}, fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id")
     private Course course;
     @OneToMany(mappedBy = "lesson", cascade = ALL)

@@ -31,6 +31,7 @@ public class Group {
     private LocalDate finishDate;
     @OneToMany(mappedBy = "group", cascade = ALL)
     private List<Student> students;
+
     @ManyToMany(mappedBy = "groups", cascade = {MERGE, PERSIST, REFRESH, DETACH}, fetch = LAZY)
     private List<Course> courses;
 

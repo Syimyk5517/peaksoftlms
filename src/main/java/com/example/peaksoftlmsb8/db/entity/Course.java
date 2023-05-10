@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,9 +29,11 @@ public class Course {
     private String image;
     private String description;
     private LocalDate createdAt;
-    private LocalDate finalDate;
-    @ManyToMany(mappedBy = "courses", cascade = ALL)
+    private LocalDate finishDate;
+    
+    @ManyToMany(mappedBy = "courses", cascade = {All},fetch = FetchType.LAZY)
     private List<Instructor> instructors;
+    @ManyToMany(cascade = {ALL})
 
     public void addInstructor(Instructor instructor) {
         if (instructors == null) {
@@ -48,10 +51,16 @@ public class Course {
     @OneToMany(mappedBy = "course", cascade = ALL)
     private List<Lesson> lessons;
 
-    public void assignCourse(Group group) {
-        if (groups == null) {
+    public void assignCourse(Group group){
+        if (groups==null){
             groups = new ArrayList<>();
         }
         groups.add(group);
+    }
+    public void addInstructor(Instructor instructor) {
+        if (instructors == null) {
+            instructors = new ArrayList<>();
+        }
+        instructors.add(instructor);
     }
 }
