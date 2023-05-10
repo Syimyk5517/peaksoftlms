@@ -1,6 +1,8 @@
 package com.example.peaksoftlmsb8.service.impl;
 
+import com.example.peaksoftlmsb8.config.JwtService;
 import com.example.peaksoftlmsb8.db.entity.*;
+import com.example.peaksoftlmsb8.db.enums.Role;
 import com.example.peaksoftlmsb8.db.exception.NotFoundException;
 import com.example.peaksoftlmsb8.dto.request.AssignRequest;
 import com.example.peaksoftlmsb8.dto.request.CourseRequest;
@@ -14,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +32,9 @@ public class CourseServiceImpl implements CourseService {
     private final TestRepository testRepository;
     private final LessonRepository lessonRepository;
     private final GroupRepository groupRepository;
+    private final JwtService jwtService;
+
+    private final JdbcTemplate jdbcTemplate;
 
     @Override
     public SimpleResponse assignInstructorToCourse(Boolean isAssigned, AssignRequest assignRequest) {
@@ -49,22 +55,53 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public CoursePaginationResponse getAllCourse(int size, int page) {
-        Pageable pageable = PageRequest.of(page - 1, size);
-        Page<CourseResponse> coursePage = courseRepository.getAllCourses(pageable);
-        List<CourseResponse> courseResponseList = new ArrayList<>(coursePage.getContent().stream()
-                .map(c -> new CourseResponse(
-                        c.getId(),
-                        c.getName(),
-                        c.getImage(),
-                        c.getDescription(),
-                        c.getCreatedAt(),
-                        c.getFinalDate()
-                )).toList());
-        CoursePaginationResponse coursePaginationResponse = new CoursePaginationResponse();
-        coursePaginationResponse.setCourseResponses(courseResponseList);
-        coursePaginationResponse.setPageSize(coursePage.getNumber());
-        coursePaginationResponse.setCurrentPage(coursePage.getSize());
-        return coursePaginationResponse;
+        User user = jwtService.getAccountInToken();
+        if (user.getRole().equals(Role.STUDENT)) {
+            int offset = size * page;
+            Group group = user.getStudent().getGroup();
+            String sql = """
+                    select c.id as course_id,
+                           c.name as course_name,
+                           c.description as course_description,
+                           c.created_at as course_created_at,
+                           c.final_date as course_finish_date
+                    from courses c join groups_courses gc on c.id = gc.courses_id where gc.group_id =:? limit ? offset ?;
+                    """;
+            List<CourseResponse> courseResponses = jdbcTemplate.query(sql, (resultSet, i) -> {
+                CourseResponse courseResponse = new CourseResponse();
+                courseResponse.setId(resultSet.getLong("course_id"));
+                courseResponse.setName(resultSet.getString("course_name"));
+                courseResponse.setDescription(resultSet.getString("course_description"));
+                courseResponse.setCreatedAt(resultSet.getDate("course_create_date").toLocalDate());
+                courseResponse.setFinalDate(resultSet.getDate("course_finish_date").toLocalDate());
+                return courseResponse;
+
+            }, group.getId(), size, offset);
+            return CoursePaginationResponse.builder().
+                    courseResponses(courseResponses)
+                    .currentPage(page)
+                    .pageSize(size).
+                    build();
+
+        } else {
+
+            Pageable pageable = PageRequest.of(page - 1, size);
+            Page<CourseResponse> coursePage = courseRepository.getAllCourses(pageable);
+            List<CourseResponse> courseResponseList = new ArrayList<>(coursePage.getContent().stream()
+                    .map(c -> new CourseResponse(
+                            c.getId(),
+                            c.getName(),
+                            c.getImage(),
+                            c.getDescription(),
+                            c.getCreatedAt(),
+                            c.getFinalDate()
+                    )).toList());
+            CoursePaginationResponse coursePaginationResponse = new CoursePaginationResponse();
+            coursePaginationResponse.setCourseResponses(courseResponseList);
+            coursePaginationResponse.setPageSize(coursePage.getNumber());
+            coursePaginationResponse.setCurrentPage(coursePage.getSize());
+            return coursePaginationResponse;
+        }
     }
 
     @Override
