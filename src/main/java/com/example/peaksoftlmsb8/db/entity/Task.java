@@ -26,7 +26,7 @@ public class Task {
     private String description;
     private String file;
     @OneToMany(cascade = ALL, mappedBy = "task")
-    private List<Content> contents;
+    private List<TaskAnswer> taskAnswers;
     private LocalDate deadline;
     @ManyToOne(cascade = {PERSIST, MERGE, REFRESH, DETACH})
     @JoinColumn(name = "lesson_id")

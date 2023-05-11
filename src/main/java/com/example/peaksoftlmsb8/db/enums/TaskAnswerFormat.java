@@ -1,6 +1,6 @@
 package com.example.peaksoftlmsb8.db.enums;
 
-public enum ContentFormat {
+public enum TaskAnswerFormat {
     TEXT,
     LINK,
     IMAGE,
