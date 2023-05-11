@@ -11,13 +11,13 @@ public interface CourseService {
 
     SimpleResponse assignInstructorToCourse(Boolean isAssigned, AssignRequest assignRequest);
 
-    CoursePaginationResponse getAllCourse(int size, int page, String word, String sort);
+    CoursePaginationResponse getAllCourse(int size, int page);
 
     CourseResponse findByCourseId(Long courseId);
 
     SimpleResponse saveCourse(CourseRequest courseRequest);
 
-    SimpleResponse updateCourse(Long courseId, CourseRequest courseRequest);
+    SimpleResponse updateCourse(CourseRequest courseRequest);
 
     SimpleResponse deleteCourse(Long courseId);
 

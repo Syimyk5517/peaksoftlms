@@ -28,17 +28,10 @@ public class Course {
     private String image;
     private String description;
     private LocalDate createdAt;
-    private LocalDate finalDate;
-    @ManyToMany(mappedBy = "courses", cascade = ALL)
+    private LocalDate finishDate;
+    
+    @ManyToMany(mappedBy = "courses", cascade = {ALL},fetch = FetchType.LAZY)
     private List<Instructor> instructors;
-
-    public void addInstructor(Instructor instructor) {
-        if (instructors == null) {
-            instructors = new ArrayList<>();
-        }
-        instructors.add(instructor);
-    }
-
     @ManyToMany(cascade = ALL)
     @JoinTable(name = "groups_courses",
             joinColumns = @JoinColumn(name = "group_id"),
@@ -48,10 +41,17 @@ public class Course {
     @OneToMany(mappedBy = "course", cascade = ALL)
     private List<Lesson> lessons;
 
-    public void assignCourse(Group group) {
-        if (groups == null) {
+    public void assignCourse(Group group){
+        if (groups==null){
             groups = new ArrayList<>();
         }
         groups.add(group);
     }
+    public void addInstructor(Instructor instructor) {
+        if (instructors == null) {
+            instructors = new ArrayList<>();
+        }
+        instructors.add(instructor);
+    }
+
 }
