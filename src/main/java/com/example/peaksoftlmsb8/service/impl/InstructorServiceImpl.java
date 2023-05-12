@@ -25,15 +25,26 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class InstructorServiceImpl implements InstructorService {
+
     private final UserRepository userRepository;
+
     private final InstructorRepository instructorRepository;
+
     private final PasswordEncoder passwordEncoder;
 
     @Override
+    public PaginationResponseForInstructor getAllInstructors(int size, int page, String search, String sortBy) {
+        if (!"name_asc".equals(sortBy) &&
+                !"name_desc".equals(sortBy) &&
+                sortBy != null) {
+            throw new NotFoundException("you wrote the wrong name , write like this name_asc or name_desc");
+        }
+        Pageable pageable = PageRequest.of(page - 1, size);
+        Page<InstructorResponse> pageInstructor = instructorRepository.getAll(pageable, search, sortBy);
         PaginationResponseForInstructor paginationResponse = new PaginationResponseForInstructor();
         paginationResponse.setInstructorResponses(pageInstructor.getContent());
-        paginationResponse.setCurrentPage(pageInstructor.getNumber());
-        paginationResponse.setPageSize(pageInstructor.getNumber());
+        paginationResponse.setCurrentPage(pageInstructor.getNumber() + 1);
+        paginationResponse.setPageSize(pageInstructor.getTotalPages());
 
         return paginationResponse;
     }
