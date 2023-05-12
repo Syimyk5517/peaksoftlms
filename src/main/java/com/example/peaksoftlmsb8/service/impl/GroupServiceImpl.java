@@ -13,7 +13,6 @@ import com.example.peaksoftlmsb8.repository.CourseRepository;
 import com.example.peaksoftlmsb8.repository.GroupRepository;
 import com.example.peaksoftlmsb8.repository.ResultOfTestRepository;
 import com.example.peaksoftlmsb8.repository.UserRepository;
-import com.example.peaksoftlmsb8.repository.*;
 import com.example.peaksoftlmsb8.service.GroupService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -47,7 +46,7 @@ public class GroupServiceImpl implements GroupService {
         group.setImage(groupRequest.getImage());
         group.setFinishDate(groupRequest.getFinishDate());
         groupRepository.save(group);
-        return SimpleResponse.builder().httpStatus(HttpStatus.OK).message("Group with name : " + groupRequest.getName() + " successfully saved").build();
+        return SimpleResponse.builder().httpStatus(HttpStatus.OK).message("Group with name: " + groupRequest.getName() + " successfully saved").build();
     }
 
     @Override
