@@ -76,7 +76,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         mimeMessageHelper.setTo(email);
         mimeMessageHelper.setText(link + "/" + user.getId(), true);
         mailSender.send(mimeMessage);
-        logger.info("Method forgotPassword SimpleResponse return builder");
+        logger.info("SMS sent to mail !");
         return SimpleResponse.builder()
                 .httpStatus(HttpStatus.OK)
                 .message("SMS sent to mail !")
@@ -89,7 +89,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         User user = userRepository.findById(passwordRequest.getId())
                 .orElseThrow(() -> new NotFoundException("This id : " + passwordRequest.getId() + " is not found !"));
         user.setPassword(passwordEncoder.encode(passwordRequest.getPassword()));
-        logger.info("Method resetPassword() SimpleResponse return builder");
+        logger.info("Password successfully updated");
         return SimpleResponse.builder()
                 .httpStatus(HttpStatus.OK)
                 .message("Password successfully updated")

@@ -54,10 +54,10 @@ public class CourseServiceImpl implements CourseService {
                 instructor.addCourse(course);
             }
             courseRepository.save(course);
-            logger.info("Method assignInstructorToCourse return SimpleResponse builder");
+            logger.info("Successfully assigned");
             return SimpleResponse.builder().httpStatus(HttpStatus.OK).message("Successfully assigned").build();
         } else {
-            logger.info("Method assignInstructorToCourse return SimpleResponse builder");
+            logger.info("Not assigned ");
             return SimpleResponse.builder().httpStatus(HttpStatus.OK).message("Not assigned ").build();
         }
     }
@@ -134,7 +134,7 @@ public class CourseServiceImpl implements CourseService {
         course.setCreatedAt(LocalDate.now());
         course.setFinishDate(courseRequest.getFinishDate());
         courseRepository.save(course);
-        logger.info("Method saveCourse return SimpleResponse builder");
+        logger.info("Course with name" + courseRequest.getName() + "successfully saved!");
         return SimpleResponse.builder().httpStatus(HttpStatus.OK).message("Course with name" +
                 courseRequest.getName() + "successfully saved!").build();
     }
@@ -156,7 +156,7 @@ public class CourseServiceImpl implements CourseService {
         course.setCreatedAt(courseRequest.getCreatedAt());
         course.setFinishDate(courseRequest.getFinishDate());
         courseRepository.save(course);
-        logger.info("Method updateCourse return SimpleResponse builder");
+        logger.info("Successfully updated!");
         return SimpleResponse.builder().httpStatus(HttpStatus.OK).message("Successfully updated!").build();
     }
 
@@ -178,7 +178,7 @@ public class CourseServiceImpl implements CourseService {
             groupRepository.save(group);
         }
         courseRepository.delete(course);
-        logger.info("Method deleteCourse return SimpleResponse builder");
+        logger.info("Successfully deleted!");
         return SimpleResponse.builder()
                 .httpStatus(HttpStatus.OK)
                 .message("Successfully deleted!")
