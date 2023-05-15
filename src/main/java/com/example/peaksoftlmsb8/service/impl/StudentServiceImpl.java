@@ -21,6 +21,9 @@ import com.poiji.bind.Poiji;
 import com.poiji.exception.PoijiExcelType;
 import com.poiji.option.PoijiOptions;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -33,16 +36,21 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+
 @Service
 @RequiredArgsConstructor
+@Log4j2
 public class StudentServiceImpl implements StudentService {
     private final StudentRepository studentRepository;
     private final GroupRepository groupRepository;
     private final UserRepository userRepository;
-     private final PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
+
+    private static final Logger logger = LogManager.getLogger(CourseServiceImpl.class);
 
     @Override
     public SimpleResponse importExcel(Long groupId, MultipartFile multipartFile) throws IOException {
+        logger.info("Group with id " + groupId + " not found!");
         Group group = groupRepository.findById(groupId).orElseThrow(
                 () -> new NotFoundException("Group with id " + groupId + " not found!")
         );
@@ -53,6 +61,7 @@ public class StudentServiceImpl implements StudentService {
             List<StudentExcelRequest> excelRequests = Poiji.fromExcel(inputStream, PoijiExcelType.XLSX, StudentExcelRequest.class, poijiOptions);
             for (StudentExcelRequest excelRequest : excelRequests) {
                 if (userRepository.existsByEmail(excelRequest.getEmail())) {
+                    logger.info("Student with " + excelRequest.getEmail() + " exists!");
                     throw new AlReadyExistException("Student with " + excelRequest.getEmail() + " exists!");
                 }
 
@@ -78,6 +87,7 @@ public class StudentServiceImpl implements StudentService {
 
 
         }
+        logger.info("Students successfully uploaded");
         return SimpleResponse.builder().httpStatus(HttpStatus.OK)
                 .message("Students successfully uploaded").build();
     }
@@ -85,12 +95,15 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public SimpleResponse save(StudentRequest studentRequest) {
+        logger.info("Student with Email: " + studentRequest.getEmail() + " is already saved!");
         if (studentRepository.existsByEmail(studentRequest.getEmail())) {
             throw new BadRequestException("Student with Email: " + studentRequest.getEmail() + " is already saved!");
         }
+        logger.info("Student with Phone number: " + studentRequest.getPhoneNumber() + " is already saved!");
         if (studentRepository.existsByPhoneNumber(studentRequest.getPhoneNumber())) {
             throw new BadRequestException("Student with Phone number: " + studentRequest.getPhoneNumber() + " is already saved!");
         }
+        logger.info("Group with id : " + studentRequest.getGroupId() + "not found !");
         Group group = groupRepository.findById(studentRequest.getGroupId()).orElseThrow(
                 () -> new NotFoundException("Group with id : " + studentRequest.getGroupId() + "not found !"));
         User user = new User();
@@ -108,6 +121,7 @@ public class StudentServiceImpl implements StudentService {
         student.setUser(user);
         user.setStudent(student);
         studentRepository.save(student);
+        logger.info("Student with ID: " + student.getId() + " is successfully saved!");
         return SimpleResponse.builder()
                 .httpStatus(HttpStatus.OK)
                 .message("Student with ID: " + student.getId() + " is successfully saved!")
@@ -116,6 +130,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public StudentResponse findById(Long studentId) {
+        logger.info("Student with ID: " + studentId + " is not found!");
         return studentRepository.findStudentById(studentId).orElseThrow(
                 () -> new NotFoundException("Student with ID: " + studentId + " is not found!"));
     }
@@ -141,10 +156,12 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public SimpleResponse deleteById(Long studentId) {
+        logger.info("Student with ID: " + studentId + " is not found!");
         if (!studentRepository.existsById(studentId)) {
             throw new BadRequestException("Student with ID: " + studentId + " is not found!");
         }
         studentRepository.deleteById(studentId);
+        logger.info("Student with ID: " + studentId + " is successfully deleted!");
         return SimpleResponse.builder()
                 .httpStatus(HttpStatus.OK)
                 .message("Student with ID: " + studentId + " is successfully deleted!")
@@ -153,8 +170,10 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public SimpleResponse update(StudentRequest newStudentRequest, Long studentId) {
+        logger.info("Student with ID: " + studentId + " is not found!");
         Student student = studentRepository.findById(studentId).orElseThrow(
                 () -> new NotFoundException("Student with ID: " + studentId + " is not found!"));
+        logger.info("Group with id : " + newStudentRequest.getGroupId() + "not found !");
         Group group = groupRepository.findById(newStudentRequest.getGroupId()).orElseThrow(
                 () -> new NotFoundException("Group with id : " + newStudentRequest.getGroupId() + "not found !"));
         User user = student.getUser();
@@ -165,6 +184,7 @@ public class StudentServiceImpl implements StudentService {
             user.setLastName(newStudentRequest.getLastName());
         }
         if (!newStudentRequest.getEmail().equals(user.getEmail())) {
+            logger.info("Student with Email: " + newStudentRequest.getEmail() + " is already saved!");
             if (studentRepository.existsByEmail(newStudentRequest.getEmail())) {
                 throw new BadRequestException("Student with Email: " + newStudentRequest.getEmail() + " is already saved!");
             }
@@ -172,6 +192,7 @@ public class StudentServiceImpl implements StudentService {
         }
         user.setPassword(passwordEncoder.encode(newStudentRequest.getPassword()));
         if (!newStudentRequest.getPhoneNumber().equals(user.getPhoneNumber())) {
+            logger.info("Student with Phone number: " + newStudentRequest.getPhoneNumber() + " is already saved!");
             if (studentRepository.existsByPhoneNumber(newStudentRequest.getPhoneNumber())) {
                 throw new BadRequestException("Student with Phone number: " + newStudentRequest.getPhoneNumber() + " is already saved!");
             }
@@ -181,8 +202,8 @@ public class StudentServiceImpl implements StudentService {
             student.setFormLearning(newStudentRequest.getFormLearning());
         }
 
-            student.setGroup(group);
-            group.setStudents(List.of(student));
+        student.setGroup(group);
+        group.setStudents(List.of(student));
 
         if (!student.getUser().equals(user)) {
             student.setUser(user);
@@ -191,6 +212,7 @@ public class StudentServiceImpl implements StudentService {
             user.setStudent(student);
         }
         studentRepository.save(student);
+        logger.info("Student with ID: " + studentId + " is successfully updated!");
         return SimpleResponse.builder()
                 .httpStatus(HttpStatus.OK)
                 .message("Student with ID: " + studentId + " is successfully updated!")
