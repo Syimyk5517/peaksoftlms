@@ -14,7 +14,7 @@ import java.util.Optional;
 @Repository
 public interface InstructorRepository extends JpaRepository<Instructor, Long> {
     @Query("SELECT new com.example.peaksoftlmsb8.dto.response.InstructorResponse(" +
-            "i.id, CONCAT(u.firstName, ' ', u.lastName), i.special, u.phoneNumber, u.email) " +
+            "i.id, CONCAT(u.firstName, ' ', u.lastName), i.special, u.phoneNumber,u.email) " +
             "FROM Instructor i " +
             "LEFT JOIN i.user u " +
             "WHERE (:search IS NULL " +
@@ -32,9 +32,4 @@ public interface InstructorRepository extends JpaRepository<Instructor, Long> {
             "i.id,concat(i.user.firstName,' ',i.user.lastName), i.special, i.user.phoneNumber, i.user.email)" +
             " from Instructor i where i.id = ?1")
     Optional<InstructorResponse> getByInstructorId(Long instructorId);
-
-    @Query("select new com.example.peaksoftlmsb8.dto.response.InstructorResponse(" +
-            "i.id,concat(u.firstName,' ',u.lastName),i.special,u.phoneNumber,u.email) " +
-            "from User u join Instructor i")
-    Page<InstructorResponse> getAllPage(Pageable pageable);
 }

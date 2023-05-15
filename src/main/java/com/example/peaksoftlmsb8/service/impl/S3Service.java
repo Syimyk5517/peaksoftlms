@@ -1,5 +1,4 @@
 package com.example.peaksoftlmsb8.service.impl;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -48,7 +47,6 @@ public class S3Service {
                 .build();
 
         s3.putObject(por, RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
-
         return Map.of(
                 "link", bucketPath + key
         );
