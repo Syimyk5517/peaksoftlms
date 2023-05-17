@@ -41,7 +41,7 @@ public class TaskAnswerServiceImpl implements TaskAnswerService {
                 new NotFoundException(String.format("Task answer with id: " + taskAnswerId + " not found")));
         taskAnswer.setPoint(null);
         taskAnswerRepository.save(taskAnswer);
-        return SimpleResponse.builder().httpStatus(HttpStatus.OK).message("Successfully updated").build();
+        return SimpleResponse.builder().httpStatus(HttpStatus.OK).message("Successfully deleted").build();
     }
 
 }

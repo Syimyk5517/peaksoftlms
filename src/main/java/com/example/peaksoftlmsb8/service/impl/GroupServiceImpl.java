@@ -54,8 +54,7 @@ public class GroupServiceImpl implements GroupService {
         group.setFinishDate(groupRequest.getFinishDate());
         groupRepository.save(group);
         return SimpleResponse.builder().httpStatus(HttpStatus.OK).message("Group with name: " + groupRequest.getName() + " successfully saved").build();
-        logger.info("Group with name : " + groupRequest.getName() + " successfully saved");
-      }
+    }
 
     @Override
     public GroupPaginationResponse getAllGroups(int size, int page) {
