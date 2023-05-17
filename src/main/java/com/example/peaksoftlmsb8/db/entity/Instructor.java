@@ -23,10 +23,10 @@ public class Instructor {
     @SequenceGenerator(name = "instructor_gen", sequenceName = "instructor_seq", initialValue = 8, allocationSize = 1)
     private Long id;
     private String special;
-    @OneToOne(mappedBy = "instructor", cascade = {PERSIST, MERGE, REFRESH, DETACH})
+    @OneToOne(mappedBy = "instructor", cascade = {ALL})
     @JoinColumn(name = "user_id")
     private User user;
-    @ManyToMany(cascade = {DETACH, MERGE, PERSIST, REFRESH})
+    @ManyToMany(cascade = {DETACH, MERGE, PERSIST, REFRESH}, fetch = FetchType.LAZY)
     @JoinTable(name = "course_instructors",
             joinColumns = @JoinColumn(name = "course_id"),
             inverseJoinColumns = @JoinColumn(name = "instructors_id"))
