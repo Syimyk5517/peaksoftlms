@@ -41,7 +41,6 @@ public class InstructorServiceImpl implements InstructorService {
                 !"name_desc".equals(sortBy) &&
                 sortBy != null) {
             logger.info("you wrote the wrong name , write like this name_asc or name_desc");
-
             throw new NotFoundException("you wrote the wrong name , write like this name_asc or name_desc");
         }
         Pageable pageable = PageRequest.of(page - 1, size);
