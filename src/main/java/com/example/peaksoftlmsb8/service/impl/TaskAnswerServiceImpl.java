@@ -53,7 +53,6 @@ public class TaskAnswerServiceImpl implements TaskAnswerService {
         if (taskAnswerRequest.getTaskValue().equals("") || taskAnswerRequest.getTaskValue() == null) {
             throw new BadRequestException("Task answer value cannot be null");
         }
-        taskAnswer.setTaskAnswerFormat(taskAnswerRequest.getTaskAnswerFormat());
         taskAnswer.setTaskValue(taskAnswerRequest.getTaskValue());
         taskAnswer.setTask(task);
         taskAnswer.setStudent(user.getStudent());
@@ -69,9 +68,6 @@ public class TaskAnswerServiceImpl implements TaskAnswerService {
     public SimpleResponse update(Long taskAnswerId, TaskAnswerRequest taskAnswerRequest) {
         TaskAnswer taskAnswer = taskAnswerRepository.findById(taskAnswerId).orElseThrow(
                 () -> new NotFoundException("Task answer with ID: " + taskAnswerId + " is not found !"));
-        if (!taskAnswerRequest.getTaskAnswerFormat().equals(taskAnswer.getTaskAnswerFormat())) {
-            taskAnswer.setTaskAnswerFormat(taskAnswerRequest.getTaskAnswerFormat());
-        }
         if (!taskAnswerRequest.getTaskValue().equals(taskAnswer.getTaskValue())) {
             taskAnswer.setTaskValue(taskAnswerRequest.getTaskValue());
         }

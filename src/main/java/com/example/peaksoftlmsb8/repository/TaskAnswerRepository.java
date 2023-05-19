@@ -11,6 +11,6 @@ import java.util.List;
 @Repository
 public interface TaskAnswerRepository extends JpaRepository<TaskAnswer, Long> {
     @Query("select new com.example.peaksoftlmsb8.dto.response.TaskAnswerResponse" +
-            "(ta.id,ta.taskAnswerFormat,ta.taskValue,ta.taskStatus) from TaskAnswer ta where ta.task.id=:taskId")
+            "(ta.id,ta.taskValue,ta.taskStatus) from TaskAnswer ta where ta.task.id=:taskId")
     List<TaskAnswerResponse> findAllByTaskId(Long taskId);
 }
