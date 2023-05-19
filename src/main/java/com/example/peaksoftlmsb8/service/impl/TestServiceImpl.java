@@ -13,6 +13,9 @@ import com.example.peaksoftlmsb8.dto.response.SimpleResponse;
 import com.example.peaksoftlmsb8.repository.*;
 import com.example.peaksoftlmsb8.service.TestService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -25,6 +28,7 @@ import java.util.List;
 @Service
 @Transactional
 @RequiredArgsConstructor
+@Log4j2
 public class TestServiceImpl implements TestService {
     private final TestRepository testRepository;
     private final LessonRepository lessonRepository;
@@ -34,6 +38,8 @@ public class TestServiceImpl implements TestService {
     private final ResultOfTestRepository resultOfTestRepository;
     private final JwtService jwtService;
 
+
+    private static final Logger logger = LogManager.getLogger(TestServiceImpl.class);
 
     @Override
     public List<TestResponseForInstructor> findAll() {
@@ -114,9 +120,10 @@ public class TestServiceImpl implements TestService {
             test.setQuestions(questions);
             testRepository.save(test);
         } else {
+            logger.info("There is already a test in this lesson !");
             throw new AlReadyExistException("There is already a test in this lesson !");
         }
-
+        logger.info("Test with name: " + request.getTestName() + " successfully saved !");
         return SimpleResponse.builder().httpStatus(HttpStatus.OK).message(String.format("Test with name: %s successfully saved !", request.getTestName())).build();
     }
 
@@ -166,9 +173,11 @@ public class TestServiceImpl implements TestService {
                         counterIsTrue++;
                     }
                     if (counterIsTrue < 1) {
+                        logger.info("You must choose one correct answer !");
                         throw new BadRequestException("You must choose one correct answer !");
                     }
                     if (counterIsTrue > 1) {
+                        logger.info("You can only choose one correct answer !");
                         throw new BadRequestException("You can only choose one correct answer !");
                     }
                 } else {
@@ -176,9 +185,11 @@ public class TestServiceImpl implements TestService {
                         counterIsTrue++;
                     }
                     if (counterIsTrue < 1) {
+                        logger.info("You must choose one correct answer !");
                         throw new BadRequestException("You must choose one correct answer !");
                     }
                     if (counterIsTrue > 2) {
+                        logger.info("You can only choose two correct answers !");
                         throw new BadRequestException("You can only choose two correct answers !");
                     }
 
@@ -212,12 +223,16 @@ public class TestServiceImpl implements TestService {
     public SimpleResponse deleteById(Long testId) {
         Test test = testRepository.findById(testId).orElseThrow(
                 () -> new NotFoundException("Test with id : " + testId + " not found !"));
-        ResultOfTest result = resultOfTestRepository.findResultOfTestById(test.getId());
+        logger.info("Test with id:" + testId + "not found");
+        ResultOfTest result = resultOfTestRepository.findResultOfTestById(test.getId()).orElseThrow(
+                () -> new NotFoundException("Result of test with id : " + testId + " not found !" ));
         resultOfTestRepository.delete(result);
         testRepository.delete(test);
+        logger.info("Test with id  : " + testId + " successfully deleted !");
         return SimpleResponse.builder().
                 httpStatus(HttpStatus.OK).
                 message(String.format("Test with id  : %s successfully deleted !", testId)).build();
+
     }
 
     @Override
@@ -347,4 +362,4 @@ public class TestServiceImpl implements TestService {
         }
         return questions;
     }
-}
+  }

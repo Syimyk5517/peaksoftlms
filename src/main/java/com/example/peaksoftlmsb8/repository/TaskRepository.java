@@ -19,6 +19,6 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     Optional<TaskResponse> findByIdTask(Long taskId);
 
     @Query("select new com.example.peaksoftlmsb8.dto.response.TaskResponse(t.id,t.name,t.description,t.file,t.deadline,t.lesson.id) " +
-            "from Task t join Lesson  l on t.lesson.id = l.id where t.id = :taskId")
+            "from Task t join Lesson where t.lesson.id = :lessonId")
     List<TaskResponse> findAllTaskByLessonId(Long lessonId);
 }

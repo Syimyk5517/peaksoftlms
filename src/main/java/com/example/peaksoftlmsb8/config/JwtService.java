@@ -1,6 +1,8 @@
 package com.example.peaksoftlmsb8.config;
 
 import com.example.peaksoftlmsb8.db.entity.User;
+
+import com.example.peaksoftlmsb8.db.exception.NotFoundException;
 import com.example.peaksoftlmsb8.repository.UserRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -24,6 +26,7 @@ import java.util.function.Function;
 @Slf4j
 @RequiredArgsConstructor
 public class JwtService {
+
    private final UserRepository userRepository;
 
     private static final String SECRET_KEY = "645367566B5970337336763979244226452948404D6351665468576D5A713474";
@@ -63,7 +66,7 @@ public class JwtService {
     }
 
     private boolean isTokenExpired(String token) {
-        return  extractExpiration(token).before(new Date());
+        return extractExpiration(token).before(new Date());
     }
 
     private Date extractExpiration(String token) {
