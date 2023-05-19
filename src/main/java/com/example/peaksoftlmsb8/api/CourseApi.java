@@ -2,6 +2,7 @@ package com.example.peaksoftlmsb8.api;
 
 import com.example.peaksoftlmsb8.dto.request.AssignRequest;
 import com.example.peaksoftlmsb8.dto.response.SimpleResponse;
+import com.example.peaksoftlmsb8.dto.response.course.CourseResponse;
 import com.example.peaksoftlmsb8.service.CourseService;
 
 import io.swagger.v3.oas.annotations.Operation;

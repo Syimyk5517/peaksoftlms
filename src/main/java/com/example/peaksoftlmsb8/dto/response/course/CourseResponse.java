@@ -1,26 +1,20 @@
 package com.example.peaksoftlmsb8.dto.response.course;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 @Builder
-@Getter
-@Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@Data
 public class CourseResponse {
     private Long id;
     private String name;
     private String image;
     private String description;
     private LocalDate createdAt;
-    private LocalDate finalDate;
-
-    public CourseResponse(Long id, String name, String image, String description, LocalDate createdAt, LocalDate finalDate) {
-        this.id = id;
-        this.name = name;
-        this.image = image;
-        this.description = description;
-        this.createdAt = createdAt;
-        this.finalDate = finalDate;
-    }
+    private LocalDate finishDate;
 }

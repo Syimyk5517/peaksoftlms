@@ -7,8 +7,8 @@ import com.example.peaksoftlmsb8.db.exception.NotFoundException;
 import com.example.peaksoftlmsb8.dto.request.AssignRequest;
 import com.example.peaksoftlmsb8.dto.request.course.CourseRequest;
 import com.example.peaksoftlmsb8.dto.response.course.CoursePaginationResponse;
-import com.example.peaksoftlmsb8.dto.response.course.CourseResponse;
 import com.example.peaksoftlmsb8.dto.response.SimpleResponse;
+import com.example.peaksoftlmsb8.dto.response.course.CourseResponse;
 import com.example.peaksoftlmsb8.repository.*;
 import com.example.peaksoftlmsb8.service.CourseService;
 import lombok.RequiredArgsConstructor;
@@ -82,7 +82,7 @@ public class CourseServiceImpl implements CourseService {
                 courseResponse.setName(resultSet.getString("course_name"));
                 courseResponse.setDescription(resultSet.getString("course_description"));
                 courseResponse.setCreatedAt(resultSet.getDate("course_create_date").toLocalDate());
-                courseResponse.setFinalDate(resultSet.getDate("course_finish_date").toLocalDate());
+                courseResponse.setFinishDate(resultSet.getDate("course_finish_date").toLocalDate());
                 return courseResponse;
 
             }, group.getId(), size, offset);
@@ -103,7 +103,7 @@ public class CourseServiceImpl implements CourseService {
                             c.getImage(),
                             c.getDescription(),
                             c.getCreatedAt(),
-                            c.getFinalDate()
+                            c.getFinishDate()
                     )).toList());
             CoursePaginationResponse coursePaginationResponse = new CoursePaginationResponse();
             coursePaginationResponse.setCourseResponses(courseResponseList);
