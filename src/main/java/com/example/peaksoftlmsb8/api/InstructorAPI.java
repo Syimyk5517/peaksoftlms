@@ -12,7 +12,7 @@ import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@CrossOrigin
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RequestMapping("/api/instructors")
 @RequiredArgsConstructor
 @Tag(name = "Instructors")

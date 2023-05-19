@@ -7,12 +7,12 @@ import com.example.peaksoftlmsb8.db.enums.Role;
 import com.example.peaksoftlmsb8.db.exception.AlReadyExistException;
 import com.example.peaksoftlmsb8.db.exception.BadRequestException;
 import com.example.peaksoftlmsb8.db.exception.NotFoundException;
-import com.example.peaksoftlmsb8.dto.request.student.StudentExcelRequest;
-import com.example.peaksoftlmsb8.dto.request.student.StudentRequest;
+import com.example.peaksoftlmsb8.dto.request.StudentExcelRequest;
+import com.example.peaksoftlmsb8.dto.request.StudentRequest;
 import com.example.peaksoftlmsb8.dto.response.SimpleResponse;
-import com.example.peaksoftlmsb8.dto.response.student.StudentPaginationResponse;
-import com.example.peaksoftlmsb8.dto.response.student.StudentResponse;
-import com.example.peaksoftlmsb8.dto.response.student.StudentResponseForAdmin;
+import com.example.peaksoftlmsb8.dto.response.StudentPaginationResponse;
+import com.example.peaksoftlmsb8.dto.response.StudentResponse;
+import com.example.peaksoftlmsb8.dto.response.StudentResponseForAdmin;
 import com.example.peaksoftlmsb8.repository.GroupRepository;
 import com.example.peaksoftlmsb8.repository.StudentRepository;
 import com.example.peaksoftlmsb8.repository.UserRepository;
@@ -20,11 +20,14 @@ import com.example.peaksoftlmsb8.service.StudentService;
 import com.poiji.bind.Poiji;
 import com.poiji.exception.PoijiExcelType;
 import com.poiji.option.PoijiOptions;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -37,14 +40,18 @@ import java.util.List;
 @Service
 @Transactional
 @RequiredArgsConstructor
+@Log4j2
 public class StudentServiceImpl implements StudentService {
     private final StudentRepository studentRepository;
     private final GroupRepository groupRepository;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
+    private static final Logger logger = LogManager.getLogger(CourseServiceImpl.class);
+
     @Override
     public SimpleResponse importExcel(Long groupId, MultipartFile multipartFile) throws IOException {
+        logger.info("Group with id " + groupId + " not found!");
         Group group = groupRepository.findById(groupId).orElseThrow(
                 () -> new NotFoundException("Group with id " + groupId + " not found!")
         );
@@ -55,6 +62,7 @@ public class StudentServiceImpl implements StudentService {
             List<StudentExcelRequest> excelRequests = Poiji.fromExcel(inputStream, PoijiExcelType.XLSX, StudentExcelRequest.class, poijiOptions);
             for (StudentExcelRequest excelRequest : excelRequests) {
                 if (userRepository.existsByEmail(excelRequest.getEmail())) {
+                    logger.info("Student with " + excelRequest.getEmail() + " exists!");
                     throw new AlReadyExistException("Student with " + excelRequest.getEmail() + " exists!");
                 }
 
@@ -80,6 +88,7 @@ public class StudentServiceImpl implements StudentService {
 
 
         }
+        logger.info("Students successfully uploaded");
         return SimpleResponse.builder().httpStatus(HttpStatus.OK)
                 .message("Students successfully uploaded").build();
     }
@@ -87,12 +96,15 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public SimpleResponse save(StudentRequest studentRequest) {
+        logger.info("Student with Email: " + studentRequest.getEmail() + " is already saved!");
         if (studentRepository.existsByEmail(studentRequest.getEmail())) {
             throw new BadRequestException("Student with Email: " + studentRequest.getEmail() + " is already saved!");
         }
+        logger.info("Student with Phone number: " + studentRequest.getPhoneNumber() + " is already saved!");
         if (studentRepository.existsByPhoneNumber(studentRequest.getPhoneNumber())) {
             throw new BadRequestException("Student with Phone number: " + studentRequest.getPhoneNumber() + " is already saved!");
         }
+        logger.info("Group with id : " + studentRequest.getGroupId() + "not found !");
         Group group = groupRepository.findById(studentRequest.getGroupId()).orElseThrow(
                 () -> new NotFoundException("Group with id : " + studentRequest.getGroupId() + "not found !"));
         User user = new User();
@@ -110,6 +122,7 @@ public class StudentServiceImpl implements StudentService {
         student.setUser(user);
         user.setStudent(student);
         studentRepository.save(student);
+        logger.info("Student with ID: " + student.getId() + " is successfully saved!");
         return SimpleResponse.builder()
                 .httpStatus(HttpStatus.OK)
                 .message("Student with ID: " + student.getId() + " is successfully saved!")
@@ -148,8 +161,10 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public SimpleResponse update(StudentRequest newStudentRequest, Long studentId) {
+        logger.info("Student with ID: " + studentId + " is not found!");
         Student student = studentRepository.findById(studentId).orElseThrow(
                 () -> new NotFoundException("Student with ID: " + studentId + " is not found!"));
+        logger.info("Group with id : " + newStudentRequest.getGroupId() + "not found !");
         Group group = groupRepository.findById(newStudentRequest.getGroupId()).orElseThrow(
                 () -> new NotFoundException("Group with id : " + newStudentRequest.getGroupId() + "not found !"));
         if (studentRepository.existsByEmail(newStudentRequest.getEmail())) {
@@ -166,6 +181,7 @@ public class StudentServiceImpl implements StudentService {
         student.setFormLearning(newStudentRequest.getFormLearning());
         student.setGroup(group);
         studentRepository.save(student);
+        logger.info("Student with ID: " + studentId + " is successfully updated!");
         return SimpleResponse.builder()
                 .httpStatus(HttpStatus.OK)
                 .message("Student with ID: " + studentId + " is successfully updated!")

@@ -3,9 +3,10 @@ package com.example.peaksoftlmsb8.api;
 import com.example.peaksoftlmsb8.dto.request.AssignRequest;
 import com.example.peaksoftlmsb8.dto.response.SimpleResponse;
 import com.example.peaksoftlmsb8.service.CourseService;
+
+import io.swagger.v3.oas.annotations.Operation;
 import com.example.peaksoftlmsb8.dto.request.course.CourseRequest;
 import com.example.peaksoftlmsb8.dto.response.course.CoursePaginationResponse;
-import com.example.peaksoftlmsb8.dto.response.course.CourseResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -22,32 +23,36 @@ public class CourseApi {
 
     @PostMapping("/assign")
     @PreAuthorize("hasAuthority('ADMIN')")
+    @Operation(summary = "This method assign Instructor to Course",description = "You can assign Instructor to Course. Access to this method: ADMIN")
     public SimpleResponse assignInstructorToCourse(@RequestParam Boolean isAssigned, @RequestBody AssignRequest assignRequest) {
         return courseService.assignInstructorToCourse(isAssigned, assignRequest);
     }
 
 
-    @PostMapping("/save")
+    @PostMapping()
+    @Operation(summary = "This method save Course",description = "You can save Course")
     public SimpleResponse saveCourse(@RequestBody CourseRequest courseRequest) {
         return courseService.saveCourse(courseRequest);
     }
 
     @GetMapping("/pagination")
+    @Operation(summary = "This method get all Courses",description = "You can get all Courses")
     public CoursePaginationResponse getAllCourses(@RequestParam int size,
-                                                  @RequestParam int page,
-                                                  @RequestParam String sort,
-                                                  @RequestParam String search) {
-        return courseService.getAllCourse(size, page, search, sort);
+                                                  @RequestParam int page) {
+        return courseService.getAllCourse(size, page);
     }
 
     @GetMapping("/{courseId}")
+    @Operation(summary = "This method find by Course with id",description = "You can find by Course with id")
     public CourseResponse findByCourseId(@PathVariable Long courseId) {
         return courseService.findByCourseId(courseId);
     }
 
-    @PutMapping("/{courseId}")
-    public SimpleResponse updateCourse(@PathVariable Long courseId, @RequestBody @Valid CourseRequest courseRequest) {
-        return courseService.updateCourse(courseId, courseRequest);
+    @PutMapping()
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    @Operation(summary = "This method update Course",description = "you can update Course. Access to this method: ADMIN")
+    public SimpleResponse updateCourse(@RequestBody @Valid CourseRequest courseRequest) {
+        return courseService.updateCourse(courseRequest);
     }
 
     @DeleteMapping("/{courseId}")

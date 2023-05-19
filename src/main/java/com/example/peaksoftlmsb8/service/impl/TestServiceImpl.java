@@ -15,6 +15,9 @@ import com.example.peaksoftlmsb8.dto.response.SimpleResponse;
 import com.example.peaksoftlmsb8.repository.*;
 import com.example.peaksoftlmsb8.service.TestService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -27,6 +30,7 @@ import java.util.List;
 @Service
 @Transactional
 @RequiredArgsConstructor
+@Log4j2
 public class TestServiceImpl implements TestService {
     private final TestRepository testRepository;
     private final LessonRepository lessonRepository;
@@ -34,6 +38,8 @@ public class TestServiceImpl implements TestService {
     private final OptionRepository optionRepository;
     private final JdbcTemplate jdbcTemplate;
     private final ResultOfTestRepository resultOfTestRepository;
+
+    private static final Logger logger = LogManager.getLogger(TestServiceImpl.class);
 
     @Override
     public List<TestResponse> findAll() {
@@ -104,7 +110,9 @@ public class TestServiceImpl implements TestService {
 
     @Override
     public SimpleResponse saveTest(TestRequest request) {
-        Lesson lesson = lessonRepository.findById(request.getLessonId()).orElseThrow(() -> new NotFoundException("Lesson with id : " + request.getLessonId() + " not found !"));
+        logger.info("Lesson with id : " + request.getLessonId() + " not found !");
+        Lesson lesson = lessonRepository.findById(request.getLessonId())
+                .orElseThrow(() -> new NotFoundException("Lesson with id : " + request.getLessonId() + " not found !"));
         if (lesson.getTest() == null) {
             Test test = new Test();
             List<Question> questions = new ArrayList<>();
@@ -119,9 +127,11 @@ public class TestServiceImpl implements TestService {
                             ++counter;
                         }
                         if (counter < 1) {
+                            logger.info("You must choose one correct answer !");
                             throw new BadRequestException("You must choose one correct answer !");
                         }
                         if (counter > 1) {
+                            logger.info("You can only choose one correct answer !");
                             throw new BadRequestException("You can only choose one correct answer !");
                         }
                     } else {
@@ -130,9 +140,11 @@ public class TestServiceImpl implements TestService {
                             counter++;
                         }
                         if (counter < 1) {
+                            logger.info("You must choose one correct answer !");
                             throw new BadRequestException("You must choose one correct answer !");
                         }
                         if (counter > 2) {
+                            logger.info("You can only choose two correct answers !");
                             throw new BadRequestException("You can only choose two correct answers !");
                         }
 
@@ -147,14 +159,16 @@ public class TestServiceImpl implements TestService {
             test.setQuestions(questions);
             testRepository.save(test);
         } else {
+            logger.info("There is already a test in this lesson !");
             throw new AlReadyExistException("There is already a test in this lesson !");
         }
-
+        logger.info("Test with name: " + request.getTestName() + " successfully saved !");
         return SimpleResponse.builder().httpStatus(HttpStatus.OK).message(String.format("Test with name: %s successfully saved !", request.getTestName())).build();
     }
 
     @Override
     public TestResponse findById(Long id) {
+        logger.info("Test with id : " + id + " not found !");
         Test test = testRepository.findById(id).orElseThrow(() -> new NotFoundException("Test with id : " + id + " not found !"));
         List<QuestionResponse> questionResponses = questionResponses(test.getQuestions());
         return TestResponse.builder().lessonId(test.getLesson().getId()).lessonName(test.getLesson().getName()).testId(test.getId()).testName(test.getName()).dateTest(test.getDateTest()).questionResponses(questionResponses).build();
@@ -163,13 +177,18 @@ public class TestServiceImpl implements TestService {
 
     @Override
     public SimpleResponse updateTest(Long testId, TestUpdateRequest testUpdateRequest) {
-        Test test = testRepository.findById(testId).orElseThrow(() -> new NotFoundException("Test with id : " + testId + " not found !"));
-
-        Lesson lesson = lessonRepository.findById(testUpdateRequest.getLessonId()).orElseThrow(() -> new NotFoundException("Lesson with id : " + testUpdateRequest.getLessonId() + " not found!"));
+        logger.info("Test with id : " + testId + " not found !");
+        Test test = testRepository.findById(testId)
+                .orElseThrow(() -> new NotFoundException("Test with id : " + testId + " not found !"));
+        logger.info("Lesson with id : " + testUpdateRequest.getLessonId() + " not found!");
+        Lesson lesson = lessonRepository.findById(testUpdateRequest.getLessonId())
+                .orElseThrow(() -> new NotFoundException("Lesson with id : " + testUpdateRequest.getLessonId() + " not found!"));
 
         List<Question> questions = new ArrayList<>();
         for (QuestionUpdateRequest questionUpdateRequest : testUpdateRequest.getQuestionRequests()) {
-            Question question = questionRepository.findById(questionUpdateRequest.getQuestionId()).orElseThrow(() -> new NotFoundException("Question with id : " + questionUpdateRequest.getQuestionId() + "not found !"));
+            logger.info("Question with id : " + questionUpdateRequest.getQuestionId() + "not found !");
+            Question question = questionRepository.findById(questionUpdateRequest.getQuestionId())
+                    .orElseThrow(() -> new NotFoundException("Question with id : " + questionUpdateRequest.getQuestionId() + "not found !"));
             question.setTest(test);
             question.setQuestionName(questionUpdateRequest.getQuestionName());
             question.setOptionType(questionUpdateRequest.getOptionType());
@@ -182,6 +201,7 @@ public class TestServiceImpl implements TestService {
             for (OptionUpdateRequest optionUpdateRequest : questionUpdateRequest.getOptionRequests()) {
                 if (questionUpdateRequest.getOptionType().equals(OptionType.SINGLETON)) {
                     if (counter1 > 0) {
+                        logger.info("You can't change the options until the question is changed");
                         throw new BadRequestException("You can't change the options until the question is changed");
                     }
 
@@ -189,9 +209,11 @@ public class TestServiceImpl implements TestService {
                         counterIsTrue++;
                     }
                     if (counterIsTrue < 1) {
+                        logger.info("You must choose one correct answer !");
                         throw new BadRequestException("You must choose one correct answer !");
                     }
                     if (counterIsTrue > 1) {
+                        logger.info("You can only choose one correct answer !");
                         throw new BadRequestException("You can only choose one correct answer !");
                     }
                 } else {
@@ -199,9 +221,11 @@ public class TestServiceImpl implements TestService {
                         counterIsTrue++;
                     }
                     if (counterIsTrue < 1) {
+                        logger.info("You must choose one correct answer !");
                         throw new BadRequestException("You must choose one correct answer !");
                     }
                     if (counterIsTrue > 2) {
+                        logger.info("You can only choose two correct answers !");
                         throw new BadRequestException("You can only choose two correct answers !");
                     }
 
@@ -219,15 +243,19 @@ public class TestServiceImpl implements TestService {
         test.setLesson(lesson);
         test.setQuestions(questions);
         testRepository.save(test);
+        logger.info("Test with name : " + test.getName() + " successfully updated !");
         return SimpleResponse.builder().httpStatus(HttpStatus.OK).message(String.format("Test with name : %s successfully updated !", test.getName())).build();
     }
 
     @Override
     public SimpleResponse deleteById(Long testId) {
         Test test = testRepository.findById(testId).orElseThrow(() -> new NotFoundException("Test with id : " + testId + " not found !"));
-        ResultOfTest result = resultOfTestRepository.findResultOfTestById(test.getId());
+        logger.info("Test with id:" + testId + "not found");
+        ResultOfTest result = resultOfTestRepository.findResultOfTestById(test.getId()).orElseThrow(
+                () -> new NotFoundException("Test with id:" + testId + "not found"));
         resultOfTestRepository.delete(result);
         testRepository.delete(test);
+        logger.info("Test with id  : " + testId + " successfully deleted !");
         return SimpleResponse.builder().httpStatus(HttpStatus.OK).message(String.format("Test with id  : %s successfully deleted !", testId)).build();
     }
 
@@ -246,6 +274,7 @@ public class TestServiceImpl implements TestService {
             testResponseForStudent.setLessonId(resulSet.getLong("lesson_id"));
             testResponseForStudent.setTestId(resulSet.getLong("test_id"));
             testResponseForStudent.setTestName(resulSet.getString("test_name"));
+            logger.info("NOt found");
             return testResponseForStudent;
         }, testId).stream().findAny().orElseThrow(() -> new NotFoundException("NOt found"));
 

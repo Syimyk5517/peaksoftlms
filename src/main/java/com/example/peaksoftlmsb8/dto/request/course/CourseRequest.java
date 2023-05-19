@@ -13,6 +13,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CourseRequest {
+    private Long id;
     @NotBlank(message = "Name should not be null")
     private String name;
     @NotBlank(message = "Image should not be null")
@@ -20,5 +21,5 @@ public class CourseRequest {
     @NotBlank(message = "Description should not be null")
     private String description;
     private LocalDate createdAt;
-    private LocalDate finalDate;
+    private LocalDate finishDate;
 }
