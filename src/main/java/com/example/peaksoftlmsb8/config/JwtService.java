@@ -1,6 +1,7 @@
 package com.example.peaksoftlmsb8.config;
 
 import com.example.peaksoftlmsb8.db.entity.User;
+
 import com.example.peaksoftlmsb8.db.exception.NotFoundException;
 import com.example.peaksoftlmsb8.repository.UserRepository;
 import io.jsonwebtoken.Claims;
@@ -14,18 +15,19 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.webjars.NotFoundException;
 
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
-
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class JwtService {
-    private final UserRepository userRepository;
+
+   private final UserRepository userRepository;
 
     private static final String SECRET_KEY = "645367566B5970337336763979244226452948404D6351665468576D5A713474";
 
@@ -51,7 +53,9 @@ public class JwtService {
                 .setClaims(extraClaims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 10000 * 60 * 24))
+
+                .setExpiration(new Date(System.currentTimeMillis() + 1000000 * 60 * 24))
+         
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
     }

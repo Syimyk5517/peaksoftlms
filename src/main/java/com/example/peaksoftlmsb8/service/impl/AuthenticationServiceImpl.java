@@ -64,6 +64,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     }
 
+
     @Override
     public SimpleResponse forgotPassword(String email, String link) throws MessagingException {
         logger.info("This email : " + email + " is not found !");

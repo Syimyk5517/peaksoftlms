@@ -4,7 +4,7 @@ import com.example.peaksoftlmsb8.dto.request.test.TestRequest;
 import com.example.peaksoftlmsb8.dto.request.test.TestUpdateRequest;
 import com.example.peaksoftlmsb8.dto.response.SimpleResponse;
 import com.example.peaksoftlmsb8.dto.response.test.TestResponse;
-import com.example.peaksoftlmsb8.dto.response.test.TestResponseForStudent;
+import com.example.peaksoftlmsb8.dto.response.test.TestResponseForInstructor;
 import com.example.peaksoftlmsb8.service.TestService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -24,7 +24,7 @@ public class TestApi {
     @GetMapping
     @Operation(summary = "This method returns all tests",
             description = "Find all tests")
-    public List<TestResponse> findAll() {
+    public List<TestResponseForInstructor> findAll() {
         return testService.findAll();
     }
 
@@ -36,24 +36,17 @@ public class TestApi {
     }
 
     @GetMapping("/findById")
-    @Operation(summary = "This method returns test by id from by instructor",
+    @Operation(summary = "This method returns test by id from by student and by instructor",
             description = "This method return test find by id ")
-    public TestResponse findById(@RequestParam Long testId) {
+    public TestResponse findById(@RequestParam Long testId){
         return testService.findById(testId);
-    }
-
-    @GetMapping("/findByTestById")
-    @Operation(summary = "This method returns test by id from by student",
-            description = "This method return test find by id ")
-    public TestResponseForStudent findByTestId(@RequestParam Long testId){
-        return testService.findByTestById(testId);
     }
 
     @PutMapping
     @Operation(summary = "This method updated test by id from by instructor",
             description = "This method updated test by id")
-    public SimpleResponse updateTest(@RequestParam Long testId, @RequestBody TestUpdateRequest testUpdateRequest) {
-        return testService.updateTest(testId, testUpdateRequest);
+    public SimpleResponse updateTest(@RequestBody TestUpdateRequest testUpdateRequest) {
+        return testService.updateTest(testUpdateRequest);
     }
 
     @DeleteMapping
