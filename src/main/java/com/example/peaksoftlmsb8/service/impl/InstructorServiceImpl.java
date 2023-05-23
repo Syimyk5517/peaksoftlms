@@ -2,6 +2,7 @@ package com.example.peaksoftlmsb8.service.impl;
 
 import com.example.peaksoftlmsb8.db.entity.Course;
 import com.example.peaksoftlmsb8.db.entity.Instructor;
+import com.example.peaksoftlmsb8.db.entity.User;
 import com.example.peaksoftlmsb8.db.exception.AlReadyExistException;
 import com.example.peaksoftlmsb8.db.exception.NotFoundException;
 import com.example.peaksoftlmsb8.dto.request.instructor.InstructorRequest;
@@ -67,9 +68,18 @@ public class InstructorServiceImpl implements InstructorService {
             throw new AlReadyExistException("This email " + instructorRequest.getEmail() + " already exists !");
         }
         Instructor instructor = new Instructor();
-        universalMethod(instructorRequest, instructor);
-        logger.info("This " + instructor.getUser().getFirstName() + " saved...");
-        return new SimpleResponse(HttpStatus.OK, "This " + instructor.getUser().getFirstName() + " saved...");
+        User user = new User();
+        user.setFirstName(instructorRequest.getFirstName());
+        user.setLastName(instructorRequest.getLastName());
+        user.setPassword(passwordEncoder.encode(instructorRequest.getPassword()));
+        user.setEmail(instructorRequest.getEmail());
+        user.setPhoneNumber(instructorRequest.getPhoneNumber());
+        instructor.setSpecial(instructorRequest.getSpecial());
+        instructor.setUser(user);
+        user.setInstructor(instructor);
+        instructorRepository.save(instructor);
+        logger.info("This " + instructorRequest.getFirstName() + " saved...");
+        return new SimpleResponse(HttpStatus.OK, "This " + instructorRequest.getFirstName() + " saved...");
     }
 
     @Override
@@ -77,7 +87,13 @@ public class InstructorServiceImpl implements InstructorService {
         logger.info("this id = " + instructorId + " not found!");
         Instructor instructor = instructorRepository.findById(instructorId)
                 .orElseThrow(() -> new NotFoundException("this id = " + instructorId + " not found!"));
-        universalMethod(newInstructor, instructor);
+        instructor.getUser().setFirstName(newInstructor.getFirstName());
+        instructor.getUser().setLastName(newInstructor.getLastName());
+        instructor.getUser().setPassword(passwordEncoder.encode(newInstructor.getPassword()));
+        instructor.getUser().setEmail(newInstructor.getEmail());
+        instructor.getUser().setPhoneNumber(newInstructor.getPhoneNumber());
+        instructor.setSpecial(newInstructor.getSpecial());
+        instructorRepository.save(instructor);
         logger.info("This " + instructor.getUser().getFirstName() + " updated on " + newInstructor.getFirstName());
         return new SimpleResponse(HttpStatus.OK, "This " +
                 instructor.getUser().getFirstName() + " updated on " +
@@ -97,13 +113,4 @@ public class InstructorServiceImpl implements InstructorService {
         return new SimpleResponse(HttpStatus.OK, "This " + instructor.getUser().getFirstName() + " deleted...");
     }
 
-    private void universalMethod(InstructorRequest instructorRequest, Instructor instructor) {
-        instructor.getUser().setFirstName(instructorRequest.getFirstName());
-        instructor.getUser().setLastName(instructorRequest.getLastName());
-        instructor.getUser().setPassword(passwordEncoder.encode(instructorRequest.getPassword()));
-        instructor.getUser().setEmail(instructorRequest.getEmail());
-        instructor.getUser().setPhoneNumber(instructorRequest.getPhoneNumber());
-        instructor.setSpecial(instructorRequest.getSpecial());
-        instructorRepository.save(instructor);
-    }
 }

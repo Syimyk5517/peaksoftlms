@@ -1,6 +1,7 @@
 package com.example.peaksoftlmsb8.db.entity;
 
 import jakarta.persistence.*;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,8 +30,8 @@ public class Course {
     private String description;
     private LocalDate createdAt;
     private LocalDate finishDate;
-    
-    @ManyToMany(mappedBy = "courses", cascade = {ALL},fetch = FetchType.LAZY)
+
+    @ManyToMany(mappedBy = "courses", cascade = {ALL}, fetch = FetchType.LAZY)
     private List<Instructor> instructors;
     @ManyToMany(cascade = ALL)
     @JoinTable(name = "groups_courses",
@@ -41,12 +42,13 @@ public class Course {
     @OneToMany(mappedBy = "course", cascade = ALL)
     private List<Lesson> lessons;
 
-    public void assignCourse(Group group){
-        if (groups==null){
+    public void assignCourse(Group group) {
+        if (groups == null) {
             groups = new ArrayList<>();
         }
         groups.add(group);
     }
+
     public void addInstructor(Instructor instructor) {
         if (instructors == null) {
             instructors = new ArrayList<>();

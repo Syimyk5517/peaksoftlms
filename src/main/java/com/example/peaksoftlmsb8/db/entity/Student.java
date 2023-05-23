@@ -2,6 +2,7 @@ package com.example.peaksoftlmsb8.db.entity;
 
 import com.example.peaksoftlmsb8.db.enums.FormLearning;
 import jakarta.persistence.*;
+import jakarta.persistence.Table;
 import lombok.*;
 
 import static jakarta.persistence.CascadeType.*;

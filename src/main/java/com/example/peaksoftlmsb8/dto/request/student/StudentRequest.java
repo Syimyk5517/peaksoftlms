@@ -1,4 +1,4 @@
-package com.example.peaksoftlmsb8.dto.request.student;
+package com.example.peaksoftlmsb8.dto.request;
 
 import com.example.peaksoftlmsb8.db.entity.Group;
 import com.example.peaksoftlmsb8.db.enums.FormLearning;
@@ -29,5 +29,6 @@ public class StudentRequest {
     private String password;
 
     private Long groupId;
+
     private FormLearning formLearning;
 }
