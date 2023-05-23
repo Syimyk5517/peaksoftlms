@@ -29,6 +29,6 @@ public class StudentRequest {
     private String password;
 
     private Long groupId;
-    @NotBlank(message = "Form learning should not be null")
+
     private FormLearning formLearning;
 }
