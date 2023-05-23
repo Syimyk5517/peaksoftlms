@@ -1,7 +1,7 @@
 INSERT INTO courses(id,
                     created_at,
                     description,
-                    final_date,
+                    finish_date,
                     image,
                     name)
 VALUES (1,
@@ -40,12 +40,14 @@ VALUES (1,
         '2023-06-30',
         'default.img',
         'React');
+
 INSERT INTO groups(id,
                    created_at,
                    description,
                    finish_date,
                    image,
                    name)
+
 VALUES (1,
         '2022-10-03',
         'Java - 8 group',
@@ -125,6 +127,17 @@ VALUES (1,
         'TRUE',
         5,
         2);
+INSERT INTO task_answers(id,
+                         content_format,
+                         content_value,
+                         point,
+                         task_status
+)
+VALUES (1,'LINK',
+        'ssss',
+        10,
+        'EXPECTATION'
+       );
 INSERT INTO users(id,
                   first_name,
                   last_name,

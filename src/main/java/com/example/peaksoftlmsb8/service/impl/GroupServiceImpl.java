@@ -53,8 +53,7 @@ public class GroupServiceImpl implements GroupService {
         group.setImage(groupRequest.getImage());
         group.setFinishDate(groupRequest.getFinishDate());
         groupRepository.save(group);
-        logger.info("Group with name : " + groupRequest.getName() + " successfully saved");
-        return SimpleResponse.builder().httpStatus(HttpStatus.OK).message("Group with name : " + groupRequest.getName() + " successfully saved").build();
+        return SimpleResponse.builder().httpStatus(HttpStatus.OK).message("Group with name: " + groupRequest.getName() + " successfully saved").build();
     }
 
     @Override

@@ -100,7 +100,7 @@ public class LessonServiceImpl implements LessonService {
         Test test = testRepository.findById(lesson.getTest().getId()).orElseThrow(() ->
                 new NotFoundException(String.format("Test with id: " + lesson.getTest().getId() + " not found")));
         ResultOfTest result = resultOfTestRepository.findResultOfTestById(test.getId())
-                .orElseThrow(()-> new NotFoundException(String.format("Lesson with id: " + test.getId() + " not found")));
+                .orElseThrow(() -> new NotFoundException(String.format("Lesson with id: " + test.getId() + " not found")));
         resultOfTestRepository.delete(result);
         testRepository.delete(test);
         lessonRepository.delete(lesson);
