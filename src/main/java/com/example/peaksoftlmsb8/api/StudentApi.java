@@ -1,6 +1,5 @@
 package com.example.peaksoftlmsb8.api;
-
-import com.example.peaksoftlmsb8.dto.request.student.StudentRequest;
+import com.example.peaksoftlmsb8.dto.request.StudentRequest;
 import com.example.peaksoftlmsb8.dto.response.SimpleResponse;
 import com.example.peaksoftlmsb8.dto.response.student.StudentPaginationResponse;
 import com.example.peaksoftlmsb8.dto.response.student.StudentResponse;
