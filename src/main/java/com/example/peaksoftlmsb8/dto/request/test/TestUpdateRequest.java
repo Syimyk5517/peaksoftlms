@@ -1,5 +1,6 @@
 package com.example.peaksoftlmsb8.dto.request.test;
 
+import com.example.peaksoftlmsb8.dto.request.test.question.QuestionUpdateRequest;
 import lombok.Builder;
 import lombok.Data;
 
@@ -14,5 +15,8 @@ public class TestUpdateRequest {
     private List<QuestionRequest> questionRequestList;
     private List<Long> deleteQuestionsIds;
     private List<Long> deleteOptionsIds;
+    private String testName;
+    private List<QuestionUpdateRequest> questionRequests;
+    private Long lessonId;
 
 }

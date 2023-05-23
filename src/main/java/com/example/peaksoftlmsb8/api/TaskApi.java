@@ -1,8 +1,8 @@
 package com.example.peaksoftlmsb8.api;
 
-import com.example.peaksoftlmsb8.dto.request.TaskRequest;
+import com.example.peaksoftlmsb8.dto.request.task.TaskRequest;
 import com.example.peaksoftlmsb8.dto.response.SimpleResponse;
-import com.example.peaksoftlmsb8.dto.response.TaskResponse;
+import com.example.peaksoftlmsb8.dto.response.task.TaskResponse;
 import com.example.peaksoftlmsb8.service.TaskService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
