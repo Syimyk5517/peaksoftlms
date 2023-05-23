@@ -14,7 +14,6 @@ import static jakarta.persistence.CascadeType.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@EqualsAndHashCode
 public class Student {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "student_gen")

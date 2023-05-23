@@ -2,11 +2,12 @@ package com.example.peaksoftlmsb8.api;
 
 import com.example.peaksoftlmsb8.dto.request.AssignRequest;
 import com.example.peaksoftlmsb8.dto.response.SimpleResponse;
+import com.example.peaksoftlmsb8.dto.response.course.CourseResponse;
 import com.example.peaksoftlmsb8.service.CourseService;
-import com.example.peaksoftlmsb8.dto.request.CourseRequest;
-import com.example.peaksoftlmsb8.dto.response.CoursePaginationResponse;
-import com.example.peaksoftlmsb8.dto.response.CourseResponse;
+
 import io.swagger.v3.oas.annotations.Operation;
+import com.example.peaksoftlmsb8.dto.request.course.CourseRequest;
+import com.example.peaksoftlmsb8.dto.response.course.CoursePaginationResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -56,8 +57,6 @@ public class CourseApi {
     }
 
     @DeleteMapping("/{courseId}")
-    @PreAuthorize("hasAnyAuthority('ADMIN')")
-    @Operation(summary = "This method delete Course",description = "you can delete Course. Access to this method: ADMIN")
     public SimpleResponse deleteCourse(@PathVariable Long courseId) {
         return courseService.deleteCourse(courseId);
 

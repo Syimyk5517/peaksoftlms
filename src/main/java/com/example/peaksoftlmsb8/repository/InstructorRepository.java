@@ -1,7 +1,7 @@
 package com.example.peaksoftlmsb8.repository;
 
 import com.example.peaksoftlmsb8.db.entity.Instructor;
-import com.example.peaksoftlmsb8.dto.response.InstructorResponse;
+import com.example.peaksoftlmsb8.dto.response.instructor.InstructorResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,7 +13,7 @@ import java.util.Optional;
 
 @Repository
 public interface InstructorRepository extends JpaRepository<Instructor, Long> {
-    @Query("SELECT new com.example.peaksoftlmsb8.dto.response.InstructorResponse(" +
+    @Query("SELECT new com.example.peaksoftlmsb8.dto.response.instructor.InstructorResponse(" +
             "i.id, CONCAT(u.firstName, ' ', u.lastName), i.special, u.phoneNumber,u.email) " +
             "FROM Instructor i " +
             "LEFT JOIN i.user u " +
@@ -28,7 +28,7 @@ public interface InstructorRepository extends JpaRepository<Instructor, Long> {
             "i.id ASC")
     Page<InstructorResponse> getAll(Pageable pageable, @Param("search") String search, @Param("sort") String sort);
 
-    @Query("select new com.example.peaksoftlmsb8.dto.response.InstructorResponse(" +
+    @Query("select new com.example.peaksoftlmsb8.dto.response.instructor.InstructorResponse(" +
             "i.id,concat(i.user.firstName,' ',i.user.lastName), i.special, i.user.phoneNumber, i.user.email)" +
             " from Instructor i where i.id = ?1")
     Optional<InstructorResponse> getByInstructorId(Long instructorId);

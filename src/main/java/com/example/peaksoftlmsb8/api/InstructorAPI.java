@@ -1,8 +1,8 @@
 package com.example.peaksoftlmsb8.api;
 
-import com.example.peaksoftlmsb8.dto.request.InstructorRequest;
-import com.example.peaksoftlmsb8.dto.response.InstructorResponse;
-import com.example.peaksoftlmsb8.dto.response.PaginationResponseForInstructor;
+import com.example.peaksoftlmsb8.dto.request.instructor.InstructorRequest;
+import com.example.peaksoftlmsb8.dto.response.instructor.InstructorResponse;
+import com.example.peaksoftlmsb8.dto.response.instructor.PaginationResponseForInstructor;
 import com.example.peaksoftlmsb8.dto.response.SimpleResponse;
 import com.example.peaksoftlmsb8.service.InstructorService;
 import io.swagger.v3.oas.annotations.Operation;
