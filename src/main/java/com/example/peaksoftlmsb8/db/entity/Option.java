@@ -20,7 +20,7 @@ public class Option {
     private Long id;
     private String text;
     private Boolean isTrue;
-    @ManyToOne(cascade = {PERSIST, MERGE, REFRESH, DETACH})
+    @ManyToOne(cascade = {PERSIST, MERGE, REFRESH, DETACH},fetch = FetchType.LAZY)
     @JoinColumn(name = "question_id")
     private Question question;
 

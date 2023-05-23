@@ -25,7 +25,7 @@ public class Question {
     private String questionName;
     @Enumerated(EnumType.STRING)
     private OptionType optionType;
-    @ManyToOne(cascade = {PERSIST, MERGE, REFRESH, DETACH})
+    @ManyToOne(cascade = {PERSIST, MERGE, REFRESH, DETACH},fetch = FetchType.LAZY)
     @JoinColumn(name = "test_id")
     private Test test;
     @OneToMany(mappedBy = "question", cascade = ALL)
