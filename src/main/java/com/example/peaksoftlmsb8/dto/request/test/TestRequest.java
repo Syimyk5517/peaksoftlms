@@ -7,10 +7,8 @@ import java.util.List;
 @Builder
 public class TestRequest {
     private String testName;
-
     private Long lessonId;
     private List<QuestionRequest> questionRequests;
     private List<QuestionRequest> questionRequests;
-    private Long lessonId;
 
 }
