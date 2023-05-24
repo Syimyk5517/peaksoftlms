@@ -1,6 +1,5 @@
 package com.example.peaksoftlmsb8.db.entity;
 
-import com.example.peaksoftlmsb8.db.enums.TaskFormat;
 import com.example.peaksoftlmsb8.db.enums.TaskStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -16,12 +15,10 @@ import static jakarta.persistence.CascadeType.*;
 @NoArgsConstructor
 public class TaskAnswer {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "task_answer_gen")
-    @SequenceGenerator(name = "task_answer_gen", sequenceName = "task_answer_seq", initialValue = 8, allocationSize = 1)
+    @SequenceGenerator(name = "taskAnswer_gen",sequenceName = "taskAnswer_seq", allocationSize = 1, initialValue = 8)
+    @GeneratedValue(generator = "taskAnswer_gen", strategy = GenerationType.SEQUENCE)
     private Long id;
-    @Enumerated(EnumType.STRING)
-    private TaskFormat contentFormat;
-    private String contentValue;
+    private String taskValue;
     private Integer point;
     @OneToOne(cascade = {
             MERGE,
@@ -37,6 +34,4 @@ public class TaskAnswer {
     private Task task;
     @Enumerated(EnumType.STRING)
     private TaskStatus taskStatus;
-
-
 }

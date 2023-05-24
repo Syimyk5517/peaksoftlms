@@ -135,16 +135,20 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public StudentPaginationResponse findAllPagination(int size, int page, String search, String filter) {
-        Pageable pageable = PageRequest.of(page - 1, size);
-        Page<StudentResponse> studentResponsePage = studentRepository.findAllStudents(pageable, search, filter);
-        StudentPaginationResponse studentPaginationResponse = new StudentPaginationResponse();
-        studentPaginationResponse.setStudentResponses(studentResponsePage.getContent());
-        studentPaginationResponse.setPageSize(studentResponsePage.getNumber());
-        studentPaginationResponse.setCurrentPage(studentResponsePage.getSize());
-        return studentPaginationResponse;
+    public List<StudentResponse> findAllStudentsByCourse(Long courseId) {
+        if (studentRepository.findAllStudentsByCourseId(courseId).isEmpty()){
+            throw new BadRequestException("Students not found!");
+        }
+        return studentRepository.findAllStudentsByCourseId(courseId);
     }
 
+    @Override
+    public List<StudentResponse> findAllStudentsByCourseIdWithSort(Long courseId, String formatStudy) {
+        if (studentRepository.findAllStudentsByCourseId(courseId).isEmpty()){
+            throw new BadRequestException("Students not found!");
+        }
+        return studentRepository.findAllStudentsByCourseIdWithSort(courseId,formatStudy);
+    }
 
     @Override
     public SimpleResponse deleteById(Long studentId) {

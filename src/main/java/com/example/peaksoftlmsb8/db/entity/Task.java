@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import static jakarta.persistence.CascadeType.*;
 
@@ -24,6 +25,8 @@ public class Task {
     private String name;
     private String description;
     private String file;
+    @OneToMany(cascade = ALL, mappedBy = "task")
+    private List<TaskAnswer> taskAnswers;
     private LocalDate deadline;
     @ManyToOne(cascade = {PERSIST, MERGE, REFRESH, DETACH})
     @JoinColumn(name = "lesson_id")
