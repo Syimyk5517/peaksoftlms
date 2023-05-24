@@ -1,41 +1,38 @@
 package com.example.peaksoftlmsb8.api;
 
-import com.example.peaksoftlmsb8.db.entity.Lesson;
+import com.example.peaksoftlmsb8.dto.response.SimpleResponse;
 import com.example.peaksoftlmsb8.service.LinkService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 
 @RestController
 @RequestMapping("/lessons/{lessonId}/links")
 public class LinkApi {
 
-    @Autowired
+
     private LinkService linkService;
 
+    public LinkApi(LinkService linkService) {
+        this.linkService = linkService;
+    }
+
+
     @PostMapping
-    public ResponseEntity<Lesson> addLinkToLesson(@PathVariable Long lessonId, @RequestParam String key, @RequestParam String value) {
-        Lesson lesson = linkService.addLinkToLesson(lessonId, key, value);
-        return new ResponseEntity<>(lesson, HttpStatus.OK);
+    public SimpleResponse addLinkToLesson(@PathVariable Long lessonId, @RequestParam String key, @RequestParam String value) {
+       return linkService.addLinkToLesson(lessonId, key, value);
     }
 
     @DeleteMapping("/{key}")
-    public ResponseEntity<Lesson> removeLinkFromLesson(@PathVariable Long lessonId, @PathVariable String key) {
-        Lesson lesson = linkService.removeLinkFromLesson(lessonId, key);
-        return new ResponseEntity<>(lesson, HttpStatus.OK);
+    public SimpleResponse removeLinkFromLesson(@PathVariable Long lessonId, @PathVariable String key) {
+        return linkService.removeLinkFromLesson(lessonId, key);
     }
 
     @PutMapping("/{key}")
-    public ResponseEntity<Lesson> updateLinkInLesson(@PathVariable Long lessonId, @PathVariable String key, @RequestParam String value) {
-        Lesson lesson = linkService.updateLinkInLesson(lessonId, key, value);
-        return new ResponseEntity<>(lesson, HttpStatus.OK);
+    public SimpleResponse updateLinkInLesson(@PathVariable Long lessonId, @PathVariable String key, @RequestParam String value) {
+        return linkService.updateLinkInLesson(lessonId, key, value);
     }
 
     @GetMapping("/{key}")
-    public ResponseEntity<String> getLinkFromLesson(@PathVariable Long lessonId, @PathVariable String key) {
-        String link = linkService.getLinkFromLesson(lessonId, key);
-        return new ResponseEntity<>(link, HttpStatus.OK);
+    public SimpleResponse getLinkFromLesson(@PathVariable Long lessonId) {
+        return linkService.getLinkFromLesson(lessonId);
     }
 }
