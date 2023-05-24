@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @CrossOrigin
@@ -22,18 +23,6 @@ import java.io.IOException;
 @Tag(name = "Students")
 public class StudentApi {
     private final StudentService studentService;
-
-    @Operation(summary = "This method can get all Students",
-            description = "You can get Students with sort or search")
-    @GetMapping()
-    @PreAuthorize("hasAnyAuthority('ADMIN,INSTRUCTOR')")
-    public StudentPaginationResponse getAllStudents(@RequestParam int size,
-                                                    @RequestParam int page,
-                                                    @RequestParam String search,
-                                                    @RequestParam String filter) {
-        return studentService.findAllPagination(size, page, search, filter);
-    }
-
     @PostMapping(
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE,
@@ -59,6 +48,21 @@ public class StudentApi {
     @PreAuthorize("hasAnyAuthority('ADMIN,INSTRUCTOR')")
     public StudentResponse findById(@RequestParam Long studentId) {
         return studentService.findById(studentId);
+    }
+    @Operation(summary = "This method can get Student with Group ID",
+            description = "You can get Student with ID")
+    @GetMapping()
+    @PreAuthorize("hasAnyAuthority('ADMIN,INSTRUCTOR')")
+    public List<StudentResponse> findAllStudentsByGroupId(@RequestParam Long courseId) {
+        return studentService.findAllStudentsByCourse(courseId);
+    }
+    @Operation(summary = "This method can get Student with Group ID",
+            description = "You can get Student with ID")
+    @GetMapping("/getAllForAdmin")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    public List<StudentResponse> findAllStudentsByGroupIdAdmin(@RequestParam Long courseId,
+                                                               @RequestParam(required = false) String formStudy) {
+        return studentService.findAllStudentsByCourseIdWithSort(courseId,formStudy);
     }
 
     @Operation(summary = "This method can update Student with ID",

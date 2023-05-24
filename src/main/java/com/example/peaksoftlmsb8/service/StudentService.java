@@ -4,6 +4,7 @@ import com.example.peaksoftlmsb8.dto.request.StudentRequest;
 import com.example.peaksoftlmsb8.dto.response.SimpleResponse;
 import com.example.peaksoftlmsb8.dto.response.student.StudentPaginationResponse;
 import com.example.peaksoftlmsb8.dto.response.student.StudentResponse;
+import org.springframework.data.repository.query.Param;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -15,8 +16,8 @@ public interface StudentService {
     SimpleResponse importExcel(Long groupId, MultipartFile multipartFile) throws IOException;
 
     StudentResponse findById(Long studentId);
-
-    StudentPaginationResponse findAllPagination(int size, int page, String search,String filter);
+    List<StudentResponse> findAllStudentsByCourse(Long courseId);
+    List<StudentResponse> findAllStudentsByCourseIdWithSort(Long courseId, String formatStudy);
     SimpleResponse deleteById(Long studentId);
 
     SimpleResponse update(StudentRequest newStudentRequest, Long studentId);
