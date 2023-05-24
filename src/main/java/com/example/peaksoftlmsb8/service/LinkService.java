@@ -10,11 +10,11 @@ import java.util.List;
 public interface LinkService {
     SimpleResponse addLinkToLesson(Long lessonId, String key, String value);
 
-    SimpleResponse removeLinkFromLesson(Long lessonId, String key);
+    SimpleResponse removeLinkFromLesson(Long lessonId, String key,String value);
 
     SimpleResponse updateLinkInLesson(Long lessonId, String key, String value);
 
-    SimpleResponse getLinkFromLesson(Long lessonId);
+    LinkResponse getLinkFromLesson(Long lessonId,String key);
 }
 
 
