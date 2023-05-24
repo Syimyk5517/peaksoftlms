@@ -2,6 +2,7 @@ package com.example.peaksoftlmsb8.db.exception.handler;
 
 import com.example.peaksoftlmsb8.db.exception.*;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -42,6 +43,16 @@ public class GlobalExceptionHandler {
     public ExceptionResponse handleNotBadCredentialException(BadCredentialException e) {
         return new ExceptionResponse(
                 HttpStatus.FORBIDDEN,
+                e.getClass().getSimpleName(),
+                e.getMessage()
+        );
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ExceptionResponse handlerNotFoundException(MethodArgumentNotValidException e) {
+        return new ExceptionResponse(
+                HttpStatus.BAD_REQUEST,
                 e.getClass().getSimpleName(),
                 e.getMessage()
         );

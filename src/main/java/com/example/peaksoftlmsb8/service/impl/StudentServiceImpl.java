@@ -7,12 +7,11 @@ import com.example.peaksoftlmsb8.db.enums.Role;
 import com.example.peaksoftlmsb8.db.exception.AlReadyExistException;
 import com.example.peaksoftlmsb8.db.exception.BadRequestException;
 import com.example.peaksoftlmsb8.db.exception.NotFoundException;
-import com.example.peaksoftlmsb8.dto.request.StudentExcelRequest;
 import com.example.peaksoftlmsb8.dto.request.StudentRequest;
+import com.example.peaksoftlmsb8.dto.request.student.StudentExcelRequest;
 import com.example.peaksoftlmsb8.dto.response.SimpleResponse;
-import com.example.peaksoftlmsb8.dto.response.StudentPaginationResponse;
-import com.example.peaksoftlmsb8.dto.response.StudentResponse;
-import com.example.peaksoftlmsb8.dto.response.StudentResponseForAdmin;
+import com.example.peaksoftlmsb8.dto.response.student.StudentPaginationResponse;
+import com.example.peaksoftlmsb8.dto.response.student.StudentResponse;
 import com.example.peaksoftlmsb8.repository.GroupRepository;
 import com.example.peaksoftlmsb8.repository.StudentRepository;
 import com.example.peaksoftlmsb8.repository.UserRepository;
@@ -20,6 +19,7 @@ import com.example.peaksoftlmsb8.service.StudentService;
 import com.poiji.bind.Poiji;
 import com.poiji.exception.PoijiExcelType;
 import com.poiji.option.PoijiOptions;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.LogManager;
@@ -27,7 +27,6 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -38,6 +37,7 @@ import java.io.InputStream;
 import java.util.List;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 @Log4j2
 public class StudentServiceImpl implements StudentService {
@@ -130,15 +130,14 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public StudentResponse findById(Long studentId) {
-        logger.info("Student with ID: " + studentId + " is not found!");
         return studentRepository.findStudentById(studentId).orElseThrow(
                 () -> new NotFoundException("Student with ID: " + studentId + " is not found!"));
     }
 
     @Override
-    public StudentPaginationResponse findAllPagination(int size, int page, String search, String sort) {
-        Pageable pageable = PageRequest.of(page - 1, size, Sort.by(sort));
-        Page<StudentResponse> studentResponsePage = studentRepository.findAllStudents(pageable, search);
+    public StudentPaginationResponse findAllPagination(int size, int page, String search, String filter) {
+        Pageable pageable = PageRequest.of(page - 1, size);
+        Page<StudentResponse> studentResponsePage = studentRepository.findAllStudents(pageable, search, filter);
         StudentPaginationResponse studentPaginationResponse = new StudentPaginationResponse();
         studentPaginationResponse.setStudentResponses(studentResponsePage.getContent());
         studentPaginationResponse.setPageSize(studentResponsePage.getNumber());
@@ -146,22 +145,13 @@ public class StudentServiceImpl implements StudentService {
         return studentPaginationResponse;
     }
 
-    @Override
-    public List<StudentResponseForAdmin> allStudents() {
-        if (!studentRepository.allStudents().isEmpty()) {
-            return studentRepository.allStudents();
-        }
-        return null;
-    }
 
     @Override
     public SimpleResponse deleteById(Long studentId) {
-        logger.info("Student with ID: " + studentId + " is not found!");
-        if (!studentRepository.existsById(studentId)) {
-            throw new BadRequestException("Student with ID: " + studentId + " is not found!");
-        }
-        studentRepository.deleteById(studentId);
-        logger.info("Student with ID: " + studentId + " is successfully deleted!");
+        Student student = studentRepository.findById(studentId).orElseThrow(
+                () -> new NotFoundException("Student with ID: " + studentId + " is not found!"));
+        userRepository.deleteUserByStudentId(student.getId());
+        studentRepository.delete(student);
         return SimpleResponse.builder()
                 .httpStatus(HttpStatus.OK)
                 .message("Student with ID: " + studentId + " is successfully deleted!")
@@ -176,41 +166,19 @@ public class StudentServiceImpl implements StudentService {
         logger.info("Group with id : " + newStudentRequest.getGroupId() + "not found !");
         Group group = groupRepository.findById(newStudentRequest.getGroupId()).orElseThrow(
                 () -> new NotFoundException("Group with id : " + newStudentRequest.getGroupId() + "not found !"));
-        User user = student.getUser();
-        if (!newStudentRequest.getFirstName().equals(user.getFirstName())) {
-            user.setFirstName(newStudentRequest.getFirstName());
+        if (studentRepository.existsByEmail(newStudentRequest.getEmail())) {
+            throw new BadRequestException("Student with Email: " + newStudentRequest.getEmail() + " is already saved!");
         }
-        if (!newStudentRequest.getLastName().equals(user.getLastName())) {
-            user.setLastName(newStudentRequest.getLastName());
+        student.getUser().setFirstName(newStudentRequest.getFirstName());
+        student.getUser().setLastName(newStudentRequest.getLastName());
+        student.getUser().setEmail(newStudentRequest.getEmail());
+        student.getUser().setPassword(passwordEncoder.encode(newStudentRequest.getPassword()));
+        if (studentRepository.existsByPhoneNumber(newStudentRequest.getPhoneNumber())) {
+            throw new BadRequestException("Student with Phone number: " + newStudentRequest.getPhoneNumber() + " is already saved!");
         }
-        if (!newStudentRequest.getEmail().equals(user.getEmail())) {
-            logger.info("Student with Email: " + newStudentRequest.getEmail() + " is already saved!");
-            if (studentRepository.existsByEmail(newStudentRequest.getEmail())) {
-                throw new BadRequestException("Student with Email: " + newStudentRequest.getEmail() + " is already saved!");
-            }
-            user.setEmail(newStudentRequest.getEmail());
-        }
-        user.setPassword(passwordEncoder.encode(newStudentRequest.getPassword()));
-        if (!newStudentRequest.getPhoneNumber().equals(user.getPhoneNumber())) {
-            logger.info("Student with Phone number: " + newStudentRequest.getPhoneNumber() + " is already saved!");
-            if (studentRepository.existsByPhoneNumber(newStudentRequest.getPhoneNumber())) {
-                throw new BadRequestException("Student with Phone number: " + newStudentRequest.getPhoneNumber() + " is already saved!");
-            }
-            user.setPhoneNumber(newStudentRequest.getPhoneNumber());
-        }
-        if (!newStudentRequest.getFormLearning().equals(student.getFormLearning())) {
-            student.setFormLearning(newStudentRequest.getFormLearning());
-        }
-
+        student.getUser().setPhoneNumber(newStudentRequest.getPhoneNumber());
+        student.setFormLearning(newStudentRequest.getFormLearning());
         student.setGroup(group);
-        group.setStudents(List.of(student));
-
-        if (!student.getUser().equals(user)) {
-            student.setUser(user);
-        }
-        if (!student.equals(user.getStudent())) {
-            user.setStudent(student);
-        }
         studentRepository.save(student);
         logger.info("Student with ID: " + studentId + " is successfully updated!");
         return SimpleResponse.builder()

@@ -1,8 +1,8 @@
 package com.example.peaksoftlmsb8.api;
 
-import com.example.peaksoftlmsb8.dto.request.AuthenticationRequest;
-import com.example.peaksoftlmsb8.dto.request.PasswordRequest;
-import com.example.peaksoftlmsb8.dto.response.AuthenticationResponse;
+import com.example.peaksoftlmsb8.dto.request.authentication.AuthenticationRequest;
+import com.example.peaksoftlmsb8.dto.request.authentication.PasswordRequest;
+import com.example.peaksoftlmsb8.dto.response.authentication.AuthenticationResponse;
 import com.example.peaksoftlmsb8.dto.response.SimpleResponse;
 import com.example.peaksoftlmsb8.service.AuthenticationService;
 import io.swagger.v3.oas.annotations.tags.Tag;

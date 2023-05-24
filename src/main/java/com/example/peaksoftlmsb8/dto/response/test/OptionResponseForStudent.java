@@ -7,7 +7,8 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class OptionResponseForStudent {
+public class
+OptionResponseForStudent {
     private Long optionId;
     private String text;
 }

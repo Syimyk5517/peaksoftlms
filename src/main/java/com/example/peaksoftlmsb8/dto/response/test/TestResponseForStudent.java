@@ -2,7 +2,6 @@ package com.example.peaksoftlmsb8.dto.response.test;
 
 import lombok.*;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Builder
@@ -10,7 +9,7 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
-public class TestResponseForStudent {
+public class TestResponseForStudent implements TestResponse {
     private Long lessonId;
     private Long testId;
     private String testName;
