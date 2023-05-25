@@ -17,7 +17,7 @@ public interface StudentService {
 
     StudentResponse findById(Long studentId);
     List<StudentResponse> findAllStudentsByCourse(Long courseId);
-    List<StudentResponse> findAllStudentsByCourseIdWithSort(Long courseId, String formatStudy);
+    List<StudentResponse> findAllStudentsByCourseIdWithSort(String formatStudy);
     SimpleResponse deleteById(Long studentId);
 
     SimpleResponse update(StudentRequest newStudentRequest, Long studentId);

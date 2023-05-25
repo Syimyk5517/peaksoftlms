@@ -143,11 +143,8 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public List<StudentResponse> findAllStudentsByCourseIdWithSort(Long courseId, String formatStudy) {
-        if (studentRepository.findAllStudentsByCourseId(courseId).isEmpty()){
-            throw new BadRequestException("Students not found!");
-        }
-        return studentRepository.findAllStudentsByCourseIdWithSort(courseId,formatStudy);
+    public List<StudentResponse> findAllStudentsByCourseIdWithSort(String formatStudy) {
+        return studentRepository.findAllStudentsByCourseIdWithSort(formatStudy);
     }
 
     @Override

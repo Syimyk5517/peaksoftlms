@@ -12,12 +12,10 @@ import java.time.LocalDate;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CourseRequest {
-    @NotBlank(message = "Name should not be null")
+public class CourseUpdateRequest {
+    private Long courseId;
     private String name;
-    @NotBlank(message = "Image should not be null")
     private String image;
-    @NotBlank(message = "Description should not be null")
     private String description;
     private LocalDate createdAt;
     private LocalDate finishDate;
