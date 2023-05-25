@@ -6,9 +6,11 @@ import com.example.peaksoftlmsb8.db.entity.ResultOfTest;
 import com.example.peaksoftlmsb8.db.entity.Test;
 import com.example.peaksoftlmsb8.db.exception.AlReadyExistException;
 import com.example.peaksoftlmsb8.db.exception.NotFoundException;
-import com.example.peaksoftlmsb8.dto.request.LessonRequest;
-import com.example.peaksoftlmsb8.dto.request.LessonUpdateRequest;
+import com.example.peaksoftlmsb8.dto.request.lesson.LessonRequest;
+import com.example.peaksoftlmsb8.dto.request.lesson.LessonUpdateRequest;
 import com.example.peaksoftlmsb8.dto.response.*;
+import com.example.peaksoftlmsb8.dto.response.lesson.LessonPaginationResponse;
+import com.example.peaksoftlmsb8.dto.response.lesson.LessonResponse;
 import com.example.peaksoftlmsb8.repository.CourseRepository;
 import com.example.peaksoftlmsb8.repository.LessonRepository;
 import com.example.peaksoftlmsb8.repository.ResultOfTestRepository;
@@ -100,7 +102,7 @@ public class LessonServiceImpl implements LessonService {
         Test test = testRepository.findById(lesson.getTest().getId()).orElseThrow(() ->
                 new NotFoundException(String.format("Test with id: " + lesson.getTest().getId() + " not found")));
         ResultOfTest result = resultOfTestRepository.findResultOfTestById(test.getId())
-                .orElseThrow(()-> new NotFoundException(String.format("Lesson with id: " + test.getId() + " not found")));
+                .orElseThrow(() -> new NotFoundException(String.format("Lesson with id: " + test.getId() + " not found")));
         resultOfTestRepository.delete(result);
         testRepository.delete(test);
         lessonRepository.delete(lesson);

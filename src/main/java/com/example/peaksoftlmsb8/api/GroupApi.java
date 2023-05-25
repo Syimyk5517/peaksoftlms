@@ -1,9 +1,9 @@
 package com.example.peaksoftlmsb8.api;
 
-import com.example.peaksoftlmsb8.dto.request.GroupRequest;
-import com.example.peaksoftlmsb8.dto.request.GroupUpdateRequest;
-import com.example.peaksoftlmsb8.dto.response.GroupPaginationResponse;
-import com.example.peaksoftlmsb8.dto.response.GroupResponse;
+import com.example.peaksoftlmsb8.dto.request.group.GroupRequest;
+import com.example.peaksoftlmsb8.dto.request.group.GroupUpdateRequest;
+import com.example.peaksoftlmsb8.dto.response.group.GroupPaginationResponse;
+import com.example.peaksoftlmsb8.dto.response.group.GroupResponse;
 import com.example.peaksoftlmsb8.dto.response.SimpleResponse;
 import com.example.peaksoftlmsb8.service.GroupService;
 import io.swagger.v3.oas.annotations.Operation;
