@@ -34,11 +34,10 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
     @Query("select new com.example.peaksoftlmsb8.dto.response.student.StudentResponse(" +
             "s.id,concat(u.firstName,' ',u.lastName),u.phoneNumber,u.email,s.formLearning,s.group.name) " +
             "from Course c join c.groups g join Student s on s.group.id=g.id join User u on u.student.id=s.id " +
-            "where c.id=:courseId " +
             "ORDER BY " +
             "CASE WHEN :formatStudy = 'online' THEN s.formLearning END ASC, " +
             "CASE WHEN :formatStudy = 'offline' THEN s.formLearning END DESC, " +
             "s.id ASC")
-    List<StudentResponse> findAllStudentsByCourseIdWithSort(Long courseId,@Param("formatStudy") String formatStudy);
+    List<StudentResponse> findAllStudentsByCourseIdWithSort(@Param("formatStudy") String formatStudy);
 }
 

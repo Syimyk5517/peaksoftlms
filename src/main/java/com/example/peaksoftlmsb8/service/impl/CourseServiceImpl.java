@@ -6,6 +6,7 @@ import com.example.peaksoftlmsb8.db.enums.Role;
 import com.example.peaksoftlmsb8.db.exception.NotFoundException;
 import com.example.peaksoftlmsb8.dto.request.AssignRequest;
 import com.example.peaksoftlmsb8.dto.request.course.CourseRequest;
+import com.example.peaksoftlmsb8.dto.request.course.CourseUpdateRequest;
 import com.example.peaksoftlmsb8.dto.response.course.CoursePaginationResponse;
 import com.example.peaksoftlmsb8.dto.response.SimpleResponse;
 import com.example.peaksoftlmsb8.dto.response.course.CourseResponse;
@@ -140,21 +141,21 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public SimpleResponse updateCourse(CourseRequest courseRequest) {
-        if (courseRepository.existsCourseByName(courseRequest.getName())) {
+    public SimpleResponse updateCourse(CourseUpdateRequest courseUpdateRequest) {
+        if (courseRepository.existsCourseByName(courseUpdateRequest.getName())) {
             logger.info("Method updateCourse return SimpleResponse builder");
             return SimpleResponse.builder()
                     .httpStatus(HttpStatus.CONFLICT)
-                    .message(String.format("Course with name :%s already exist", courseRequest.getName())).build();
+                    .message(String.format("Course with name :%s already exist", courseUpdateRequest.getName())).build();
         }
-        logger.info("Course with id: " + courseRequest.getId() + " not found");
-        Course course = courseRepository.findById(courseRequest.getId())
-                .orElseThrow(() -> new NotFoundException(String.format("Course with id: " + courseRequest.getId() + " not found")));
-        course.setName(courseRequest.getName());
-        course.setImage(courseRequest.getImage());
-        course.setDescription(courseRequest.getDescription());
-        course.setCreatedAt(courseRequest.getCreatedAt());
-        course.setFinishDate(courseRequest.getFinishDate());
+        logger.info("Course with id: " + courseUpdateRequest.getCourseId() + " not found");
+        Course course = courseRepository.findById(courseUpdateRequest.getCourseId())
+                .orElseThrow(() -> new NotFoundException(String.format("Course with id: " + courseUpdateRequest.getCourseId() + " not found")));
+        course.setName(courseUpdateRequest.getName());
+        course.setImage(courseUpdateRequest.getImage());
+        course.setDescription(courseUpdateRequest.getDescription());
+        course.setCreatedAt(courseUpdateRequest.getCreatedAt());
+        course.setFinishDate(courseUpdateRequest.getFinishDate());
         courseRepository.save(course);
         logger.info("Successfully updated!");
         return SimpleResponse.builder().httpStatus(HttpStatus.OK).message("Successfully updated!").build();

@@ -8,7 +8,9 @@ import com.example.peaksoftlmsb8.db.exception.AlReadyExistException;
 import com.example.peaksoftlmsb8.db.exception.BadRequestException;
 import com.example.peaksoftlmsb8.db.exception.NotFoundException;
 import com.example.peaksoftlmsb8.dto.request.test.*;
+import com.example.peaksoftlmsb8.dto.request.test.option.OptionRequest;
 import com.example.peaksoftlmsb8.dto.request.test.option.OptionUpdateRequest;
+import com.example.peaksoftlmsb8.dto.request.test.question.QuestionRequest;
 import com.example.peaksoftlmsb8.dto.request.test.question.QuestionUpdateRequest;
 import com.example.peaksoftlmsb8.dto.response.test.*;
 import com.example.peaksoftlmsb8.dto.response.SimpleResponse;
@@ -208,10 +210,10 @@ public class TestServiceImpl implements TestService {
                 question.addOption(option);
             }
         }
-//        if (!testUpdateRequest.getQuestionRequests().isEmpty()) {
-//            List<Question> questionList = questionList(testUpdateRequest.getQuestionRequestList(), test);
-//            questions.addAll(questionList);
-//        }
+        if (!testUpdateRequest.getQuestionRequests().isEmpty()) {
+            List<Question> questionList = questionList(testUpdateRequest.getQuestionRequestList(), test);
+            questions.addAll(questionList);
+        }
         test.setName(testUpdateRequest.getTestName());
         test.setLesson(lesson);
         test.setQuestions(questions);

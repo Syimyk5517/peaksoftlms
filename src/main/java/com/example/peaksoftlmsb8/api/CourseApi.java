@@ -1,6 +1,7 @@
 package com.example.peaksoftlmsb8.api;
 
 import com.example.peaksoftlmsb8.dto.request.AssignRequest;
+import com.example.peaksoftlmsb8.dto.request.course.CourseUpdateRequest;
 import com.example.peaksoftlmsb8.dto.response.SimpleResponse;
 import com.example.peaksoftlmsb8.dto.response.course.CourseResponse;
 import com.example.peaksoftlmsb8.service.CourseService;
@@ -52,8 +53,8 @@ public class CourseApi {
     @PutMapping()
     @PreAuthorize("hasAnyAuthority('ADMIN')")
     @Operation(summary = "This method update Course",description = "you can update Course. Access to this method: ADMIN")
-    public SimpleResponse updateCourse(@RequestBody @Valid CourseRequest courseRequest) {
-        return courseService.updateCourse(courseRequest);
+    public SimpleResponse updateCourse(@RequestBody @Valid CourseUpdateRequest courseUpdateRequest) {
+        return courseService.updateCourse(courseUpdateRequest);
     }
 
     @DeleteMapping("/{courseId}")

@@ -56,13 +56,13 @@ public class StudentApi {
     public List<StudentResponse> findAllStudentsByGroupId(@RequestParam Long courseId) {
         return studentService.findAllStudentsByCourse(courseId);
     }
-    @Operation(summary = "This method can get Student with Group ID",
-            description = "You can get Student with ID")
+    @Operation(summary = "This method can get Students",
+            description = "You can get Students")
     @GetMapping("/getAllForAdmin")
     @PreAuthorize("hasAnyAuthority('ADMIN')")
-    public List<StudentResponse> findAllStudentsByGroupIdAdmin(@RequestParam Long courseId,
+    public List<StudentResponse> findAllStudentsByGroupIdAdmin(
                                                                @RequestParam(required = false) String formStudy) {
-        return studentService.findAllStudentsByCourseIdWithSort(courseId,formStudy);
+        return studentService.findAllStudentsByCourseIdWithSort(formStudy);
     }
 
     @Operation(summary = "This method can update Student with ID",
