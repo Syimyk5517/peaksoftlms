@@ -2,6 +2,7 @@ version: "3.9"
 services:
   backend:
     image: '#image'
+    restart: always
     container_name: peaksoftlms
     ports:
       - "80:2023"
