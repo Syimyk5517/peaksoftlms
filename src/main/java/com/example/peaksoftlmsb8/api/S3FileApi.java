@@ -14,7 +14,7 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/file")
-@CrossOrigin(origins = "*", maxAge = 3600)
+@CrossOrigin
 @Tag(name = "File API", description = "User can upload file")
 public class S3FileApi {
 
