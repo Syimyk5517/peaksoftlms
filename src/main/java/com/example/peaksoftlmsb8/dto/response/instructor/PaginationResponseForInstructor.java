@@ -1,6 +1,5 @@
 package com.example.peaksoftlmsb8.dto.response.instructor;
 
-import com.example.peaksoftlmsb8.dto.response.instructor.InstructorResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

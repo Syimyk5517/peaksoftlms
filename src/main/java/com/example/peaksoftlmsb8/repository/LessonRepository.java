@@ -12,7 +12,7 @@ import java.util.Optional;
 
 @Repository
 public interface LessonRepository extends JpaRepository<Lesson, Long> {
-    boolean existsById(Long lessonId);
+    boolean existsById(Long id);
 
     @Query("select new com.example.peaksoftlmsb8.dto.response.lesson.LessonResponse(" +
             "l.id,l.name,l.course.id) " +
