@@ -5,16 +5,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ResultOfTestResponse implements ResultResponse{
-    private Long resultOfTestId;
+public class ResultResponses {
+    private Long resulOfTestId;
     private Long testId;
-    private String testName;
-    private int studentPoint;
-    private List<ResultQuestionResponse> resultQuestionResponses;
+    private String studentFullName;
+    private int correctAnswers;
+    private int wrongAnswers;
 }

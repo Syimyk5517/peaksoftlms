@@ -11,10 +11,8 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ResultOfTestResponse implements ResultResponse{
-    private Long resultOfTestId;
-    private Long testId;
-    private String testName;
-    private int studentPoint;
-    private List<ResultQuestionResponse> resultQuestionResponses;
+public class ResultOfTestResponseForInstructor implements ResultResponse{
+   private Long resultOfTestId;
+   private Long testId;
+   private List<ResultResponses> resultResponses;
 }

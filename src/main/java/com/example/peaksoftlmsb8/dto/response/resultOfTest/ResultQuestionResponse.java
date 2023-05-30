@@ -17,6 +17,6 @@ public class ResultQuestionResponse {
     private String questionName;
     private OptionType optionType;
     private int point;
-    private List<Boolean> studentAnswers;
+    private List<Long> studentAnswers;
     private List<ResultOptionResponse> optionResponses;
 }

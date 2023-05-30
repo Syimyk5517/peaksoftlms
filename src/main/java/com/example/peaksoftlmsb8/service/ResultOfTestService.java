@@ -6,7 +6,9 @@ import com.example.peaksoftlmsb8.dto.response.resultOfTest.ResultOfTestResponse;
 import java.util.List;
 
 public interface ResultOfTestService {
+
+    List<ResultOfTestResponse> getAll();
     ResultOfTestResponse passTest(PassTestRequest passTestRequest);
 
-    List<ResultOfTestResponse> findAllTests();
+
 }
