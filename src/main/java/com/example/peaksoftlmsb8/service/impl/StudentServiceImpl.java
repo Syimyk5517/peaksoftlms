@@ -15,6 +15,7 @@ import com.example.peaksoftlmsb8.dto.response.student.StudentResponse;
 import com.example.peaksoftlmsb8.repository.GroupRepository;
 import com.example.peaksoftlmsb8.repository.StudentRepository;
 import com.example.peaksoftlmsb8.repository.UserRepository;
+import com.example.peaksoftlmsb8.service.EmailSenderService;
 import com.example.peaksoftlmsb8.service.StudentService;
 import com.poiji.bind.Poiji;
 import com.poiji.exception.PoijiExcelType;
@@ -44,6 +45,7 @@ public class StudentServiceImpl implements StudentService {
     private final StudentRepository studentRepository;
     private final GroupRepository groupRepository;
     private final UserRepository userRepository;
+    private final EmailSenderService emailSenderService;
     private final PasswordEncoder passwordEncoder;
 
     private static final Logger logger = LogManager.getLogger(CourseServiceImpl.class);
@@ -83,6 +85,7 @@ public class StudentServiceImpl implements StudentService {
                 group.setStudents(List.of(student));
                 user.setStudent(student);
                 studentRepository.save(student);
+                emailSenderService.emailSender(excelRequest.getEmail(),"d");
             }
 
 
@@ -121,6 +124,7 @@ public class StudentServiceImpl implements StudentService {
         student.setUser(user);
         user.setStudent(student);
         studentRepository.save(student);
+        emailSenderService.emailSender(studentRequest.getEmail(),"d");
         logger.info("Student with ID: " + student.getId() + " is successfully saved!");
         return SimpleResponse.builder()
                 .httpStatus(HttpStatus.OK)

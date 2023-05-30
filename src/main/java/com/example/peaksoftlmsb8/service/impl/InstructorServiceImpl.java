@@ -11,6 +11,7 @@ import com.example.peaksoftlmsb8.dto.response.instructor.PaginationResponseForIn
 import com.example.peaksoftlmsb8.dto.response.SimpleResponse;
 import com.example.peaksoftlmsb8.repository.InstructorRepository;
 import com.example.peaksoftlmsb8.repository.UserRepository;
+import com.example.peaksoftlmsb8.service.EmailSenderService;
 import com.example.peaksoftlmsb8.service.InstructorService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -20,6 +21,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -33,8 +35,9 @@ public class InstructorServiceImpl implements InstructorService {
     private final InstructorRepository instructorRepository;
 
     private final PasswordEncoder passwordEncoder;
-
+    private final EmailSenderService emailSenderService;
     private static final Logger logger = LogManager.getLogger(InstructorServiceImpl.class);
+
 
     @Override
     public PaginationResponseForInstructor getAllInstructors(int size, int page, String search, String sortBy) {
@@ -77,7 +80,9 @@ public class InstructorServiceImpl implements InstructorService {
         instructor.setSpecial(instructorRequest.getSpecial());
         instructor.setUser(user);
         user.setInstructor(instructor);
+        emailSenderService.emailSender(instructorRequest.getEmail(),"d");
         instructorRepository.save(instructor);
+
         logger.info("This " + instructorRequest.getFirstName() + " saved...");
         return new SimpleResponse(HttpStatus.OK, "This " + instructorRequest.getFirstName() + " saved...");
     }

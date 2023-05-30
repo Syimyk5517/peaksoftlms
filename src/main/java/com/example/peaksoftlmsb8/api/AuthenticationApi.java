@@ -38,4 +38,5 @@ public class  AuthenticationApi {
     public SimpleResponse resetPassword(@RequestParam PasswordRequest newPassword) {
         return authenticationService.resetPassword(newPassword);
     }
+
 }
