@@ -59,7 +59,7 @@ public class StudentApi {
     @Operation(summary = "This method can get Students",
             description = "You can get Students")
     @GetMapping("/getAllForAdmin")
-    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public List<StudentResponse> findAllStudentsByGroupIdAdmin(
                                                                @RequestParam(required = false) String formStudy) {
         return studentService.findAllStudentsByCourseIdWithSort(formStudy);
