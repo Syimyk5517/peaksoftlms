@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/instructors")
 @RequiredArgsConstructor
 @Tag(name = "Instructors")
-@PostAuthorize("hasAuthority('ADMIN')")
+@PostAuthorize("hasAuthority ('ADMIN')")
 public class InstructorAPI {
     private final InstructorService instructorService;
 
