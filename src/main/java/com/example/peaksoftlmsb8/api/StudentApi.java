@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,6 +22,7 @@ import java.util.List;
 @RequestMapping("/api/students")
 @RequiredArgsConstructor
 @Tag(name = "Students")
+@PostAuthorize("hasAnyAuthority('ADNIN,INSTRUCTOR')")
 public class StudentApi {
     private final StudentService studentService;
     @PostMapping(
@@ -29,6 +31,7 @@ public class StudentApi {
             path = "/import")
     @Operation(summary = "This method import excel file to database",
             description = "Add students from excel file by administrator")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public SimpleResponse importExcel(@RequestParam Long id, @RequestParam(name = "file") MultipartFile multipartFile) throws IOException {
         return studentService.importExcel(id, multipartFile);
     }
@@ -59,7 +62,7 @@ public class StudentApi {
     @Operation(summary = "This method can get Students",
             description = "You can get Students")
     @GetMapping("/getAllForAdmin")
-    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public List<StudentResponse> findAllStudentsByGroupIdAdmin(
                                                                @RequestParam(required = false) String formStudy) {
         return studentService.findAllStudentsByCourseIdWithSort(formStudy);
