@@ -36,6 +36,7 @@ public class CourseServiceImpl implements CourseService {
     private final InstructorRepository instructorRepository;
     private final TestRepository testRepository;
     private final LessonRepository lessonRepository;
+    private final ResultOfTestRepository resultOfTestRepository;
     private final GroupRepository groupRepository;
     private final JwtService jwtService;
 
@@ -170,6 +171,7 @@ public class CourseServiceImpl implements CourseService {
         for (Lesson lesson : course.getLessons()) {
             Test test = lesson.getTest();
             if (test != null) {
+                resultOfTestRepository.deleteByTest_Id(test.getId());
                 testRepository.delete(test);
             }
             lessonRepository.delete(lesson);
