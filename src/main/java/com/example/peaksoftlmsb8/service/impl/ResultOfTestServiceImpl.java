@@ -6,11 +6,11 @@ import com.example.peaksoftlmsb8.db.enums.OptionType;
 import com.example.peaksoftlmsb8.db.exception.NotFoundException;
 import com.example.peaksoftlmsb8.dto.request.resultOfTest.PassQuestionRequest;
 import com.example.peaksoftlmsb8.dto.request.resultOfTest.PassTestRequest;
-import com.example.peaksoftlmsb8.dto.response.resultOfTest.*;
-import com.example.peaksoftlmsb8.repository.OptionRepository;
-import com.example.peaksoftlmsb8.repository.QuestionRepository;
-import com.example.peaksoftlmsb8.repository.ResultOfTestRepository;
-import com.example.peaksoftlmsb8.repository.TestRepository;
+import com.example.peaksoftlmsb8.dto.response.resultOfTest.ResultOfTestResponseForInstructor;
+import com.example.peaksoftlmsb8.dto.response.resultOfTest.ResultOfTestResponseForStudent;
+import com.example.peaksoftlmsb8.dto.response.resultOfTest.ResultOptionResponse;
+import com.example.peaksoftlmsb8.dto.response.resultOfTest.ResultQuestionResponse;
+import com.example.peaksoftlmsb8.repository.*;
 import com.example.peaksoftlmsb8.service.ResultOfTestService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,18 +25,24 @@ public class ResultOfTestServiceImpl implements ResultOfTestService {
     private final QuestionRepository questionRepository;
     private final OptionRepository optionRepository;
     private final ResultOfTestRepository resultOfTestRepository;
+    private final ResultRepository resultRepository;
     private final JwtService jwtService;
 
     @Override
-    public List<ResultOfTestResponse> getAll() {
+    public ResultOfTestResponseForStudent findResultOfTestByTestIdForStudent(Long testId) {
         User accountInToken = jwtService.getAccountInToken();
         Student student = accountInToken.getStudent();
-        List<ResultOfTest> allByStudentId = resultOfTestRepository.findAllByStudentId(student.getId());
-        List<ResultOfTestResponse> resultOfTestResponses = new ArrayList<>();
-        for (ResultOfTest resultTest : allByStudentId) {
-            int countCorrectAnswers = 0;
-            Test test = resultTest.getTest();
-            List<ResultQuestionResponse> resultQuestionResponses = new ArrayList<>();
+        Test test = testRepository.findById(testId).orElseThrow(
+                () -> new NotFoundException("Test with id : " + testId + " not found !"));
+
+        ResultOfTest resultOfTest = resultOfTestRepository.findByStudentId(student.getId()).orElseThrow(
+                () -> new NotFoundException("Result of test with id : " + student.getId() + " not found !"));
+
+        List<ResultQuestionResponse> resultQuestionResponses = new ArrayList<>();
+
+        int countCorrectStudentAnswers = 0;
+
+        if (resultOfTest.getTest().getId().equals(test.getId())) {
             for (Question question : test.getQuestions()) {
                 ResultQuestionResponse questionResponse = new ResultQuestionResponse();
                 questionResponse.setQuestionId(question.getId());
@@ -52,19 +58,19 @@ public class ResultOfTestServiceImpl implements ResultOfTestService {
                     resultOptionResponse.setIsTrue(option.getIsTrue());
                     optionResponses.add(resultOptionResponse);
                 }
-                for (Long studentAnswers : resultTest.getStudentAnswers()) {
+                for (Long studentAnswers : resultOfTest.getStudentAnswers()) {
                     for (Option option : question.getOptions()) {
                         if (question.getOptionType().equals(OptionType.SINGLETON)) {
                             if (studentAnswers.equals(option.getId())) {
                                 questionResponse.setPoint(10);
                                 questionResponse.getStudentAnswers().add(option.getId());
-                                countCorrectAnswers += 10;
+                                countCorrectStudentAnswers += 10;
                             }
                         } else {
                             if (studentAnswers.equals(option.getId())) {
                                 questionResponse.setPoint(questionResponse.getPoint() + 5);
                                 questionResponse.getStudentAnswers().add(option.getId());
-                                countCorrectAnswers += 5;
+                                countCorrectStudentAnswers += 5;
                             }
                         }
                     }
@@ -72,22 +78,19 @@ public class ResultOfTestServiceImpl implements ResultOfTestService {
                 questionResponse.setOptionResponses(optionResponses);
                 resultQuestionResponses.add(questionResponse);
             }
-            ResultOfTestResponse resultOfTestResponse = ResultOfTestResponse.builder()
-                    .resultOfTestId(resultTest.getId())
-                    .testId(test.getId())
-                    .testName(test.getName())
-                    .resultQuestionResponses(resultQuestionResponses)
-                    .studentPoint(countCorrectAnswers)
-                    .build();
-            resultOfTestResponses.add(resultOfTestResponse);
         }
-
-        return resultOfTestResponses;
+        return ResultOfTestResponseForStudent.builder()
+                .resultOfTestId(resultOfTest.getId())
+                .testId(test.getId())
+                .testName(test.getName())
+                .resultQuestionResponses(resultQuestionResponses)
+                .studentPoint(countCorrectStudentAnswers)
+                .build();
 
     }
 
     @Override
-    public ResultOfTestResponse passTest(PassTestRequest passTestRequest) {
+    public ResultOfTestResponseForStudent passTest(PassTestRequest passTestRequest) {
         User accountInToken = jwtService.getAccountInToken();
 
         Student student = accountInToken.getStudent();
@@ -169,7 +172,7 @@ public class ResultOfTestServiceImpl implements ResultOfTestService {
         resultOfTest.setCountInCorrect(countInCorrect);
         resultOfTestRepository.save(resultOfTest);
 
-        return ResultOfTestResponse.builder()
+        return ResultOfTestResponseForStudent.builder()
                 .testId(test.getId())
                 .testName(test.getName())
                 .resultQuestionResponses(resultQuestionResponses)
@@ -178,5 +181,12 @@ public class ResultOfTestServiceImpl implements ResultOfTestService {
 
     }
 
+    @Override
+    public List<ResultOfTestResponseForInstructor> findAll(Long testId) {
+        return resultRepository.resultTest(testId);
+    }
+
 
 }
+
+

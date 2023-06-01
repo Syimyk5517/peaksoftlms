@@ -11,7 +11,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ResultOfTestResponse implements ResultResponse{
+public class ResultOfTestResponseForStudent {
     private Long resultOfTestId;
     private Long testId;
     private String testName;
