@@ -128,13 +128,11 @@ VALUES (1,
         5,
         2);
 INSERT INTO task_answers(id,
-                         content_format,
-                         content_value,
+
                          point,
                          task_status
 )
-VALUES (1,'LINK',
-        'ssss',
+VALUES (1,
         10,
         'EXPECTATION'
        );
