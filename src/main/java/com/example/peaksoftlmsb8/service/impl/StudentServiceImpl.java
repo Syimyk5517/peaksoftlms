@@ -10,7 +10,6 @@ import com.example.peaksoftlmsb8.db.exception.NotFoundException;
 import com.example.peaksoftlmsb8.dto.request.StudentRequest;
 import com.example.peaksoftlmsb8.dto.request.student.StudentExcelRequest;
 import com.example.peaksoftlmsb8.dto.response.SimpleResponse;
-import com.example.peaksoftlmsb8.dto.response.student.StudentPaginationResponse;
 import com.example.peaksoftlmsb8.dto.response.student.StudentResponse;
 import com.example.peaksoftlmsb8.repository.GroupRepository;
 import com.example.peaksoftlmsb8.repository.StudentRepository;
@@ -25,11 +24,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -46,12 +41,11 @@ public class StudentServiceImpl implements StudentService {
     private final GroupRepository groupRepository;
     private final UserRepository userRepository;
     private final EmailSenderService emailSenderService;
-    private final PasswordEncoder passwordEncoder;
 
     private static final Logger logger = LogManager.getLogger(CourseServiceImpl.class);
 
     @Override
-    public SimpleResponse importExcel(Long groupId, MultipartFile multipartFile) throws IOException {
+    public SimpleResponse importExcel(Long groupId,String link, MultipartFile multipartFile) throws IOException {
         logger.info("Group with id " + groupId + " not found!");
         Group group = groupRepository.findById(groupId).orElseThrow(
                 () -> new NotFoundException("Group with id " + groupId + " not found!")
@@ -85,7 +79,7 @@ public class StudentServiceImpl implements StudentService {
                 group.setStudents(List.of(student));
                 user.setStudent(student);
                 studentRepository.save(student);
-                emailSenderService.emailSender(excelRequest.getEmail(),"d");
+                emailSenderService.emailSender(excelRequest.getEmail(),link);
             }
 
 
@@ -113,7 +107,6 @@ public class StudentServiceImpl implements StudentService {
         user.setFirstName(studentRequest.getFirstName());
         user.setLastName(studentRequest.getLastName());
         user.setEmail(studentRequest.getEmail());
-        user.setPassword(passwordEncoder.encode(studentRequest.getPassword()));
         user.setPhoneNumber(studentRequest.getPhoneNumber());
         user.setRole(Role.STUDENT);
         Student student = new Student();
@@ -124,7 +117,7 @@ public class StudentServiceImpl implements StudentService {
         student.setUser(user);
         user.setStudent(student);
         studentRepository.save(student);
-        emailSenderService.emailSender(studentRequest.getEmail(),"d");
+        emailSenderService.emailSender(studentRequest.getEmail(),studentRequest.getLink());
         logger.info("Student with ID: " + student.getId() + " is successfully saved!");
         return SimpleResponse.builder()
                 .httpStatus(HttpStatus.OK)
@@ -177,7 +170,6 @@ public class StudentServiceImpl implements StudentService {
         student.getUser().setFirstName(newStudentRequest.getFirstName());
         student.getUser().setLastName(newStudentRequest.getLastName());
         student.getUser().setEmail(newStudentRequest.getEmail());
-        student.getUser().setPassword(passwordEncoder.encode(newStudentRequest.getPassword()));
         if (studentRepository.existsByPhoneNumber(newStudentRequest.getPhoneNumber())) {
             throw new BadRequestException("Student with Phone number: " + newStudentRequest.getPhoneNumber() + " is already saved!");
         }

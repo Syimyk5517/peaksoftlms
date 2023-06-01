@@ -19,6 +19,5 @@ public class CourseRequest {
     private String image;
     @NotBlank(message = "Description should not be null")
     private String description;
-    private LocalDate createdAt;
     private LocalDate finishDate;
 }

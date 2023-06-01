@@ -1,6 +1,5 @@
 package com.example.peaksoftlmsb8.dto.request.course;
 
-import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

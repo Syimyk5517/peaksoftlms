@@ -16,7 +16,7 @@ public class TaskRequest {
     private String description;
     @NotBlank
     private String file;
-    @NotBlank
+
     private LocalDate deadline;
     private Long lessonId;
 }

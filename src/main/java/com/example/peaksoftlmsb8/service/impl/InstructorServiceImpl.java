@@ -33,8 +33,6 @@ public class InstructorServiceImpl implements InstructorService {
     private final UserRepository userRepository;
 
     private final InstructorRepository instructorRepository;
-
-    private final PasswordEncoder passwordEncoder;
     private final EmailSenderService emailSenderService;
     private static final Logger logger = LogManager.getLogger(InstructorServiceImpl.class);
 
@@ -74,13 +72,12 @@ public class InstructorServiceImpl implements InstructorService {
         User user = new User();
         user.setFirstName(instructorRequest.getFirstName());
         user.setLastName(instructorRequest.getLastName());
-        user.setPassword(passwordEncoder.encode(instructorRequest.getPassword()));
         user.setEmail(instructorRequest.getEmail());
         user.setPhoneNumber(instructorRequest.getPhoneNumber());
         instructor.setSpecial(instructorRequest.getSpecial());
         instructor.setUser(user);
         user.setInstructor(instructor);
-        emailSenderService.emailSender(instructorRequest.getEmail(),"d");
+        emailSenderService.emailSender(instructorRequest.getEmail(),instructorRequest.getLink());
         instructorRepository.save(instructor);
 
         logger.info("This " + instructorRequest.getFirstName() + " saved...");
@@ -94,7 +91,6 @@ public class InstructorServiceImpl implements InstructorService {
                 .orElseThrow(() -> new NotFoundException("this id = " + instructorId + " not found!"));
         instructor.getUser().setFirstName(newInstructor.getFirstName());
         instructor.getUser().setLastName(newInstructor.getLastName());
-        instructor.getUser().setPassword(passwordEncoder.encode(newInstructor.getPassword()));
         instructor.getUser().setEmail(newInstructor.getEmail());
         instructor.getUser().setPhoneNumber(newInstructor.getPhoneNumber());
         instructor.setSpecial(newInstructor.getSpecial());
