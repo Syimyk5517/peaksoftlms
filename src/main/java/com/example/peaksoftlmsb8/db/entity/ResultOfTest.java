@@ -7,6 +7,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+import java.util.Map;
+
 import static jakarta.persistence.CascadeType.*;
 import static jakarta.persistence.CascadeType.DETACH;
 
@@ -26,8 +29,12 @@ public class ResultOfTest {
     @OneToOne (cascade = {PERSIST, MERGE, REFRESH, DETACH})
     @JoinColumn(name = "student_id")
     private Student student;
-    @OneToOne(cascade = {PERSIST, MERGE, REFRESH, DETACH})
+    @ManyToOne(cascade = {PERSIST, MERGE, REFRESH, DETACH})
     @JoinColumn(name = "test_id")
     private Test test;
+    @ElementCollection
+    private List<Long> studentAnswers;
+
+
 
 }

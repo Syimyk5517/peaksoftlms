@@ -31,6 +31,7 @@ public class StudentApi {
             path = "/import")
     @Operation(summary = "This method import excel file to database",
             description = "Add students from excel file by administrator")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public SimpleResponse importExcel(@RequestParam Long id,@RequestParam (name = "link")String link,
                                       @RequestParam(name = "file") MultipartFile multipartFile) throws IOException {
         return studentService.importExcel(id,link,multipartFile);
