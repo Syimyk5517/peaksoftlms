@@ -3,8 +3,8 @@ package com.example.peaksoftlmsb8.service.impl;
 import com.example.peaksoftlmsb8.db.entity.Course;
 import com.example.peaksoftlmsb8.db.entity.Instructor;
 import com.example.peaksoftlmsb8.db.entity.User;
-import com.example.peaksoftlmsb8.db.exception.AlReadyExistException;
-import com.example.peaksoftlmsb8.db.exception.NotFoundException;
+import com.example.peaksoftlmsb8.exception.AlReadyExistException;
+import com.example.peaksoftlmsb8.exception.NotFoundException;
 import com.example.peaksoftlmsb8.dto.request.instructor.InstructorRequest;
 import com.example.peaksoftlmsb8.dto.response.instructor.InstructorResponse;
 import com.example.peaksoftlmsb8.dto.response.instructor.PaginationResponseForInstructor;
@@ -21,8 +21,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Log4j2

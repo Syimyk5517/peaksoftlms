@@ -2,8 +2,8 @@ package com.example.peaksoftlmsb8.service.impl;
 
 import com.example.peaksoftlmsb8.db.entity.Lesson;
 import com.example.peaksoftlmsb8.db.entity.Presentation;
-import com.example.peaksoftlmsb8.db.exception.AlReadyExistException;
-import com.example.peaksoftlmsb8.db.exception.NotFoundException;
+import com.example.peaksoftlmsb8.exception.AlReadyExistException;
+import com.example.peaksoftlmsb8.exception.NotFoundException;
 import com.example.peaksoftlmsb8.dto.request.presentation.PresentationRequest;
 import com.example.peaksoftlmsb8.dto.request.presentation.PresentationUpdateRequest;
 import com.example.peaksoftlmsb8.dto.response.presentation.PresentationResponse;

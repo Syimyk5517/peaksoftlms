@@ -1,6 +1,7 @@
 package com.example.peaksoftlmsb8.dto.request.student;
 
 import com.example.peaksoftlmsb8.db.enums.FormLearning;
+import com.example.peaksoftlmsb8.validation.email.EmailValid;
 import com.poiji.annotation.ExcelCellName;
 import lombok.Data;
 
@@ -15,5 +16,6 @@ public class StudentExcelRequest {
     @ExcelCellName("Form learning")
     private FormLearning formLearning;
     @ExcelCellName("email")
+    @EmailValid
     private String email;
 }

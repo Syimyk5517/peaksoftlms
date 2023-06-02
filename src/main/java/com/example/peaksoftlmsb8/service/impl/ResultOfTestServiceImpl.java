@@ -3,7 +3,7 @@ package com.example.peaksoftlmsb8.service.impl;
 import com.example.peaksoftlmsb8.config.JwtService;
 import com.example.peaksoftlmsb8.db.entity.*;
 import com.example.peaksoftlmsb8.db.enums.OptionType;
-import com.example.peaksoftlmsb8.db.exception.NotFoundException;
+import com.example.peaksoftlmsb8.exception.NotFoundException;
 import com.example.peaksoftlmsb8.dto.request.resultOfTest.PassQuestionRequest;
 import com.example.peaksoftlmsb8.dto.request.resultOfTest.PassTestRequest;
 import com.example.peaksoftlmsb8.dto.response.resultOfTest.ResultOfTestResponseForInstructor;

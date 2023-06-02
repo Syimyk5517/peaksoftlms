@@ -2,8 +2,8 @@ package com.example.peaksoftlmsb8.service.impl;
 
 import com.example.peaksoftlmsb8.config.JwtService;
 import com.example.peaksoftlmsb8.db.entity.User;
-import com.example.peaksoftlmsb8.db.exception.BadRequestException;
-import com.example.peaksoftlmsb8.db.exception.NotFoundException;
+import com.example.peaksoftlmsb8.exception.BadRequestException;
+import com.example.peaksoftlmsb8.exception.NotFoundException;
 import com.example.peaksoftlmsb8.dto.request.authentication.AuthenticationRequest;
 import com.example.peaksoftlmsb8.dto.request.authentication.PasswordRequest;
 import com.example.peaksoftlmsb8.dto.response.authentication.AuthenticationResponse;
@@ -89,7 +89,15 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         logger.info("This id : " + passwordRequest.getId() + " is not found !");
         User user = userRepository.findById(passwordRequest.getId())
                 .orElseThrow(() -> new NotFoundException("This id : " + passwordRequest.getId() + " is not found !"));
+        int dotIndex = user.getEmail().indexOf(".");
+        String modifiedEmail = user.getEmail().substring(0, dotIndex).replace("@", "");
+        if (user.getPassword().equals(modifiedEmail)){
+           throw new BadRequestException("");
+        }else {
         user.setPassword(passwordEncoder.encode(passwordRequest.getPassword()));
+        userRepository.save(user);
+        }
+
         logger.info("Password successfully updated");
         return SimpleResponse.builder()
                 .httpStatus(HttpStatus.OK)

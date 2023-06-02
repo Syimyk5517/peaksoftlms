@@ -1,7 +1,6 @@
 package com.example.peaksoftlmsb8.api;
 
 import com.example.peaksoftlmsb8.dto.request.AssignRequest;
-import com.example.peaksoftlmsb8.dto.request.course.CourseUpdateRequest;
 import com.example.peaksoftlmsb8.dto.response.SimpleResponse;
 import com.example.peaksoftlmsb8.dto.response.course.CourseResponse;
 import com.example.peaksoftlmsb8.service.CourseService;
@@ -26,7 +25,7 @@ public class CourseApi {
     @PostMapping("/assign")
     @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "This method assign Instructor to Course",description = "You can assign Instructor to Course. Access to this method: ADMIN")
-    public SimpleResponse assignInstructorToCourse(@RequestParam Boolean isAssigned, @RequestBody AssignRequest assignRequest) {
+    public SimpleResponse assignInstructorToCourse(@RequestParam Boolean isAssigned, @RequestBody @Valid AssignRequest assignRequest) {
         return courseService.assignInstructorToCourse(isAssigned, assignRequest);
     }
 
@@ -52,8 +51,8 @@ public class CourseApi {
     @PutMapping()
     @PreAuthorize("hasAnyAuthority('ADMIN')")
     @Operation(summary = "This method update Course",description = "you can update Course. Access to this method: ADMIN")
-    public SimpleResponse updateCourse(@RequestBody @Valid CourseUpdateRequest courseUpdateRequest) {
-        return courseService.updateCourse(courseUpdateRequest);
+    public SimpleResponse updateCourse( @RequestParam Long courseId,@RequestBody @Valid CourseRequest courseUpdateRequest) {
+        return courseService.updateCourse(courseId,courseUpdateRequest);
     }
 
     @DeleteMapping("/{courseId}")

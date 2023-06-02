@@ -3,25 +3,24 @@ package com.example.peaksoftlmsb8.service.impl;
 import com.example.peaksoftlmsb8.config.JwtService;
 import com.example.peaksoftlmsb8.db.entity.*;
 import com.example.peaksoftlmsb8.db.enums.Role;
-import com.example.peaksoftlmsb8.db.exception.NotFoundException;
 import com.example.peaksoftlmsb8.dto.request.AssignRequest;
 import com.example.peaksoftlmsb8.dto.request.course.CourseRequest;
-import com.example.peaksoftlmsb8.dto.request.course.CourseUpdateRequest;
-import com.example.peaksoftlmsb8.dto.response.course.CoursePaginationResponse;
 import com.example.peaksoftlmsb8.dto.response.SimpleResponse;
+import com.example.peaksoftlmsb8.dto.response.course.CoursePaginationResponse;
 import com.example.peaksoftlmsb8.dto.response.course.CourseResponse;
+import com.example.peaksoftlmsb8.exception.AlReadyExistException;
+import com.example.peaksoftlmsb8.exception.NotFoundException;
 import com.example.peaksoftlmsb8.repository.*;
 import com.example.peaksoftlmsb8.service.CourseService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
@@ -40,7 +39,7 @@ public class CourseServiceImpl implements CourseService {
     private final GroupRepository groupRepository;
     private final JwtService jwtService;
 
-    private final JdbcTemplate jdbcTemplate;
+    private final CourseRepo courseRepo;
 
     private static final Logger logger = LogManager.getLogger(CourseServiceImpl.class);
 
@@ -68,32 +67,7 @@ public class CourseServiceImpl implements CourseService {
     public CoursePaginationResponse getAllCourse(int size, int page) {
         User user = jwtService.getAccountInToken();
         if (user.getRole().equals(Role.STUDENT)) {
-            int offset = size * page;
-            Group group = user.getStudent().getGroup();
-            String sql = """
-                    select c.id as course_id,
-                           c.name as course_name,
-                           c.description as course_description,
-                           c.created_at as course_created_at,
-                           c.final_date as course_finish_date
-                    from courses c join groups_courses gc on c.id = gc.courses_id where gc.group_id =:? limit ? offset ?;
-                    """;
-            List<CourseResponse> courseResponses = jdbcTemplate.query(sql, (resultSet, i) -> {
-                CourseResponse courseResponse = new CourseResponse();
-                courseResponse.setId(resultSet.getLong("course_id"));
-                courseResponse.setName(resultSet.getString("course_name"));
-                courseResponse.setDescription(resultSet.getString("course_description"));
-                courseResponse.setCreatedAt(resultSet.getDate("course_create_date").toLocalDate());
-                courseResponse.setFinishDate(resultSet.getDate("course_finish_date").toLocalDate());
-                return courseResponse;
-
-            }, group.getId(), size, offset);
-            return CoursePaginationResponse.builder().
-                    courseResponses(courseResponses)
-                    .currentPage(page)
-                    .pageSize(size).
-                    build();
-
+            return courseRepo.getAllCourses(user, size, page);
         } else {
 
             Pageable pageable = PageRequest.of(page - 1, size);
@@ -142,20 +116,17 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public SimpleResponse updateCourse(CourseUpdateRequest courseUpdateRequest) {
+    public SimpleResponse updateCourse(Long courseId, CourseRequest courseUpdateRequest) {
         if (courseRepository.existsCourseByName(courseUpdateRequest.getName())) {
             logger.info("Method updateCourse return SimpleResponse builder");
-            return SimpleResponse.builder()
-                    .httpStatus(HttpStatus.CONFLICT)
-                    .message(String.format("Course with name :%s already exist", courseUpdateRequest.getName())).build();
+            throw new AlReadyExistException(String.format("Course with name :%s already exist", courseUpdateRequest.getName()));
         }
-        logger.info("Course with id: " + courseUpdateRequest.getCourseId() + " not found");
-        Course course = courseRepository.findById(courseUpdateRequest.getCourseId())
-                .orElseThrow(() -> new NotFoundException(String.format("Course with id: " + courseUpdateRequest.getCourseId() + " not found")));
+        logger.info("Course with id: " + courseId + " not found");
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new NotFoundException(String.format("Course with id: " + courseId + " not found")));
         course.setName(courseUpdateRequest.getName());
         course.setImage(courseUpdateRequest.getImage());
         course.setDescription(courseUpdateRequest.getDescription());
-        course.setCreatedAt(courseUpdateRequest.getCreatedAt());
         course.setFinishDate(courseUpdateRequest.getFinishDate());
         courseRepository.save(course);
         logger.info("Successfully updated!");

@@ -3,9 +3,9 @@ package com.example.peaksoftlmsb8.service.impl;
 import com.example.peaksoftlmsb8.db.entity.Course;
 import com.example.peaksoftlmsb8.db.entity.Group;
 import com.example.peaksoftlmsb8.db.entity.Student;
-import com.example.peaksoftlmsb8.db.exception.NotFoundException;
+import com.example.peaksoftlmsb8.exception.AlReadyExistException;
+import com.example.peaksoftlmsb8.exception.NotFoundException;
 import com.example.peaksoftlmsb8.dto.request.group.GroupRequest;
-import com.example.peaksoftlmsb8.dto.request.group.GroupUpdateRequest;
 import com.example.peaksoftlmsb8.dto.response.group.GroupPaginationResponse;
 import com.example.peaksoftlmsb8.dto.response.group.GroupResponse;
 import com.example.peaksoftlmsb8.dto.response.SimpleResponse;
@@ -26,6 +26,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 @Transactional
@@ -74,16 +75,10 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     @Transactional
-    public SimpleResponse updateGroup(GroupUpdateRequest groupUpdateRequest) {
-        logger.info("Group with name : " + groupUpdateRequest.getName() + " already exists");
-        if (groupRepository.existsGroupByName(groupUpdateRequest.getName())) {
-            return SimpleResponse.builder().httpStatus(HttpStatus.CONFLICT).
-                    message(String.format("Group with name : " + groupUpdateRequest.getName() + " already exists")).build();
-        }
-        logger.info("Group with id : " + groupUpdateRequest.getGroupId() + " not found");
-        Group group = groupRepository.findById(groupUpdateRequest.getGroupId()).orElseThrow(() ->
-                new NotFoundException(String.format("Group with id : " + groupUpdateRequest.getGroupId() + " not found")));
-        group.setId(groupUpdateRequest.getGroupId());
+    public SimpleResponse updateGroup(Long groupId, GroupRequest groupUpdateRequest) {
+        logger.info("Group with id : " + groupId + " not found");
+        Group group = groupRepository.findById(groupId).orElseThrow(() ->
+                new NotFoundException(String.format("Group with id : " + groupId + " not found")));
         group.setName(groupUpdateRequest.getName());
         group.setDescription(groupUpdateRequest.getDescription());
         group.setImage(groupUpdateRequest.getImage());
@@ -118,12 +113,17 @@ public class GroupServiceImpl implements GroupService {
         logger.info("Course with id : " + courseId + " not found");
         Course course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new NotFoundException("Course with id : " + courseId + " not found"));
-        group.addCourse(course);
-        groupRepository.save(group);
-        logger.info("Successfully saved!");
+        if (group.getCourses().contains(course)) {
+            throw new AlReadyExistException("There is already such a course in this group");
+        } else {
+            group.addCourse(course);
+            course.assignCourse(group);
+            groupRepository.save(group);
+            logger.info("Successfully saved!");
+        }
         return SimpleResponse.builder()
                 .httpStatus(HttpStatus.OK)
-                .message("Successfully saved!")
+                .message(String.format("%s group has successfully joined the course %s", group.getName(), course.getName()))
                 .build();
     }
 }

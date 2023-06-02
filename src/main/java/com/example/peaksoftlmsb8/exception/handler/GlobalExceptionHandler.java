@@ -1,6 +1,6 @@
-package com.example.peaksoftlmsb8.db.exception.handler;
+package com.example.peaksoftlmsb8.exception.handler;
 
-import com.example.peaksoftlmsb8.db.exception.*;
+import com.example.peaksoftlmsb8.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;

@@ -1,6 +1,9 @@
 package com.example.peaksoftlmsb8.dto.request.authentication;
 
+import com.example.peaksoftlmsb8.validation.email.EmailValid;
+import com.example.peaksoftlmsb8.validation.password.PasswordValid;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
@@ -9,8 +12,10 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AuthenticationRequest {
-    @Email
+    @EmailValid
+    @NotBlank(message = "email can't be empty!")
     private String email;
-    @NotNull
+    @PasswordValid
+    @NotBlank(message = "password can't be empty!")
     private String password;
 }

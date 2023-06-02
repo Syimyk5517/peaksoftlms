@@ -1,4 +1,4 @@
-package com.example.peaksoftlmsb8.db.exception;
+package com.example.peaksoftlmsb8.exception;
 
 import lombok.Getter;
 import lombok.Setter;
