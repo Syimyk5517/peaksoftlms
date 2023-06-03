@@ -1,5 +1,6 @@
 package com.example.peaksoftlmsb8.service;
 
+import com.example.peaksoftlmsb8.db.enums.FormLearning;
 import com.example.peaksoftlmsb8.dto.request.StudentRequest;
 import com.example.peaksoftlmsb8.dto.response.SimpleResponse;
 import com.example.peaksoftlmsb8.dto.response.student.StudentPaginationResponse;
@@ -17,7 +18,7 @@ public interface StudentService {
 
     StudentResponse findById(Long studentId);
     List<StudentResponse> findAllStudentsByCourse(Long courseId);
-    List<StudentResponse> findAllStudentsByCourseIdWithSort(String formatStudy);
+    List<StudentResponse> findAllStudentsByCourseIdWithSort(FormLearning formatStudy);
     SimpleResponse deleteById(Long studentId);
 
     SimpleResponse update(StudentRequest newStudentRequest, Long studentId);
