@@ -3,6 +3,7 @@ package com.example.peaksoftlmsb8.service.impl;
 import com.example.peaksoftlmsb8.db.entity.Group;
 import com.example.peaksoftlmsb8.db.entity.Student;
 import com.example.peaksoftlmsb8.db.entity.User;
+import com.example.peaksoftlmsb8.db.enums.FormLearning;
 import com.example.peaksoftlmsb8.db.enums.Role;
 import com.example.peaksoftlmsb8.db.exception.AlReadyExistException;
 import com.example.peaksoftlmsb8.db.exception.BadRequestException;
@@ -143,7 +144,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public List<StudentResponse> findAllStudentsByCourseIdWithSort(String formatStudy) {
+    public List<StudentResponse> findAllStudentsByCourseIdWithSort(FormLearning formatStudy) {
         return studentRepository.findAllStudentsByCourseIdWithSort(formatStudy);
     }
 

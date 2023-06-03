@@ -26,7 +26,7 @@ public class ResultOfTest {
     private Long id;
     private int countCorrect;
     private int countInCorrect;
-    @OneToOne (cascade = {PERSIST, MERGE, REFRESH, DETACH})
+    @ManyToOne (cascade = {PERSIST, MERGE, REFRESH, DETACH})
     @JoinColumn(name = "student_id")
     private Student student;
     @ManyToOne(cascade = {PERSIST, MERGE, REFRESH, DETACH})

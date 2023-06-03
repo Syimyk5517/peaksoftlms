@@ -1,5 +1,6 @@
 package com.example.peaksoftlmsb8.api;
 
+import com.example.peaksoftlmsb8.db.enums.FormLearning;
 import com.example.peaksoftlmsb8.dto.request.StudentRequest;
 import com.example.peaksoftlmsb8.dto.response.SimpleResponse;
 import com.example.peaksoftlmsb8.dto.response.student.StudentResponse;
@@ -65,7 +66,7 @@ public class StudentApi {
     @GetMapping("/getAllForAdmin")
     @PreAuthorize("hasAuthority('ADMIN')")
     public List<StudentResponse> findAllStudentsByGroupIdAdmin(
-                                                               @RequestParam(required = false) String formStudy) {
+                                                               @RequestParam(required = false) FormLearning formStudy) {
         return studentService.findAllStudentsByCourseIdWithSort(formStudy);
     }
 
