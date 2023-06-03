@@ -33,10 +33,9 @@ public class CourseApi {
 
     @PostMapping()
     @Operation(summary = "This method save Course",description = "You can save Course")
-    public SimpleResponse saveCourse(@RequestBody CourseRequest courseRequest) {
+    public SimpleResponse saveCourse(@RequestBody @Valid CourseRequest courseRequest) {
         return courseService.saveCourse(courseRequest);
     }
-
     @GetMapping("/pagination")
     @Operation(summary = "This method get all Courses",description = "You can get all Courses")
     public CoursePaginationResponse getAllCourses(@RequestParam int size,

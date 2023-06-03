@@ -33,9 +33,9 @@ public class StudentApi {
     @Operation(summary = "This method import excel file to database",
             description = "Add students from excel file by administrator")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public SimpleResponse importExcel(@RequestParam Long id,
+    public SimpleResponse importExcel(@RequestParam Long id,@RequestParam (name = "link")String link,
                                       @RequestParam(name = "file") MultipartFile multipartFile) throws IOException {
-        return studentService.importExcel(id, multipartFile);
+        return studentService.importExcel(id,link,multipartFile);
     }
 
     @Operation(summary = "This method can save Students",

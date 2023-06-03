@@ -24,11 +24,9 @@ public class StudentRequest {
     @NotBlank(message = "E-mail can't be empty!")
     @Email(message = "Invalid email!")
     private String email;
-    @Size(min = 5, max = 100, message = "Password must be at least 4 characters!")
-    @NotBlank(message = "Password can't be empty!")
-    private String password;
 
     private Long groupId;
 
     private FormLearning formLearning;
+    private String link;
 }
