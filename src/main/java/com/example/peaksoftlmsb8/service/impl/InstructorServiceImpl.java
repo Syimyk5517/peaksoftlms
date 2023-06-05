@@ -21,17 +21,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Log4j2
 @Service
 @RequiredArgsConstructor
 public class InstructorServiceImpl implements InstructorService {
-
     private final UserRepository userRepository;
-
     private final InstructorRepository instructorRepository;
     private final EmailSenderService emailSenderService;
     private static final Logger logger = LogManager.getLogger(InstructorServiceImpl.class);
@@ -43,7 +39,7 @@ public class InstructorServiceImpl implements InstructorService {
                 !"name_desc".equals(sortBy) &&
                 sortBy != null) {
             logger.info("you wrote the wrong name , write like this name_asc or name_desc");
-            throw new NotFoundException("you wrote the wrong name , write like this name_asc or name_desc");
+            throw new NotFoundException("вы написали неправильное имя, напишите так name_asc или name_desc");
         }
         Pageable pageable = PageRequest.of(page - 1, size);
         Page<InstructorResponse> pageInstructor = instructorRepository.getAll(pageable, search, sortBy);
@@ -59,14 +55,14 @@ public class InstructorServiceImpl implements InstructorService {
     public InstructorResponse findByInstructorId(Long instructorId) {
         logger.info("this id = " + instructorId + " not found !");
         return instructorRepository.getByInstructorId(instructorId)
-                .orElseThrow(() -> new NotFoundException("this id = " + instructorId + " not found !"));
+                .orElseThrow(() -> new NotFoundException("Этот идентификатор = " + instructorId + " не найден!"));
     }
 
     @Override
     public SimpleResponse saveInstructor(InstructorRequest instructorRequest) {
         logger.info("This email " + instructorRequest.getEmail() + " already exists !");
         if (userRepository.existsByEmail(instructorRequest.getEmail())) {
-            throw new AlReadyExistException("This email " + instructorRequest.getEmail() + " already exists !");
+            throw new AlReadyExistException("Это электронное письмо: " + instructorRequest.getEmail() + " уже существует!");
         }
         Instructor instructor = new Instructor();
         User user = new User();
@@ -77,18 +73,18 @@ public class InstructorServiceImpl implements InstructorService {
         instructor.setSpecial(instructorRequest.getSpecial());
         instructor.setUser(user);
         user.setInstructor(instructor);
-        emailSenderService.emailSender(instructorRequest.getEmail(),instructorRequest.getLink());
+        emailSenderService.emailSender(instructorRequest.getEmail(), instructorRequest.getLink());
         instructorRepository.save(instructor);
 
         logger.info("This " + instructorRequest.getFirstName() + " saved...");
-        return new SimpleResponse(HttpStatus.OK, "This " + instructorRequest.getFirstName() + " saved...");
+        return new SimpleResponse(HttpStatus.OK, "Это " + instructorRequest.getFirstName() + " сохранено...");
     }
 
     @Override
     public SimpleResponse updateInstructor(Long instructorId, InstructorRequest newInstructor) {
         logger.info("this id = " + instructorId + " not found!");
         Instructor instructor = instructorRepository.findById(instructorId)
-                .orElseThrow(() -> new NotFoundException("this id = " + instructorId + " not found!"));
+                .orElseThrow(() -> new NotFoundException("Этот идентификатор = " + instructorId + " не найден"));
         instructor.getUser().setFirstName(newInstructor.getFirstName());
         instructor.getUser().setLastName(newInstructor.getLastName());
         instructor.getUser().setEmail(newInstructor.getEmail());
@@ -96,8 +92,8 @@ public class InstructorServiceImpl implements InstructorService {
         instructor.setSpecial(newInstructor.getSpecial());
         instructorRepository.save(instructor);
         logger.info("This " + instructor.getUser().getFirstName() + " updated on " + newInstructor.getFirstName());
-        return new SimpleResponse(HttpStatus.OK, "This " +
-                instructor.getUser().getFirstName() + " updated on " +
+        return new SimpleResponse(HttpStatus.OK, "Это " +
+                instructor.getUser().getFirstName() + " обновлено " +
                 newInstructor.getFirstName());
     }
 
@@ -105,13 +101,13 @@ public class InstructorServiceImpl implements InstructorService {
     public SimpleResponse deleteInstructorById(Long instructorId) {
         logger.info("this id = " + instructorId + " not found !");
         Instructor instructor = instructorRepository.findById(instructorId)
-                .orElseThrow(() -> new NotFoundException("this id = " + instructorId + " not found !"));
+                .orElseThrow(() -> new NotFoundException("Этот идентификатор = " + instructorId + " не найден!"));
         for (Course course : instructor.getCourses()) {
             course.setInstructors(null);
         }
         instructorRepository.delete(instructor);
         logger.info("This " + instructor.getUser().getFirstName() + " deleted...");
-        return new SimpleResponse(HttpStatus.OK, "This " + instructor.getUser().getFirstName() + " deleted...");
+        return new SimpleResponse(HttpStatus.OK, "Успешно удалено");
     }
 
 }

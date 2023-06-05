@@ -30,7 +30,6 @@ import org.springframework.stereotype.Service;
 @Transactional
 @Log4j2
 public class AuthenticationServiceImpl implements AuthenticationService {
-
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager manager;
     private final UserRepository userRepository;
@@ -43,11 +42,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public AuthenticationResponse sigIn(AuthenticationRequest request) {
         logger.info("User with email: " + request.getEmail() + " not found!");
         User user = userRepository.findByEmail(request.getEmail()).orElseThrow(
-                () -> new NotFoundException("User with email: " + request.getEmail() + " not found!")
+                () -> new NotFoundException("Пользователь с электронной почтой: " + request.getEmail() + " не найден!")
         );
         if (!encoder.matches(request.getPassword(), user.getPassword())) {
             logger.info("Wrong password!");
-            throw new BadRequestException("Wrong password!");
+            throw new BadRequestException("Неправильный пароль!");
         }
         manager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -64,12 +63,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     }
 
-
     @Override
     public SimpleResponse forgotPassword(String email, String link) throws MessagingException {
         logger.info("This email : " + email + " is not found !");
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new NotFoundException("This email : " + email + " is not found !"));
+                .orElseThrow(() -> new NotFoundException("Пользователь с электронной почтой : " + email + " не найден!"));
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage);
         mimeMessageHelper.setSubject("Password reset request");
@@ -80,7 +78,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         logger.info("SMS sent to mail !");
         return SimpleResponse.builder()
                 .httpStatus(HttpStatus.OK)
-                .message("SMS sent to mail !")
+                .message("SMS отправлено на почту!")
                 .build();
     }
 
@@ -88,12 +86,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public SimpleResponse resetPassword(PasswordRequest passwordRequest) {
         logger.info("This id : " + passwordRequest.getId() + " is not found !");
         User user = userRepository.findById(passwordRequest.getId())
-                .orElseThrow(() -> new NotFoundException("This id : " + passwordRequest.getId() + " is not found !"));
+                .orElseThrow(() -> new NotFoundException("Этот идентификатор: " + passwordRequest.getId() + " не найден!"));
         user.setPassword(passwordEncoder.encode(passwordRequest.getPassword()));
         logger.info("Password successfully updated");
         return SimpleResponse.builder()
                 .httpStatus(HttpStatus.OK)
-                .message("Password successfully updated")
+                .message("Пароль успешно обновлен")
                 .build();
     }
 }

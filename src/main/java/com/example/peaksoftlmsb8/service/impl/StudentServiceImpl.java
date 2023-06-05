@@ -42,14 +42,13 @@ public class StudentServiceImpl implements StudentService {
     private final GroupRepository groupRepository;
     private final UserRepository userRepository;
     private final EmailSenderService emailSenderService;
-
     private static final Logger logger = LogManager.getLogger(CourseServiceImpl.class);
 
     @Override
-    public SimpleResponse importExcel(Long groupId,String link, MultipartFile multipartFile) throws IOException {
+    public SimpleResponse importExcel(Long groupId, String link, MultipartFile multipartFile) throws IOException {
         logger.info("Group with id " + groupId + " not found!");
         Group group = groupRepository.findById(groupId).orElseThrow(
-                () -> new NotFoundException("Group with id " + groupId + " not found!")
+                () -> new NotFoundException("Группа с идентификатором:" + groupId + " не найдена!")
         );
         if (!multipartFile.isEmpty()) {
 
@@ -59,7 +58,7 @@ public class StudentServiceImpl implements StudentService {
             for (StudentExcelRequest excelRequest : excelRequests) {
                 if (userRepository.existsByEmail(excelRequest.getEmail())) {
                     logger.info("Student with " + excelRequest.getEmail() + " exists!");
-                    throw new AlReadyExistException("Student with " + excelRequest.getEmail() + " exists!");
+                    throw new AlReadyExistException("Студент с " + excelRequest.getEmail() + " существует!");
                 }
 
 
@@ -80,14 +79,14 @@ public class StudentServiceImpl implements StudentService {
                 group.setStudents(List.of(student));
                 user.setStudent(student);
                 studentRepository.save(student);
-                emailSenderService.emailSender(excelRequest.getEmail(),link);
+                emailSenderService.emailSender(excelRequest.getEmail(), link);
             }
 
 
         }
         logger.info("Students successfully uploaded");
         return SimpleResponse.builder().httpStatus(HttpStatus.OK)
-                .message("Students successfully uploaded").build();
+                .message("Студенты успешно загружены").build();
     }
 
 
@@ -95,15 +94,15 @@ public class StudentServiceImpl implements StudentService {
     public SimpleResponse save(StudentRequest studentRequest) {
         logger.info("Student with Email: " + studentRequest.getEmail() + " is already saved!");
         if (studentRepository.existsByEmail(studentRequest.getEmail())) {
-            throw new BadRequestException("Student with Email: " + studentRequest.getEmail() + " is already saved!");
+            throw new BadRequestException("Учащийся с электронной почтой: " + studentRequest.getEmail() + " уже сохранен!");
         }
         logger.info("Student with Phone number: " + studentRequest.getPhoneNumber() + " is already saved!");
         if (studentRepository.existsByPhoneNumber(studentRequest.getPhoneNumber())) {
-            throw new BadRequestException("Student with Phone number: " + studentRequest.getPhoneNumber() + " is already saved!");
+            throw new BadRequestException("Студент с номером телефона: " + studentRequest.getPhoneNumber() + " уже сохранен!");
         }
         logger.info("Group with id : " + studentRequest.getGroupId() + "not found !");
         Group group = groupRepository.findById(studentRequest.getGroupId()).orElseThrow(
-                () -> new NotFoundException("Group with id : " + studentRequest.getGroupId() + "not found !"));
+                () -> new NotFoundException("Группа с идентификатором: " + studentRequest.getGroupId() + " не найдена!"));
         User user = new User();
         user.setFirstName(studentRequest.getFirstName());
         user.setLastName(studentRequest.getLastName());
@@ -118,24 +117,24 @@ public class StudentServiceImpl implements StudentService {
         student.setUser(user);
         user.setStudent(student);
         studentRepository.save(student);
-        emailSenderService.emailSender(studentRequest.getEmail(),studentRequest.getLink());
+        emailSenderService.emailSender(studentRequest.getEmail(), studentRequest.getLink());
         logger.info("Student with ID: " + student.getId() + " is successfully saved!");
         return SimpleResponse.builder()
                 .httpStatus(HttpStatus.OK)
-                .message("Student with ID: " + student.getId() + " is successfully saved!")
+                .message("Студент с идентификатором: " + student.getId() + " успешно сохранен!")
                 .build();
     }
 
     @Override
     public StudentResponse findById(Long studentId) {
         return studentRepository.findStudentById(studentId).orElseThrow(
-                () -> new NotFoundException("Student with ID: " + studentId + " is not found!"));
+                () -> new NotFoundException("Студент с идентификатором: " + studentId + " не найден!"));
     }
 
     @Override
     public List<StudentResponse> findAllStudentsByCourse(Long courseId) {
-        if (studentRepository.findAllStudentsByCourseId(courseId).isEmpty()){
-            throw new BadRequestException("Students not found!");
+        if (studentRepository.findAllStudentsByCourseId(courseId).isEmpty()) {
+            throw new NotFoundException("Студенты не найдены!");
         }
         return studentRepository.findAllStudentsByCourseId(courseId);
     }
@@ -148,12 +147,12 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public SimpleResponse deleteById(Long studentId) {
         Student student = studentRepository.findById(studentId).orElseThrow(
-                () -> new NotFoundException("Student with ID: " + studentId + " is not found!"));
+                () -> new NotFoundException("Студент с идентификатором: " + studentId + " не найден!"));
         userRepository.deleteUserByStudentId(student.getId());
         studentRepository.delete(student);
         return SimpleResponse.builder()
                 .httpStatus(HttpStatus.OK)
-                .message("Student with ID: " + studentId + " is successfully deleted!")
+                .message("Студент с идентификатором: " + studentId + " успешно удален!")
                 .build();
     }
 
@@ -161,19 +160,13 @@ public class StudentServiceImpl implements StudentService {
     public SimpleResponse update(StudentRequest newStudentRequest, Long studentId) {
         logger.info("Student with ID: " + studentId + " is not found!");
         Student student = studentRepository.findById(studentId).orElseThrow(
-                () -> new NotFoundException("Student with ID: " + studentId + " is not found!"));
+                () -> new NotFoundException("Студент с идентификатором: " + studentId + " не найден!"));
         logger.info("Group with id : " + newStudentRequest.getGroupId() + "not found !");
         Group group = groupRepository.findById(newStudentRequest.getGroupId()).orElseThrow(
-                () -> new NotFoundException("Group with id : " + newStudentRequest.getGroupId() + "not found !"));
-        if (studentRepository.existsByEmail(newStudentRequest.getEmail())) {
-            throw new BadRequestException("Student with Email: " + newStudentRequest.getEmail() + " is already saved!");
-        }
+                () -> new NotFoundException("Группа с идентификатором: " + newStudentRequest.getGroupId() + " не найдена!"));
         student.getUser().setFirstName(newStudentRequest.getFirstName());
         student.getUser().setLastName(newStudentRequest.getLastName());
         student.getUser().setEmail(newStudentRequest.getEmail());
-        if (studentRepository.existsByPhoneNumber(newStudentRequest.getPhoneNumber())) {
-            throw new BadRequestException("Student with Phone number: " + newStudentRequest.getPhoneNumber() + " is already saved!");
-        }
         student.getUser().setPhoneNumber(newStudentRequest.getPhoneNumber());
         student.setFormLearning(newStudentRequest.getFormLearning());
         student.setGroup(group);
@@ -181,7 +174,7 @@ public class StudentServiceImpl implements StudentService {
         logger.info("Student with ID: " + studentId + " is successfully updated!");
         return SimpleResponse.builder()
                 .httpStatus(HttpStatus.OK)
-                .message("Student with ID: " + studentId + " is successfully updated!")
+                .message("Студент с идентификатором: " + studentId + " успешно обновлен!")
                 .build();
     }
 }

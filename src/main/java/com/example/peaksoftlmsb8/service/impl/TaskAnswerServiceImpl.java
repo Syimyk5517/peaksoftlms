@@ -37,21 +37,19 @@ public class TaskAnswerServiceImpl implements TaskAnswerService {
         log.info("Token has been taken!");
         User user = userRepository.findByEmail(login).orElseThrow(() -> {
             log.error("User not found!");
-            throw new NotFoundException("User not found!");
+            throw new NotFoundException("Пользователь не найден!");
         });
         Task task = taskRepository.findById(taskId).orElseThrow(
-                () -> new NotFoundException("Task with ID: " + taskId + " is not found !"));
+                () -> new NotFoundException("Задача с идентификатором: " + taskId + " не найдена!"));
         if (task.getTaskAnswers().stream().anyMatch(t -> t.getStudent().getUser().equals(user))) {
-            throw new BadRequestException("One user can only answer one task");
+            throw new BadRequestException("Один пользователь может ответить только на одну задачу");
         }
         if (!task.getTaskAnswers().stream().anyMatch(t -> t.getStudent().getUser().getRole().equals(Role.STUDENT))) {
-            throw new BadRequestException("Sorry, only students can submit an answer!");
+            throw new BadRequestException("Извините, только студенты могут отправить ответ!");
         }
-//        if (!task.getTaskAnswers().isEmpty()) {
-//            throw new BadRequestException("This task has an answer, you cannot add a new answer");
         TaskAnswer taskAnswer = new TaskAnswer();
         if (taskAnswerRequest.getTaskValue().equals("") || taskAnswerRequest.getTaskValue() == null) {
-            throw new BadRequestException("Task answer value cannot be null");
+            throw new BadRequestException("Значение ответа на задачу не может быть нулевым");
         }
         taskAnswer.setTaskValue(taskAnswerRequest.getTaskValue());
         taskAnswer.setTask(task);
@@ -60,44 +58,44 @@ public class TaskAnswerServiceImpl implements TaskAnswerService {
         taskAnswerRepository.save(taskAnswer);
         return SimpleResponse.builder()
                 .httpStatus(HttpStatus.OK)
-                .message("Task answer with ID: " + taskAnswer.getId() + " is successfully saved!")
+                .message("Ответ на задачу с идентификатором: " + taskAnswer.getId() + " успешно сохранен!")
                 .build();
     }
 
     @Override
     public SimpleResponse update(Long taskAnswerId, TaskAnswerRequest taskAnswerRequest) {
         TaskAnswer taskAnswer = taskAnswerRepository.findById(taskAnswerId).orElseThrow(
-                () -> new NotFoundException("Task answer with ID: " + taskAnswerId + " is not found !"));
+                () -> new NotFoundException("Ответ на задачу с идентификатором: " + taskAnswerId + " не найден!"));
         if (!taskAnswerRequest.getTaskValue().equals(taskAnswer.getTaskValue())) {
             taskAnswer.setTaskValue(taskAnswerRequest.getTaskValue());
         }
         taskAnswerRepository.save(taskAnswer);
         return SimpleResponse.builder()
                 .httpStatus(HttpStatus.OK)
-                .message("Task answer with ID: " + taskAnswerId + " is successfully updated!")
+                .message("Ответ на задачу с идентификатором: " + taskAnswerId + " успешно обновлен!")
                 .build();
     }
 
     @Override
     public SimpleResponse delete(Long taskAnswerId) {
         if (!taskAnswerRepository.existsById(taskAnswerId)) {
-            throw new BadRequestException("Task answer with ID: " + taskAnswerId + " is not found!");
+            throw new BadRequestException("Ответ на задачу с идентификатором: " + taskAnswerId + " не найден!");
         }
         taskAnswerRepository.deleteById(taskAnswerId);
         return SimpleResponse.builder()
                 .httpStatus(HttpStatus.OK)
-                .message("Task answer with ID: " + taskAnswerId + " is successfully deleted!")
+                .message("Ответ на задачу с идентификатором: " + taskAnswerId + " успешно удален!")
                 .build();
     }
 
     @Override
     public List<TaskAnswerResponse> findTaskAnswerByTaskId(Long taskId, String taskAnswerStatus) {
         if (!taskRepository.existsById(taskId)) {
-            throw new BadRequestException("Task with ID: " + taskId + " is not found!");
+            throw new BadRequestException("Задача с идентификатором: " + taskId + " не найдена!");
         }
         List<TaskAnswerResponse> taskAnswerResponses = taskAnswerRepository.findAllByTaskId(taskId);
         if (taskAnswerResponses.isEmpty()) {
-            throw new NotFoundException("Task answers with task ID: " + taskId + " is not found!");
+            throw new NotFoundException("Ответы задачи с идентификатором задачи: " + taskId + " не найдены!");
         }
         if (taskAnswerStatus != null) {
             if (taskAnswerResponses.stream().filter(ta -> ta.getTaskStatus() != null).count() > 0) {

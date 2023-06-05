@@ -2,6 +2,8 @@ package com.example.peaksoftlmsb8.dto.request.test;
 
 import com.example.peaksoftlmsb8.dto.request.test.question.QuestionRequest;
 import com.example.peaksoftlmsb8.dto.request.test.question.QuestionUpdateRequest;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
 
@@ -11,6 +13,8 @@ import java.util.List;
 public class TestUpdateRequest {
 
     private Long testId;
+    @NotNull(message = "Test name should not be null")
+    @NotBlank(message = "Test name can't be empty!")
     private String testName;
     private Long lessonId;
     private List<QuestionUpdateRequest> questionRequests;

@@ -13,9 +13,6 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
-import java.time.format.DateTimeFormatter;
-
-
 @Service
 @RequiredArgsConstructor
 public class EmailSenderServiceImpl implements EmailSenderService {
@@ -26,7 +23,7 @@ public class EmailSenderServiceImpl implements EmailSenderService {
     @Override
     public void emailSender(String toEmail, String link) {
         User user = userRepository.findByEmail(toEmail).orElseThrow(
-                () -> new NotFoundException("User with email: " + toEmail + " not found !"));
+                () -> new NotFoundException("Пользователь с электронной почтой: " + toEmail + " не найден!"));
         Context context = new Context();
         context.setVariable("firstMessage", String.format("Здравствуйте %s %s", user.getFirstName(), user.getLastName()));
         context.setVariable("link", link);
@@ -39,9 +36,9 @@ public class EmailSenderServiceImpl implements EmailSenderService {
             helper.setText(htmlContent, true);
             javaMailSender.send(message);
         } catch (MessagingException e) {
-            throw new NotFoundException("Email send failed!");
+            throw new NotFoundException("Отправка электронной почты не удалась!");
         } catch (NullPointerException e) {
-            throw new NotFoundException("Not found and returned null!");
+            throw new NotFoundException("Не найдено и возвращено значение null!");
         }
     }
 }

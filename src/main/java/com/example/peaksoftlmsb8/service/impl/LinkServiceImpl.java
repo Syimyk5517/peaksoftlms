@@ -6,7 +6,6 @@ import com.example.peaksoftlmsb8.dto.response.LinkResponse;
 import com.example.peaksoftlmsb8.dto.response.SimpleResponse;
 import com.example.peaksoftlmsb8.repository.LessonRepository;
 import com.example.peaksoftlmsb8.service.LinkService;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -16,49 +15,42 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 public class LinkServiceImpl implements LinkService {
-
-
     private final LessonRepository lessonRepository;
 
-
     public SimpleResponse addLinkToLesson(Long lessonId, String key, String value) {
-        Lesson lesson=lessonRepository.findById(lessonId).orElseThrow(()->new NotFoundException("Lesson  with id"+ lessonId+"not found"));
+        Lesson lesson = lessonRepository.findById(lessonId).orElseThrow(() -> new NotFoundException("Урок с идентификатором: " + lessonId + " не найден"));
         lesson.getLink().put(key, value);
         lessonRepository.save(lesson);
         return SimpleResponse.builder()
                 .httpStatus(HttpStatus.OK)
-                .message("Link added successfully")
+                .message("Ссылка успешно добавлена")
                 .build();
     }
 
-    public SimpleResponse removeLinkFromLesson(Long lessonId, String key,String value) {
-        Lesson lesson=lessonRepository.findById(lessonId).orElseThrow(()->new NotFoundException("Lesson  with id"+ lessonId+"not found"));
+    public SimpleResponse removeLinkFromLesson(Long lessonId, String key, String value) {
+        Lesson lesson = lessonRepository.findById(lessonId).orElseThrow(() -> new NotFoundException("Урок с идентификатором: " + lessonId + " не найден"));
         lesson.getLink().put(key, value);
         lessonRepository.save(lesson);
         return SimpleResponse.builder()
                 .httpStatus(HttpStatus.OK)
-                .message("Link removed successfully")
+                .message("Ссылка успешно удалена")
                 .build();
     }
 
     public SimpleResponse updateLinkInLesson(Long lessonId, String key, String value) {
-Lesson lesson=lessonRepository.findById(lessonId).orElseThrow(()->new NotFoundException("Lesson  with id"+ lessonId+"not found"));
-lesson.getLink().put(key, value);
-lessonRepository.save(lesson);
+        Lesson lesson = lessonRepository.findById(lessonId).orElseThrow(() -> new NotFoundException("Урок с идентификатором: " + lessonId + " не найден"));
+        lesson.getLink().put(key, value);
+        lessonRepository.save(lesson);
         return SimpleResponse.builder()
                 .httpStatus(HttpStatus.OK)
-                .message("Link updated successfully")
+                .message("Ссылка успешно обновлена")
                 .build();
     }
 
     public LinkResponse getLinkFromLesson(Long lessonId, String key) {
-        Lesson lesson = lessonRepository.findById(lessonId).orElseThrow(() -> new NotFoundException("Lesson with id " + lessonId + " not found"));
+        Lesson lesson = lessonRepository.findById(lessonId).orElseThrow(() -> new NotFoundException("Урок с идентификатором: " + lessonId + " не найден"));
         Map<String, String> link = lesson.getLink();
-
-
         return null;
     }
-
-
 }
 

@@ -44,10 +44,10 @@ public class LessonServiceImpl implements LessonService {
     public SimpleResponse saveLessons(LessonRequest lessonRequest) {
         logger.info("Course with id : " + lessonRequest.getCourseId() + " not found");
         Course course = courseRepository.findById(lessonRequest.getCourseId()).orElseThrow(() ->
-                new NotFoundException(String.format("Course with id : " + lessonRequest.getCourseId() + " not found")));
+                new NotFoundException(String.format("Курс с идентификатором: " + lessonRequest.getCourseId() + " не найден")));
         if (lessonRepository.existsLessonByName(lessonRequest.getName())) {
             logger.info("Lesson with name : " + lessonRequest.getName() + " already exists");
-            throw new AlReadyExistException("Lesson with name : " + lessonRequest.getName() + " already exists");
+            throw new AlReadyExistException("Урок с названием: " + lessonRequest.getName() + " уже существует");
         }
         Lesson lesson = new Lesson();
         lesson.setName(lessonRequest.getName());
@@ -55,7 +55,7 @@ public class LessonServiceImpl implements LessonService {
         lesson.setCourse(course);
         lessonRepository.save(lesson);
         logger.info("Successfully saved");
-        return SimpleResponse.builder().httpStatus(HttpStatus.OK).message("Successfully saved").build();
+        return SimpleResponse.builder().httpStatus(HttpStatus.OK).message("Успешно сохранено").build();
     }
 
     @Override
@@ -73,7 +73,7 @@ public class LessonServiceImpl implements LessonService {
     public LessonResponse findByLessonId(Long lessonId) {
         logger.info("Lesson with id : " + lessonId + " not found");
         return lessonRepository.getLessonById(lessonId).orElseThrow(() ->
-                new NotFoundException(String.format("Lesson with id : " + lessonId + " not found")));
+                new NotFoundException(String.format("Урок с идентификатором: " + lessonId + " не найден")));
     }
 
     @Override
@@ -81,32 +81,28 @@ public class LessonServiceImpl implements LessonService {
     public SimpleResponse updateLesson(LessonUpdateRequest lessonUpdateRequest) {
         logger.info("Lesson with id: " + lessonUpdateRequest.getLessonId() + " not found");
         Lesson lesson = lessonRepository.findById(lessonUpdateRequest.getLessonId()).orElseThrow(() ->
-                new NotFoundException(String.format("Lesson with id: " + lessonUpdateRequest.getLessonId() + " not found")));
-        if (lessonRepository.existsLessonByName(lessonUpdateRequest.getName())) {
-            logger.info("Lesson with name: " + lessonUpdateRequest.getName() + " already exists");
-            throw new AlReadyExistException("Lesson with name: " + lessonUpdateRequest.getName() + " already exists");
-        }
+                new NotFoundException(String.format("Урок с идентификатором: " + lessonUpdateRequest.getLessonId() + " не найден")));
         lesson.setId(lessonUpdateRequest.getLessonId());
         lesson.setName(lessonUpdateRequest.getName());
         lessonRepository.save(lesson);
         logger.info("Successfully updated");
-        return SimpleResponse.builder().httpStatus(HttpStatus.OK).message("Successfully updated").build();
+        return SimpleResponse.builder().httpStatus(HttpStatus.OK).message("Успешно обновлено").build();
     }
 
     @Override
     public SimpleResponse deleteLesson(Long lessonId) {
         logger.info("Lesson with id: " + lessonId + " not found");
         Lesson lesson = lessonRepository.findById(lessonId).orElseThrow(() ->
-                new NotFoundException(String.format("Lesson with id: " + lessonId + " not found")));
+                new NotFoundException(String.format("Урок с идентификатором: " + lessonId + " не найден")));
         logger.info("Test with id: " + lesson.getTest().getId() + " not found");
         Test test = testRepository.findById(lesson.getTest().getId()).orElseThrow(() ->
-                new NotFoundException(String.format("Test with id: " + lesson.getTest().getId() + " not found")));
+                new NotFoundException(String.format("Тест с идентификатором:" + lesson.getTest().getId() + " не найден")));
         ResultOfTest result = resultOfTestRepository.findResultOfTestById(test.getId())
-                .orElseThrow(() -> new NotFoundException(String.format("Lesson with id: " + test.getId() + " not found")));
+                .orElseThrow(() -> new NotFoundException(String.format("Урок с идентификатором: " + test.getId() + " не найден")));
         resultOfTestRepository.delete(result);
         testRepository.delete(test);
         lessonRepository.delete(lesson);
-        logger.info("Successfully deleted");
-        return SimpleResponse.builder().httpStatus(HttpStatus.OK).message("Successfully deleted").build();
+        logger.info("Успешно удалено");
+        return SimpleResponse.builder().httpStatus(HttpStatus.OK).message("Успешно удалено").build();
     }
 }

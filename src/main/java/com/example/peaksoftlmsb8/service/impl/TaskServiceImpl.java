@@ -27,7 +27,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public TaskResponse getByTaskId(Long taskId) {
         return taskRepository.findByIdTask(taskId)
-                .orElseThrow(() -> new NotFoundException(String.format("Task with id:" + taskId + " not found")));
+                .orElseThrow(() -> new NotFoundException(String.format("Задача с id:" + taskId + "не найдена")));
     }
 
     @Override
@@ -38,9 +38,9 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public SimpleResponse saveTask(TaskRequest taskRequest) {
         Lesson lesson = lessonRepository.findById(taskRequest.getLessonId())
-                .orElseThrow(() -> new NotFoundException((String.format("Lesson with id: " + taskRequest.getLessonId() + " not found"))));
+                .orElseThrow(() -> new NotFoundException((String.format("Урок с идентификатором: " + taskRequest.getLessonId() + " не найден"))));
         if (taskRepository.existsByName(taskRequest.getName())) {
-            throw new AlReadyExistException("Task with name :" + taskRequest.getName() + " already exists");
+            throw new AlReadyExistException("Задача с именем: " + taskRequest.getName() + " уже существует");
         }
         Task task = new Task();
         task.setName(taskRequest.getName());
@@ -54,7 +54,7 @@ public class TaskServiceImpl implements TaskService {
         return SimpleResponse
                 .builder()
                 .httpStatus(HttpStatus.OK)
-                .message("Successfully saved!")
+                .message("Успешно сохранено")
                 .build();
     }
 
@@ -62,7 +62,7 @@ public class TaskServiceImpl implements TaskService {
     @Transactional
     public SimpleResponse updateTask(Long taskId, TaskRequest newTaskRequest) {
         Task task = taskRepository.findById(taskId)
-                .orElseThrow(() -> new NotFoundException("Task with id:" + taskId + "not found"));
+                .orElseThrow(() -> new NotFoundException("Задача с id: " + taskId + " не найдена"));
         if (taskRepository.existsByName(newTaskRequest.getName())) {
             throw new AlReadyExistException("Task with name :" + newTaskRequest.getName() + " already exists");
         }
@@ -74,21 +74,19 @@ public class TaskServiceImpl implements TaskService {
         return SimpleResponse
                 .builder()
                 .httpStatus(HttpStatus.OK)
-                .message("Successfully updated!")
+                .message("Успешно обновлено")
                 .build();
     }
 
     @Override
     public SimpleResponse deleteTaskById(Long taskId) {
         Task task = taskRepository.findById(taskId).orElseThrow(() ->
-                new NotFoundException(String.format("Presentation with id: " + taskId + " not found")));
+                new NotFoundException(String.format("Презентация с идентификатором: " + taskId + " не найдена")));
         taskRepository.delete(task);
         return SimpleResponse
                 .builder()
                 .httpStatus(HttpStatus.OK)
-                .message("Successfully deleted!")
+                .message("Успешно удалено")
                 .build();
     }
-
-
 }
