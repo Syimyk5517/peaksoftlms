@@ -25,33 +25,36 @@ public class CourseApi {
 
     @PostMapping("/assign")
     @PreAuthorize("hasAuthority('ADMIN')")
-    @Operation(summary = "This method assign Instructor to Course",description = "You can assign Instructor to Course. Access to this method: ADMIN")
+    @Operation(summary = "This method assign Instructor to Course", description = "You can assign Instructor to Course. Access to this method: ADMIN")
     public SimpleResponse assignInstructorToCourse(@RequestParam Boolean isAssigned, @RequestBody AssignRequest assignRequest) {
         return courseService.assignInstructorToCourse(isAssigned, assignRequest);
     }
 
 
     @PostMapping()
-    @Operation(summary = "This method save Course",description = "You can save Course")
+    @Operation(summary = "This method save Course", description = "You can save Course")
     public SimpleResponse saveCourse(@RequestBody @Valid CourseRequest courseRequest) {
         return courseService.saveCourse(courseRequest);
     }
+
+    @PreAuthorize("hasAnyAuthority('ADMIN','INSTRUCTOR','STUDENT')")
     @GetMapping("/pagination")
-    @Operation(summary = "This method get all Courses",description = "You can get all Courses")
+    @Operation(summary = "This method get all Courses", description = "You can get all Courses")
     public CoursePaginationResponse getAllCourses(@RequestParam int size,
                                                   @RequestParam int page) {
         return courseService.getAllCourse(size, page);
     }
 
+    @PreAuthorize("hasAnyAuthority('ADMIN','INSTRUCTOR','STUDENT')")
     @GetMapping("/{courseId}")
-    @Operation(summary = "This method find by Course with id",description = "You can find by Course with id")
+    @Operation(summary = "This method find by Course with id", description = "You can find by Course with id")
     public CourseResponse findByCourseId(@PathVariable Long courseId) {
         return courseService.findByCourseId(courseId);
     }
 
     @PutMapping()
     @PreAuthorize("hasAnyAuthority('ADMIN')")
-    @Operation(summary = "This method update Course",description = "you can update Course. Access to this method: ADMIN")
+    @Operation(summary = "This method update Course", description = "you can update Course. Access to this method: ADMIN")
     public SimpleResponse updateCourse(@RequestBody @Valid CourseUpdateRequest courseUpdateRequest) {
         return courseService.updateCourse(courseUpdateRequest);
     }
