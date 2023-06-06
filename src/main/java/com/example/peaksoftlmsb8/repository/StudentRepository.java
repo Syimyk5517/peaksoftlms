@@ -33,8 +33,11 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
             "WHERE s.formLearning = :formatStudy " +
             "order by s.id desc ")
     List<StudentResponse> findAllStudentsByCourseIdWithSort(@Param("formatStudy") FormLearning formatStudy);
-
-
+    @Query("SELECT new com.example.peaksoftlmsb8.dto.response.student.StudentResponse(" +
+            "s.id, CONCAT(s.user.firstName, ' ', s.user.lastName), s.user.phoneNumber, s.user.email, s.formLearning, g.name) " +
+            "FROM Student s join s.group g " +
+            "order by s.id desc ")
+    List<StudentResponse> getAll();
 
 }
 

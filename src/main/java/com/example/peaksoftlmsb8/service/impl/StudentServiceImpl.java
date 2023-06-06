@@ -141,8 +141,13 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public List<StudentResponse> findAllStudentsByCourseIdWithSort(FormLearning formatStudy) {
-        return studentRepository.findAllStudentsByCourseIdWithSort(formatStudy);
+    public List<StudentResponse> findAllStudentsByCourseIdWithSort(String formatStudy) {
+        if (formatStudy.equalsIgnoreCase("все")){
+            return studentRepository.getAll();
+        }else {
+            FormLearning formLearning = FormLearning.valueOf(formatStudy);
+            return studentRepository.findAllStudentsByCourseIdWithSort(formLearning);
+        }
     }
 
     @Override

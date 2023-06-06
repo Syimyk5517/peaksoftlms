@@ -66,7 +66,7 @@ public class StudentApi {
     @GetMapping("/getAllForAdmin")
     @PreAuthorize("hasAuthority('ADMIN')")
     public List<StudentResponse> findAllStudentsByGroupIdAdmin(
-                                                               @RequestParam(required = false) FormLearning formStudy) {
+                                                               @RequestParam(required = false) String formStudy) {
         return studentService.findAllStudentsByCourseIdWithSort(formStudy);
     }
 
