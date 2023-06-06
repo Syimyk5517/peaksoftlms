@@ -2,7 +2,6 @@ package com.example.peaksoftlmsb8.service.impl;
 
 import com.example.peaksoftlmsb8.db.entity.Lesson;
 import com.example.peaksoftlmsb8.db.entity.Presentation;
-import com.example.peaksoftlmsb8.db.exception.AlReadyExistException;
 import com.example.peaksoftlmsb8.db.exception.NotFoundException;
 import com.example.peaksoftlmsb8.dto.request.presentation.PresentationRequest;
 import com.example.peaksoftlmsb8.dto.request.presentation.PresentationUpdateRequest;
@@ -27,18 +26,13 @@ import java.util.List;
 public class PresentationServiceImpl implements PresentationService {
     private final LessonRepository lessonRepository;
     private final PresentationRepository presentationRepository;
-
     private static final Logger logger = LogManager.getLogger(PresentationServiceImpl.class);
 
     @Override
     public SimpleResponse savePresentation(PresentationRequest presentationRequest) {
         logger.info("Lesson with id: " + presentationRequest.getLessonId() + " not found");
         Lesson lesson = lessonRepository.findById(presentationRequest.getLessonId()).orElseThrow(() ->
-                new NotFoundException(String.format("Lesson with id: " + presentationRequest.getLessonId() + " not found")));
-        logger.info("Presentation with formatPPT : " + presentationRequest.getFormatPPT() + " already exists");
-        if (presentationRepository.existsPresentationsByFormatPPT(presentationRequest.getFormatPPT())) {
-            throw new AlReadyExistException("Presentation with formatPPT : " + presentationRequest.getFormatPPT() + " already exists");
-        }
+                new NotFoundException(String.format("Урок с идентификатором: " + presentationRequest.getLessonId() + " не найден")));
         Presentation presentation = new Presentation();
         presentation.setName(presentationRequest.getName());
         presentation.setDescription(presentationRequest.getDescription());
@@ -46,14 +40,14 @@ public class PresentationServiceImpl implements PresentationService {
         presentation.setLesson(lesson);
         presentationRepository.save(presentation);
         logger.info("Successfully saved");
-        return SimpleResponse.builder().httpStatus(HttpStatus.OK).message("Successfully saved").build();
+        return SimpleResponse.builder().httpStatus(HttpStatus.OK).message("Успешно сохранено").build();
     }
 
     @Override
     public PresentationResponse findByPresentationId(Long presentationId) {
         logger.info("Presentation with id: " + presentationId + " not found");
         return presentationRepository.getPresentationById(presentationId)
-                .orElseThrow(() -> new NotFoundException(String.format("Presentation with id: " + presentationId + " not found")));
+                .orElseThrow(() -> new NotFoundException(String.format("Презентация с идентификатором: " + presentationId + " не найдена")));
     }
 
     @Override
@@ -66,27 +60,23 @@ public class PresentationServiceImpl implements PresentationService {
     public SimpleResponse updatePresentation(PresentationUpdateRequest presentationUpdateRequest) {
         logger.info("Presentation with id : " + presentationUpdateRequest.getPresentationId() + " not found");
         Presentation presentation = presentationRepository.findById(presentationUpdateRequest.getPresentationId()).orElseThrow(() ->
-                new NotFoundException(String.format("Presentation with id : " + presentationUpdateRequest.getPresentationId() + " not found")));
-        logger.info("Presentation with formatPPT : " + presentationUpdateRequest.getFormatPPT() + " already exists");
-        if (presentationRepository.existsPresentationsByFormatPPT(presentationUpdateRequest.getFormatPPT())) {
-            throw new AlReadyExistException("Presentation with formatPPT : " + presentationUpdateRequest.getFormatPPT() + " already exists");
-        }
+                new NotFoundException(String.format("Презентация с идентификатором:" + presentationUpdateRequest.getPresentationId() + "не найдена")));
         presentation.setId(presentationUpdateRequest.getPresentationId());
         presentation.setName(presentationUpdateRequest.getName());
         presentation.setDescription(presentationUpdateRequest.getDescription());
         presentation.setFormatPPT(presentationUpdateRequest.getFormatPPT());
         presentationRepository.save(presentation);
         logger.info("Successfully updated");
-        return SimpleResponse.builder().httpStatus(HttpStatus.OK).message("Successfully updated").build();
+        return SimpleResponse.builder().httpStatus(HttpStatus.OK).message("Успешно обновлено").build();
     }
 
     @Override
     public SimpleResponse deletePresentation(Long presentationId) {
         logger.info("Presentation with id : " + presentationId + " not found");
         Presentation presentation = presentationRepository.findById(presentationId).orElseThrow(() ->
-                new NotFoundException(String.format("Presentation with id : " + presentationId + " not found")));
+                new NotFoundException(String.format("Презентация с идентификатором: " + presentationId + " не найдена")));
         presentationRepository.delete(presentation);
         logger.info("Successfully deleted");
-        return SimpleResponse.builder().httpStatus(HttpStatus.OK).message("Successfully deleted").build();
+        return SimpleResponse.builder().httpStatus(HttpStatus.OK).message("Успешно удалено").build();
     }
 }

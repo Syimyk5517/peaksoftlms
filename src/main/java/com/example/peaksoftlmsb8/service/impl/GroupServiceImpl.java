@@ -36,7 +36,6 @@ public class GroupServiceImpl implements GroupService {
     private final GroupRepository groupRepository;
     private final ResultOfTestRepository resultOfTestRepository;
     private final UserRepository userRepository;
-
     private static final Logger logger = LogManager.getLogger(GroupServiceImpl.class);
 
     @Override
@@ -44,7 +43,7 @@ public class GroupServiceImpl implements GroupService {
         if (groupRepository.existsGroupByName(groupRequest.getName())) {
             logger.info("Group with name :" + groupRequest.getName() + " already exists");
             return SimpleResponse.builder().httpStatus(HttpStatus.CONFLICT).
-                    message(String.format("Group with name :" + groupRequest.getName() + " already exists")).build();
+                    message(String.format("Группа с именем: " + groupRequest.getName() + " уже существует")).build();
         }
         Group group = new Group();
         group.setName(groupRequest.getName());
@@ -53,7 +52,7 @@ public class GroupServiceImpl implements GroupService {
         group.setImage(groupRequest.getImage());
         group.setFinishDate(groupRequest.getFinishDate());
         groupRepository.save(group);
-        return SimpleResponse.builder().httpStatus(HttpStatus.OK).message("Group with name: " + groupRequest.getName() + " successfully saved").build();
+        return SimpleResponse.builder().httpStatus(HttpStatus.OK).message("Группа с именем: " + groupRequest.getName() + " успешно сохранена").build();
     }
 
     @Override
@@ -69,29 +68,23 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public GroupResponse getGroupById(Long groupId) {
-        return groupRepository.getGroupById(groupId).orElseThrow(() -> new NotFoundException(String.format("Group id: " + groupId + " not found")));
+        return groupRepository.getGroupById(groupId).orElseThrow(() -> new NotFoundException(String.format("Идентификатор группы: " + groupId + " не найден")));
     }
 
     @Override
     @Transactional
     public SimpleResponse updateGroup(GroupUpdateRequest groupUpdateRequest) {
-        logger.info("Group with name : " + groupUpdateRequest.getName() + " already exists");
-        if (groupRepository.existsGroupByName(groupUpdateRequest.getName())) {
-            return SimpleResponse.builder().httpStatus(HttpStatus.CONFLICT).
-                    message(String.format("Group with name : " + groupUpdateRequest.getName() + " already exists")).build();
-        }
         logger.info("Group with id : " + groupUpdateRequest.getGroupId() + " not found");
         Group group = groupRepository.findById(groupUpdateRequest.getGroupId()).orElseThrow(() ->
-                new NotFoundException(String.format("Group with id : " + groupUpdateRequest.getGroupId() + " not found")));
+                new NotFoundException(String.format("Группа с идентификатором: " + groupUpdateRequest.getGroupId() + " не найдена")));
         group.setId(groupUpdateRequest.getGroupId());
         group.setName(groupUpdateRequest.getName());
         group.setDescription(groupUpdateRequest.getDescription());
         group.setImage(groupUpdateRequest.getImage());
         group.setFinishDate(groupUpdateRequest.getFinishDate());
-
         groupRepository.save(group);
         logger.info("Successfully updated");
-        return SimpleResponse.builder().httpStatus(HttpStatus.OK).message("Successfully updated").build();
+        return SimpleResponse.builder().httpStatus(HttpStatus.OK).message("Успешно обновлено").build();
     }
 
     @Override
@@ -99,7 +92,7 @@ public class GroupServiceImpl implements GroupService {
     public SimpleResponse deleteGroup(Long groupId) {
         logger.info("Group with id : " + groupId + " not found");
         Group group = groupRepository.findById(groupId).orElseThrow(() ->
-                new NotFoundException(String.format("Group with id : " + groupId + " not found")));
+                new NotFoundException(String.format("Группа с идентификатором: " + groupId + " не найдена")));
         for (Student student : group.getStudents()) {
             resultOfTestRepository.deleteByStudentId(student.getId());
             userRepository.deleteUserByStudentId(student.getId());
@@ -107,23 +100,24 @@ public class GroupServiceImpl implements GroupService {
         group.getCourses().forEach(course -> course.setGroups(null));
         groupRepository.delete(group);
         logger.info("Successfully deleted");
-        return SimpleResponse.builder().httpStatus(HttpStatus.OK).message("Successfully deleted").build();
+        return SimpleResponse.builder().httpStatus(HttpStatus.OK).message("Успешно удалено").build();
     }
+
 
     @Override
     public SimpleResponse assignGroupToCourse(Long groupId, Long courseId) {
         logger.info("Group with id : " + groupId + " not found");
         Group group = groupRepository.findById(groupId)
-                .orElseThrow(() -> new NotFoundException("Group with id : " + groupId + " not found"));
+                .orElseThrow(() -> new NotFoundException("Группа с идентификатором: " + groupId + " не найдена"));
         logger.info("Course with id : " + courseId + " not found");
         Course course = courseRepository.findById(courseId)
-                .orElseThrow(() -> new NotFoundException("Course with id : " + courseId + " not found"));
+                .orElseThrow(() -> new NotFoundException("Курс с идентификатором: " + courseId + " не найден"));
         group.addCourse(course);
         groupRepository.save(group);
         logger.info("Successfully saved!");
         return SimpleResponse.builder()
                 .httpStatus(HttpStatus.OK)
-                .message("Successfully saved!")
+                .message("Успешно сохранено!")
                 .build();
     }
 }

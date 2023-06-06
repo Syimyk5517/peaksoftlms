@@ -16,6 +16,4 @@ public interface PresentationRepository extends JpaRepository<Presentation, Long
 
     @Query("select new com.example.peaksoftlmsb8.dto.response.presentation.PresentationResponse(p.id,p.name,p.description,p.formatPPT,p.lesson.id) from Presentation p where p.id=:presentationId")
     Optional<PresentationResponse> getPresentationById(Long presentationId);
-
-    Boolean existsPresentationsByFormatPPT(String formatPPT);
 }

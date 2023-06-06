@@ -33,10 +33,9 @@ public class ResultOfTestServiceImpl implements ResultOfTestService {
         User accountInToken = jwtService.getAccountInToken();
         Student student = accountInToken.getStudent();
         Test test = testRepository.findById(testId).orElseThrow(
-                () -> new NotFoundException("Test with id : " + testId + " not found !"));
-
+                () -> new NotFoundException("Тест с идентификатором: " + testId + " не найден!"));
         ResultOfTest resultOfTest = resultOfTestRepository.findByStudentId(student.getId()).orElseThrow(
-                () -> new NotFoundException("Result of test with id : " + student.getId() + " not found !"));
+                () -> new NotFoundException("Результат теста с идентификатором: " + student.getId() + " не найден!"));
 
         List<ResultQuestionResponse> resultQuestionResponses = new ArrayList<>();
 
@@ -98,7 +97,7 @@ public class ResultOfTestServiceImpl implements ResultOfTestService {
         ResultOfTest resultOfTest = new ResultOfTest();
 
         Test test = testRepository.findById(passTestRequest.getTestId()).orElseThrow(
-                () -> new NotFoundException("Test with id : " + passTestRequest.getTestId() + " not found !"));
+                () -> new NotFoundException("Тест с идентификатором:" + passTestRequest.getTestId() + " не найден!"));
 
         List<ResultQuestionResponse> resultQuestionResponses = new ArrayList<>();
 
@@ -107,7 +106,7 @@ public class ResultOfTestServiceImpl implements ResultOfTestService {
         int countInCorrect = 0;
         for (PassQuestionRequest questionRequest : passTestRequest.getPassQuestionRequest()) {
             Question question = questionRepository.findById(questionRequest.getQuestionId()).orElseThrow(
-                    () -> new NotFoundException("Question with id : " + questionRequest.getQuestionId()));
+                    () -> new NotFoundException("Вопрос с идентификатором: " + questionRequest.getQuestionId() + " не найден"));
 
             ResultQuestionResponse questionResponse = new ResultQuestionResponse();
             questionResponse.setQuestionId(question.getId());
@@ -137,7 +136,7 @@ public class ResultOfTestServiceImpl implements ResultOfTestService {
 
                     for (Long optionId : questionRequest.getOptionId()) {
                         Option option = optionRepository.findById(optionId).orElseThrow(
-                                () -> new NotFoundException("Option with id : " + optionId + " not found !"));
+                                () -> new NotFoundException("Вариант с идентификатором: " + optionId + " не найдена!"));
 
 
                         if (question.getOptionType().equals(OptionType.SINGLETON)) {
@@ -165,7 +164,6 @@ public class ResultOfTestServiceImpl implements ResultOfTestService {
             resultQuestionResponses.add(questionResponse);
         }
 
-
         resultOfTest.setTest(test);
         resultOfTest.setStudent(student);
         resultOfTest.setCountCorrect(countCorrect);
@@ -178,15 +176,12 @@ public class ResultOfTestServiceImpl implements ResultOfTestService {
                 .resultQuestionResponses(resultQuestionResponses)
                 .studentPoint(countCorrectAnswer)
                 .build();
-
     }
 
     @Override
     public List<ResultOfTestResponseForInstructor> findAll(Long testId) {
         return resultRepository.resultTest(testId);
     }
-
-
 }
 
 
