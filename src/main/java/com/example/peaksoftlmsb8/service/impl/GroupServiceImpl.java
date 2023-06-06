@@ -14,6 +14,7 @@ import com.example.peaksoftlmsb8.repository.GroupRepository;
 import com.example.peaksoftlmsb8.repository.ResultOfTestRepository;
 import com.example.peaksoftlmsb8.repository.UserRepository;
 import com.example.peaksoftlmsb8.service.GroupService;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -26,6 +27,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 @Transactional
@@ -112,8 +114,9 @@ public class GroupServiceImpl implements GroupService {
         logger.info("Course with id : " + courseId + " not found");
         Course course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new NotFoundException("Курс с идентификатором: " + courseId + " не найден"));
-        group.addCourse(course);
-        groupRepository.save(group);
+//        group.addCourse(course);
+        course.assignCourse(group);
+        courseRepository.save(course);
         logger.info("Successfully saved!");
         return SimpleResponse.builder()
                 .httpStatus(HttpStatus.OK)

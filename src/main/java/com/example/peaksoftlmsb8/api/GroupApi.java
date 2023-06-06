@@ -60,8 +60,8 @@ public class GroupApi {
     @PostMapping("/assign")
     @PreAuthorize("hasAnyAuthority('ADMIN','INSTRUCTOR')")
     @Operation(summary = "Assign group to course", description = "Assigns a group to a course by their respective IDs")
-    public SimpleResponse assignGroupToCourse(@RequestParam Long groupId, @RequestParam Long courseId) {
-        return groupService.assignGroupToCourse(groupId, courseId);
+    public SimpleResponse assignGroupToCourse(@RequestParam (name ="groupId")Long groupId, @RequestParam Long courseId) {
+        return groupService.assignGroupToCourse(groupId,courseId);
     }
 }
 

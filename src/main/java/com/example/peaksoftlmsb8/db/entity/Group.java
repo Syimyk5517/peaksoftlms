@@ -36,11 +36,4 @@ public class Group {
     @ManyToMany(mappedBy = "groups", cascade = {MERGE, PERSIST, REFRESH, DETACH}, fetch = LAZY)
     private List<Course> courses;
 
-    public void addCourse(Course course) {
-
-        if (courses == null) {
-            courses = new ArrayList<>();
-        }
-        courses.add(course);
-    }
 }
