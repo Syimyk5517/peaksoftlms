@@ -15,5 +15,7 @@ public class LessonRequest {
     @NotNull(message = "Name should not be null")
     @NotBlank(message = "Name can't be empty!")
     private String name;
+    @NotNull(message = "Course id should not be null")
+    @NotBlank(message = "Course id can't be empty!")
     private Long courseId;
 }

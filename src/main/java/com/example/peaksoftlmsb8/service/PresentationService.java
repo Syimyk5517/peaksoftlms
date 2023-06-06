@@ -1,7 +1,6 @@
 package com.example.peaksoftlmsb8.service;
 
 import com.example.peaksoftlmsb8.dto.request.presentation.PresentationRequest;
-import com.example.peaksoftlmsb8.dto.request.presentation.PresentationUpdateRequest;
 import com.example.peaksoftlmsb8.dto.response.presentation.PresentationResponse;
 import com.example.peaksoftlmsb8.dto.response.SimpleResponse;
 
@@ -14,7 +13,7 @@ public interface PresentationService {
 
     List<PresentationResponse> findAllPresentationsByLessonId(Long lessonId);
 
-    SimpleResponse updatePresentation(PresentationUpdateRequest presentationUpdateRequest);
+    SimpleResponse updatePresentation(Long presentationId, PresentationRequest presentationUpdateRequest);
 
     SimpleResponse deletePresentation(Long presentationId);
 

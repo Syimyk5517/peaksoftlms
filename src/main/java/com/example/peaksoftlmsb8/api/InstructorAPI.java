@@ -7,6 +7,7 @@ import com.example.peaksoftlmsb8.dto.response.SimpleResponse;
 import com.example.peaksoftlmsb8.service.InstructorService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,7 +22,8 @@ import org.springframework.web.bind.annotation.*;
 public class InstructorAPI {
     private final InstructorService instructorService;
 
-    @Operation(summary = "This method can get all Instructors ", description = "You can get Instructors with sort or search")
+    @Operation(summary = "This method can get all Instructors ",
+            description = "You can get Instructors with sort or search")
     @GetMapping
     @PreAuthorize("hasAuthority('ADMIN')")
     public PaginationResponseForInstructor getAll(@RequestParam int size,
@@ -32,29 +34,33 @@ public class InstructorAPI {
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
-    @Operation(summary = "This method can get Instructor with ID", description = "You can get Instructor with ID")
+    @Operation(summary = "This method can get Instructor with ID",
+            description = "You can get Instructor with ID")
     @GetMapping("/findById")
     public InstructorResponse findByInstructorId(@RequestParam Long instructorId) {
         return instructorService.findByInstructorId(instructorId);
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
-    @Operation(summary = "This method can save Instructor", description = "You can save Instructor in Database")
+    @Operation(summary = "This method can save Instructor",
+            description = "You can save Instructor in Database")
     @PostMapping
-    public SimpleResponse saveInstructor(@RequestBody InstructorRequest instructorRequest) {
+    public SimpleResponse saveInstructor(@RequestBody @Valid InstructorRequest instructorRequest) {
         return instructorService.saveInstructor(instructorRequest);
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
-    @Operation(summary = "This method can update Instructor with ID", description = "You can update Instructor with ID")
+    @Operation(summary = "This method can update Instructor with ID",
+            description = "You can update Instructor with ID")
     @PutMapping
     public SimpleResponse updateInstructor(@RequestParam Long instructorId,
-                                           @RequestBody InstructorRequest newInstructor) {
+                                           @RequestBody @Valid InstructorRequest newInstructor) {
         return instructorService.updateInstructor(instructorId, newInstructor);
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
-    @Operation(summary = "This method can delete Instructor with ID", description = "You can delete Instructor with ID")
+    @Operation(summary = "This method can delete Instructor with ID",
+            description = "You can delete Instructor with ID")
     @DeleteMapping
     public SimpleResponse deleteInstructorById(@RequestParam Long instructorId) {
         return instructorService.deleteInstructorById(instructorId);

@@ -1,6 +1,7 @@
 package com.example.peaksoftlmsb8.validation.phoneNumber;
 
 import jakarta.validation.Constraint;
+import jakarta.validation.Payload;
 
 import java.lang.annotation.*;
 
@@ -9,4 +10,9 @@ import java.lang.annotation.*;
 @Constraint(validatedBy = PhoneNumberValidator.class)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface PhoneNumberValid {
+    String message() default "Invalid phone number";
+
+    Class<?>[] groups() default {};
+
+    Class<? extends Payload>[] payload() default {};
 }

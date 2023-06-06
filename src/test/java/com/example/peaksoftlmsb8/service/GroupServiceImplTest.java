@@ -60,8 +60,6 @@ public class GroupServiceImplTest {
         existingGroup.setFinishDate(LocalDate.of(2023, 12, 12));
         Mockito.when(groupRepository.findById(groupId))
                 .thenReturn(Optional.of(existingGroup));
-        Mockito.when(groupRepository.existsGroupByName(updateRequest.getName()))
-                .thenReturn(false);
         SimpleResponse response = groupService.updateGroup(groupId,updateRequest);
         Assertions.assertEquals(HttpStatus.OK, response.getHttpStatus());
         Assertions.assertEquals("Successfully updated", response.getMessage());
@@ -70,7 +68,6 @@ public class GroupServiceImplTest {
         Assertions.assertEquals(updateRequest.getImage(), existingGroup.getImage());
         Assertions.assertEquals(updateRequest.getFinishDate(), existingGroup.getFinishDate());
         Mockito.verify(groupRepository).findById(groupId);
-        Mockito.verify(groupRepository).existsGroupByName(updateRequest.getName());
         Mockito.verify(groupRepository).save(existingGroup);
     }
 }

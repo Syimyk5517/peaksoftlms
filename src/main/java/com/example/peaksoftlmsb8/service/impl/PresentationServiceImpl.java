@@ -5,7 +5,6 @@ import com.example.peaksoftlmsb8.db.entity.Presentation;
 import com.example.peaksoftlmsb8.exception.AlReadyExistException;
 import com.example.peaksoftlmsb8.exception.NotFoundException;
 import com.example.peaksoftlmsb8.dto.request.presentation.PresentationRequest;
-import com.example.peaksoftlmsb8.dto.request.presentation.PresentationUpdateRequest;
 import com.example.peaksoftlmsb8.dto.response.presentation.PresentationResponse;
 import com.example.peaksoftlmsb8.dto.response.SimpleResponse;
 import com.example.peaksoftlmsb8.repository.LessonRepository;
@@ -63,18 +62,16 @@ public class PresentationServiceImpl implements PresentationService {
 
     @Override
     @Transactional
-    public SimpleResponse updatePresentation(PresentationUpdateRequest presentationUpdateRequest) {
-        logger.info("Presentation with id : " + presentationUpdateRequest.getPresentationId() + " not found");
-        Presentation presentation = presentationRepository.findById(presentationUpdateRequest.getPresentationId()).orElseThrow(() ->
-                new NotFoundException(String.format("Presentation with id : " + presentationUpdateRequest.getPresentationId() + " not found")));
-        logger.info("Presentation with formatPPT : " + presentationUpdateRequest.getFormatPPT() + " already exists");
-        if (presentationRepository.existsPresentationsByFormatPPT(presentationUpdateRequest.getFormatPPT())) {
-            throw new AlReadyExistException("Presentation with formatPPT : " + presentationUpdateRequest.getFormatPPT() + " already exists");
+    public SimpleResponse updatePresentation(Long presentationId, PresentationRequest presentationUpdateRequest) {
+        logger.info("Presentation with id : " + presentationId + " not found");
+        Presentation presentation = presentationRepository.findById(presentationId).orElseThrow(() ->
+                new NotFoundException(String.format("Presentation with id : " + presentationId + " not found")));
+
+        if (!presentationRepository.existsPresentationsByFormatPPT(presentationUpdateRequest.getFormatPPT())) {
+            presentation.setFormatPPT(presentationUpdateRequest.getFormatPPT());
         }
-        presentation.setId(presentationUpdateRequest.getPresentationId());
         presentation.setName(presentationUpdateRequest.getName());
         presentation.setDescription(presentationUpdateRequest.getDescription());
-        presentation.setFormatPPT(presentationUpdateRequest.getFormatPPT());
         presentationRepository.save(presentation);
         logger.info("Successfully updated");
         return SimpleResponse.builder().httpStatus(HttpStatus.OK).message("Successfully updated").build();

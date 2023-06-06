@@ -21,5 +21,7 @@ public class PresentationRequest {
     @NotBlank(message = "FormatPPT can't be empty!")
     @NotNull(message = "FormatPPT should not be null")
     private String formatPPT;
+    @NotBlank(message = "Lesson id can't be empty!")
+    @NotNull(message = "Lesson id should not be null")
     private Long lessonId;
 }
