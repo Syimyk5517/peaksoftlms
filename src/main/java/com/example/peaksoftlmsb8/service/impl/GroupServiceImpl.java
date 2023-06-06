@@ -114,7 +114,6 @@ public class GroupServiceImpl implements GroupService {
         logger.info("Course with id : " + courseId + " not found");
         Course course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new NotFoundException("Курс с идентификатором: " + courseId + " не найден"));
-//        group.addCourse(course);
         course.assignCourse(group);
         courseRepository.save(course);
         logger.info("Successfully saved!");
