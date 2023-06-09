@@ -47,7 +47,7 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public SimpleResponse assignInstructorToCourse(Boolean isAssigned, AssignRequest assignRequest) {
         Course course = courseRepository.findById(assignRequest.getCourseId()).orElseThrow(() ->{
-            logger.info("Course with id : " + assignRequest.getCourseId() + " not found");
+            logger.error("Course with id : " + assignRequest.getCourseId() + " not found");
           throw   new NotFoundException("Курс с идентификатором: " + assignRequest.getCourseId() + " не найден");});
         List<Instructor> instructors = instructorRepository.findAllById(assignRequest.getInstructorIds());
         if (isAssigned.equals(true)) {
@@ -118,8 +118,9 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public CourseResponse findByCourseId(Long courseId) {
-        logger.info("Course id: " + courseId + " not found");
-        return courseRepository.findByCourseId(courseId).orElseThrow(() -> new NotFoundException("Идентификатор курса:  " + courseId + " не найден"));
+        return courseRepository.findByCourseId(courseId).orElseThrow(() -> {
+            logger.error("Course id: " + courseId + " not found");
+           throw  new NotFoundException("Идентификатор курса:  " + courseId + " не найден");});
     }
 
     @Override
@@ -136,13 +137,16 @@ public class CourseServiceImpl implements CourseService {
         course.setFinishDate(courseRequest.getFinishDate());
         courseRepository.save(course);
         logger.info("Course with name" + courseRequest.getName() + "successfully saved!");
-        return SimpleResponse.builder().httpStatus(HttpStatus.OK).message("Курс с именем: " + courseRequest.getName() + " успешно сохранено!").build();
+        return SimpleResponse.builder().httpStatus(HttpStatus.OK)
+                .message("Курс с именем: " + courseRequest.getName() + " успешно сохранено!").build();
     }
 
     @Override
     public SimpleResponse updateCourse(CourseUpdateRequest courseUpdateRequest) {
-        logger.info("Course with id: " + courseUpdateRequest.getCourseId() + " not found");
-        Course course = courseRepository.findById(courseUpdateRequest.getCourseId()).orElseThrow(() -> new NotFoundException(String.format("Курс с идентификатором: " + courseUpdateRequest.getCourseId() + " не найден")));
+        Course course = courseRepository.findById(courseUpdateRequest.getCourseId()).orElseThrow(() -> {
+            logger.error("Course with id: " + courseUpdateRequest.getCourseId() + " not found");
+            throw new NotFoundException("Курс с идентификатором: " + courseUpdateRequest.getCourseId() + " не найден");});
+
         course.setName(courseUpdateRequest.getName());
         course.setImage(courseUpdateRequest.getImage());
         course.setDescription(courseUpdateRequest.getDescription());
@@ -156,8 +160,9 @@ public class CourseServiceImpl implements CourseService {
     @Override
     @Transactional
     public SimpleResponse deleteCourse(Long courseId) {
-        logger.info("Course with id: " + courseId + " not found");
-        Course course = courseRepository.findById(courseId).orElseThrow(() -> new NotFoundException("Курс с идентификатором: " + courseId + " не найден"));
+        Course course = courseRepository.findById(courseId).orElseThrow(() ->{
+            logger.error("Course with id: " + courseId + " not found");
+            throw  new NotFoundException("Курс с идентификатором: " + courseId + " не найден");});
         for (Lesson lesson : course.getLessons()) {
             Test test = lesson.getTest();
             if (test != null) {

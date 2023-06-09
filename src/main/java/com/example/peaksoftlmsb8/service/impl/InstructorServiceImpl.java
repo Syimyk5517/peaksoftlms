@@ -38,7 +38,7 @@ public class InstructorServiceImpl implements InstructorService {
         if (!"name_asc".equals(sortBy) &&
                 !"name_desc".equals(sortBy) &&
                 sortBy != null) {
-            logger.info("you wrote the wrong name , write like this name_asc or name_desc");
+            logger.error("you wrote the wrong name , write like this name_asc or name_desc");
             throw new NotFoundException("вы написали неправильное имя, напишите так name_asc или name_desc");
         }
         Pageable pageable = PageRequest.of(page - 1, size);
@@ -53,15 +53,17 @@ public class InstructorServiceImpl implements InstructorService {
 
     @Override
     public InstructorResponse findByInstructorId(Long instructorId) {
-        logger.info("this id = " + instructorId + " not found !");
         return instructorRepository.getByInstructorId(instructorId)
-                .orElseThrow(() -> new NotFoundException("Этот идентификатор = " + instructorId + " не найден!"));
+                .orElseThrow(() ->  {
+                    logger.error("this id = " + instructorId + " not found !");
+                    throw new NotFoundException("Этот идентификатор = " + instructorId + " не найден!");
+                });
     }
 
     @Override
     public SimpleResponse saveInstructor(InstructorRequest instructorRequest) {
-        logger.info("This email " + instructorRequest.getEmail() + " already exists !");
         if (userRepository.existsByEmail(instructorRequest.getEmail())) {
+            logger.error("This email " + instructorRequest.getEmail() + " already exists !");
             throw new AlReadyExistException("Это электронное письмо: " + instructorRequest.getEmail() + " уже существует!");
         }
         Instructor instructor = new Instructor();
@@ -82,9 +84,10 @@ public class InstructorServiceImpl implements InstructorService {
 
     @Override
     public SimpleResponse updateInstructor(Long instructorId, InstructorRequest newInstructor) {
-        logger.info("this id = " + instructorId + " not found!");
         Instructor instructor = instructorRepository.findById(instructorId)
-                .orElseThrow(() -> new NotFoundException("Этот идентификатор = " + instructorId + " не найден"));
+                .orElseThrow(() -> {
+                    logger.error("this id = " + instructorId + " not found!");
+                    throw new NotFoundException("Этот идентификатор = " + instructorId + " не найден");});
         instructor.getUser().setFirstName(newInstructor.getFirstName());
         instructor.getUser().setLastName(newInstructor.getLastName());
         instructor.getUser().setEmail(newInstructor.getEmail());
@@ -99,9 +102,11 @@ public class InstructorServiceImpl implements InstructorService {
 
     @Override
     public SimpleResponse deleteInstructorById(Long instructorId) {
-        logger.info("this id = " + instructorId + " not found !");
         Instructor instructor = instructorRepository.findById(instructorId)
-                .orElseThrow(() -> new NotFoundException("Этот идентификатор = " + instructorId + " не найден!"));
+                .orElseThrow(() ->{
+                    logger.error("this id = " + instructorId + " not found !");
+                    throw new NotFoundException("Этот идентификатор = " + instructorId + " не найден!");
+                });
         for (Course course : instructor.getCourses()) {
             course.setInstructors(null);
         }

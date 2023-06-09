@@ -40,12 +40,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public AuthenticationResponse sigIn(AuthenticationRequest request) {
-        logger.info("User with email: " + request.getEmail() + " not found!");
-        User user = userRepository.findByEmail(request.getEmail()).orElseThrow(
-                () -> new NotFoundException("Пользователь с электронной почтой: " + request.getEmail() + " не найден!")
-        );
+        User user = userRepository.findByEmail(request.getEmail()).orElseThrow(() -> {
+                    logger.error("User with email: " + request.getEmail() + " not found!");
+                 throw    new NotFoundException("Пользователь с электронной почтой: " + request.getEmail() + " не найден!");});
         if (!encoder.matches(request.getPassword(), user.getPassword())) {
-            logger.info("Wrong password!");
+            logger.error("Wrong password!");
             throw new BadRequestException("Неправильный пароль!");
         }
         manager.authenticate(
@@ -65,9 +64,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public SimpleResponse forgotPassword(String email, String link) throws MessagingException {
-        logger.info("This email : " + email + " is not found !");
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new NotFoundException("Пользователь с электронной почтой : " + email + " не найден!"));
+                .orElseThrow(() -> {
+                    logger.error("This email : " + email + " is not found !");
+                    throw  new NotFoundException("Пользователь с электронной почтой : " + email + " не найден!");});
+
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage);
         mimeMessageHelper.setSubject("Password reset request");
@@ -84,9 +85,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public SimpleResponse resetPassword(PasswordRequest passwordRequest) {
-        logger.info("This id : " + passwordRequest.getId() + " is not found !");
         User user = userRepository.findById(passwordRequest.getId())
-                .orElseThrow(() -> new NotFoundException("Этот идентификатор: " + passwordRequest.getId() + " не найден!"));
+                .orElseThrow(() -> {
+                    logger.error("This id : " + passwordRequest.getId() + " is not found !");
+                    throw new NotFoundException("Этот идентификатор: " + passwordRequest.getId() + " не найден!");});
         user.setPassword(passwordEncoder.encode(passwordRequest.getPassword()));
         logger.info("Password successfully updated");
         return SimpleResponse.builder()
