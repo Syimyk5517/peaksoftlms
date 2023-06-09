@@ -425,7 +425,7 @@ VALUES (1,
         5),
        (6,
         '2023-04-15',
-        'Postman task for JAVA - 8',
+        'Postman task for Java - 8',
         'diagram.file',
         'Postman task',
         5);
