@@ -95,9 +95,8 @@ public class GroupServiceImpl implements GroupService {
         logger.info("Group with id : " + groupId + " not found");
         Group group = groupRepository.findById(groupId).orElseThrow(() ->
                 new NotFoundException(String.format("Группа с идентификатором: " + groupId + " не найдена")));
-        for (Student student : group.getStudents()) {
+        for (Student student:group.getStudents()) {
             resultOfTestRepository.deleteByStudentId(student.getId());
-            userRepository.deleteUserByStudentId(student.getId());
         }
         group.getCourses().forEach(course -> course.setGroups(null));
         groupRepository.delete(group);
