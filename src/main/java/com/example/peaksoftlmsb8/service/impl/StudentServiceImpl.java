@@ -46,9 +46,11 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public SimpleResponse importExcel(Long groupId, String link, MultipartFile multipartFile) throws IOException {
-        logger.info("Group with id " + groupId + " not found!");
         Group group = groupRepository.findById(groupId).orElseThrow(
-                () -> new NotFoundException("Группа с идентификатором:" + groupId + " не найдена!")
+                () -> {
+                    logger.error("Group with id " + groupId + " not found!");
+                  throw    new NotFoundException("Группа с идентификатором:" + groupId + " не найдена!");
+                }
         );
         if (!multipartFile.isEmpty()) {
 
@@ -92,17 +94,18 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public SimpleResponse save(StudentRequest studentRequest) {
-        logger.info("Student with Email: " + studentRequest.getEmail() + " is already saved!");
         if (studentRepository.existsByEmail(studentRequest.getEmail())) {
+            logger.info("Student with Email: " + studentRequest.getEmail() + " is already saved!");
             throw new BadRequestException("Учащийся с электронной почтой: " + studentRequest.getEmail() + " уже сохранен!");
         }
-        logger.info("Student with Phone number: " + studentRequest.getPhoneNumber() + " is already saved!");
         if (studentRepository.existsByPhoneNumber(studentRequest.getPhoneNumber())) {
+            logger.info("Student with Phone number: " + studentRequest.getPhoneNumber() + " is already saved!");
             throw new BadRequestException("Студент с номером телефона: " + studentRequest.getPhoneNumber() + " уже сохранен!");
         }
-        logger.info("Group with id : " + studentRequest.getGroupId() + "not found !");
         Group group = groupRepository.findById(studentRequest.getGroupId()).orElseThrow(
-                () -> new NotFoundException("Группа с идентификатором: " + studentRequest.getGroupId() + " не найдена!"));
+                () -> {
+                    logger.error("Group with id : " + studentRequest.getGroupId() + "not found !");
+               throw new NotFoundException("Группа с идентификатором: " + studentRequest.getGroupId() + " не найдена!");});
         User user = new User();
         user.setFirstName(studentRequest.getFirstName());
         user.setLastName(studentRequest.getLastName());
@@ -128,12 +131,15 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public StudentResponse findById(Long studentId) {
         return studentRepository.findStudentById(studentId).orElseThrow(
-                () -> new NotFoundException("Студент с идентификатором: " + studentId + " не найден!"));
+                () -> { logger.error("Student with id: "+studentId+" not found!");
+                  throw   new NotFoundException("Студент с идентификатором: " + studentId + " не найден!");
+                });
     }
 
     @Override
     public List<StudentResponse> findAllStudentsByCourse(Long courseId) {
         if (studentRepository.findAllStudentsByCourseId(courseId).isEmpty()) {
+            logger.error("Student not found!");
             throw new NotFoundException("Студенты не найдены!");
         }
         return studentRepository.findAllStudentsByCourseId(courseId);
@@ -152,9 +158,12 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public SimpleResponse deleteById(Long studentId) {
         Student student = studentRepository.findById(studentId).orElseThrow(
-                () -> new NotFoundException("Студент с идентификатором: " + studentId + " не найден!"));
+                () -> { logger.error("Student with id: " +studentId+
+                        " not found");
+                    throw new NotFoundException("Студент с идентификатором: " + studentId + " не найден!");});
         userRepository.deleteUserByStudentId(student.getId());
         studentRepository.delete(student);
+        logger.info("Student with id: "+studentId+ " successfully deleted!");
         return SimpleResponse.builder()
                 .httpStatus(HttpStatus.OK)
                 .message("Студент с идентификатором: " + studentId + " успешно удален!")
@@ -163,12 +172,14 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public SimpleResponse update(StudentRequest newStudentRequest, Long studentId) {
-        logger.info("Student with ID: " + studentId + " is not found!");
         Student student = studentRepository.findById(studentId).orElseThrow(
-                () -> new NotFoundException("Студент с идентификатором: " + studentId + " не найден!"));
-        logger.info("Group with id : " + newStudentRequest.getGroupId() + "not found !");
+                () -> {
+                    logger.error("Student with ID: " + studentId + " is not found!");
+                  throw new NotFoundException("Студент с идентификатором: " + studentId + " не найден!");});
         Group group = groupRepository.findById(newStudentRequest.getGroupId()).orElseThrow(
-                () -> new NotFoundException("Группа с идентификатором: " + newStudentRequest.getGroupId() + " не найдена!"));
+                () ->{
+                    logger.error("Group with id : " + newStudentRequest.getGroupId() + "not found !");
+                throw new NotFoundException("Группа с идентификатором: " + newStudentRequest.getGroupId() + " не найдена!");});
         student.getUser().setFirstName(newStudentRequest.getFirstName());
         student.getUser().setLastName(newStudentRequest.getLastName());
         student.getUser().setEmail(newStudentRequest.getEmail());
