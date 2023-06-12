@@ -8,11 +8,12 @@ import com.example.peaksoftlmsb8.db.enums.Role;
 import com.example.peaksoftlmsb8.db.exception.AlReadyExistException;
 import com.example.peaksoftlmsb8.db.exception.BadRequestException;
 import com.example.peaksoftlmsb8.db.exception.NotFoundException;
-import com.example.peaksoftlmsb8.dto.request.student.StudentRequest;
 import com.example.peaksoftlmsb8.dto.request.student.StudentExcelRequest;
+import com.example.peaksoftlmsb8.dto.request.student.StudentRequest;
 import com.example.peaksoftlmsb8.dto.response.SimpleResponse;
 import com.example.peaksoftlmsb8.dto.response.student.StudentResponse;
 import com.example.peaksoftlmsb8.repository.GroupRepository;
+import com.example.peaksoftlmsb8.repository.ResultOfTestRepository;
 import com.example.peaksoftlmsb8.repository.StudentRepository;
 import com.example.peaksoftlmsb8.repository.UserRepository;
 import com.example.peaksoftlmsb8.service.EmailSenderService;
@@ -42,6 +43,7 @@ public class StudentServiceImpl implements StudentService {
     private final GroupRepository groupRepository;
     private final UserRepository userRepository;
     private final EmailSenderService emailSenderService;
+    private final ResultOfTestRepository resultOfTestRepository;
     private static final Logger logger = LogManager.getLogger(CourseServiceImpl.class);
 
     @Override
@@ -161,7 +163,7 @@ public class StudentServiceImpl implements StudentService {
                 () -> { logger.error("Student with id: " +studentId+
                         " not found");
                     throw new NotFoundException("Студент с идентификатором: " + studentId + " не найден!");});
-        userRepository.deleteUserByStudentId(student.getId());
+        resultOfTestRepository.deleteByStudentId(student.getId());
         studentRepository.delete(student);
         logger.info("Student with id: "+studentId+ " successfully deleted!");
         return SimpleResponse.builder()

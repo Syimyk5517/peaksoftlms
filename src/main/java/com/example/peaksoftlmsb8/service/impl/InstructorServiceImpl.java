@@ -75,11 +75,11 @@ public class InstructorServiceImpl implements InstructorService {
         instructor.setSpecial(instructorRequest.getSpecial());
         instructor.setUser(user);
         user.setInstructor(instructor);
-        emailSenderService.emailSender(instructorRequest.getEmail(), instructorRequest.getLink());
         instructorRepository.save(instructor);
+        emailSenderService.emailSender(instructorRequest.getEmail(), instructorRequest.getLink());
 
         logger.info("This " + instructorRequest.getFirstName() + " saved...");
-        return new SimpleResponse(HttpStatus.OK, "Это " + instructorRequest.getFirstName() + " сохранено...");
+        return new SimpleResponse(HttpStatus.OK, "Instructor " + instructorRequest.getFirstName() + " сохранено...");
     }
 
     @Override
@@ -95,7 +95,7 @@ public class InstructorServiceImpl implements InstructorService {
         instructor.setSpecial(newInstructor.getSpecial());
         instructorRepository.save(instructor);
         logger.info("This " + instructor.getUser().getFirstName() + " updated on " + newInstructor.getFirstName());
-        return new SimpleResponse(HttpStatus.OK, "Это " +
+        return new SimpleResponse(HttpStatus.OK, "Instructor " +
                 instructor.getUser().getFirstName() + " обновлено " +
                 newInstructor.getFirstName());
     }

@@ -26,7 +26,7 @@ public class Student {
     @OneToOne(mappedBy = "student", cascade = {ALL})
     @JoinColumn(name = "user_id")
     private User user;
-    @ManyToOne(cascade = {PERSIST, MERGE, REFRESH, DETACH})
+    @ManyToOne(cascade = {PERSIST, MERGE, REFRESH, DETACH},fetch = FetchType.LAZY)
     @JoinColumn(name = "group_id")
     private Group group;
 
