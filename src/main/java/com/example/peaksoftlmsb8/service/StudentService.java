@@ -11,11 +11,14 @@ import java.util.List;
 public interface StudentService {
     SimpleResponse save(StudentRequest studentRequest);
 
-    SimpleResponse importExcel(Long groupId,String link, MultipartFile multipartFile) throws IOException;
+    SimpleResponse importExcel(Long groupId, String link, MultipartFile multipartFile) throws IOException;
 
     StudentResponse findById(Long studentId);
+
     List<StudentResponse> findAllStudentsByCourse(Long courseId);
+
     List<StudentResponse> findAllStudentsByCourseIdWithSort(String formatStudy);
+
     SimpleResponse deleteById(Long studentId);
 
     SimpleResponse update(StudentRequest newStudentRequest, Long studentId);

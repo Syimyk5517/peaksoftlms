@@ -41,13 +41,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public AuthenticationResponse sigIn(AuthenticationRequest request) {
-        logger.info("User with email: " + request.getEmail() + " not found!");
-        User user = userRepository.findByEmail(request.getEmail()).orElseThrow(
-                () -> new NotFoundException("User with email: " + request.getEmail() + " not found!")
-        );
+        User user = userRepository.findByEmail(request.getEmail()).orElseThrow(() -> {
+                    logger.error("User with email: " + request.getEmail() + " not found!");
+                 throw    new NotFoundException("Пользователь с электронной почтой: " + request.getEmail() + " не найден!");});
         if (!encoder.matches(request.getPassword(), user.getPassword())) {
-            logger.info("Wrong password!");
-            throw new BadRequestException("Wrong password!");
+            logger.error("Wrong password!");
+            throw new BadRequestException("Неправильный пароль!");
         }
         manager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -67,9 +66,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public SimpleResponse forgotPassword(String email, String link) throws MessagingException {
-        logger.info("This email : " + email + " is not found !");
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new NotFoundException("This email : " + email + " is not found !"));
+                .orElseThrow(() -> {
+                    logger.error("This email : " + email + " is not found !");
+                    throw  new NotFoundException("Пользователь с электронной почтой : " + email + " не найден!");});
+
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage);
         mimeMessageHelper.setSubject("Password reset request");
@@ -80,7 +81,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         logger.info("SMS sent to mail !");
         return SimpleResponse.builder()
                 .httpStatus(HttpStatus.OK)
-                .message("SMS sent to mail !")
+                .message("SMS отправлено на почту!")
                 .build();
     }
 
@@ -101,7 +102,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         logger.info("Password successfully updated");
         return SimpleResponse.builder()
                 .httpStatus(HttpStatus.OK)
-                .message("Password successfully updated")
+                .message("Пароль успешно обновлен")
                 .build();
     }
 }

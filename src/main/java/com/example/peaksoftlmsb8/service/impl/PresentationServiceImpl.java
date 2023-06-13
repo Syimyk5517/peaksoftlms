@@ -26,18 +26,13 @@ import java.util.List;
 public class PresentationServiceImpl implements PresentationService {
     private final LessonRepository lessonRepository;
     private final PresentationRepository presentationRepository;
-
     private static final Logger logger = LogManager.getLogger(PresentationServiceImpl.class);
 
     @Override
     public SimpleResponse savePresentation(PresentationRequest presentationRequest) {
-        logger.info("Lesson with id: " + presentationRequest.getLessonId() + " not found");
-        Lesson lesson = lessonRepository.findById(presentationRequest.getLessonId()).orElseThrow(() ->
-                new NotFoundException(String.format("Lesson with id: " + presentationRequest.getLessonId() + " not found")));
-        logger.info("Presentation with formatPPT : " + presentationRequest.getFormatPPT() + " already exists");
-        if (presentationRepository.existsPresentationsByFormatPPT(presentationRequest.getFormatPPT())) {
-            throw new AlReadyExistException("Presentation with formatPPT : " + presentationRequest.getFormatPPT() + " already exists");
-        }
+        Lesson lesson = lessonRepository.findById(presentationRequest.getLessonId()).orElseThrow(() -> {
+            logger.error("Lesson with id: " + presentationRequest.getLessonId() + " not found");
+            throw new NotFoundException("Урок с идентификатором: " + presentationRequest.getLessonId() + " не найден");});
         Presentation presentation = new Presentation();
         presentation.setName(presentationRequest.getName());
         presentation.setDescription(presentationRequest.getDescription());
@@ -45,14 +40,15 @@ public class PresentationServiceImpl implements PresentationService {
         presentation.setLesson(lesson);
         presentationRepository.save(presentation);
         logger.info("Successfully saved");
-        return SimpleResponse.builder().httpStatus(HttpStatus.OK).message("Successfully saved").build();
+        return SimpleResponse.builder().httpStatus(HttpStatus.OK).message("Успешно сохранено").build();
     }
 
     @Override
     public PresentationResponse findByPresentationId(Long presentationId) {
-        logger.info("Presentation with id: " + presentationId + " not found");
         return presentationRepository.getPresentationById(presentationId)
-                .orElseThrow(() -> new NotFoundException(String.format("Presentation with id: " + presentationId + " not found")));
+                .orElseThrow(() ->  {
+                    logger.error("Presentation with id: " + presentationId + " not found");
+                    throw new NotFoundException("Презентация с идентификатором: " + presentationId + " не найдена");});
     }
 
     @Override
@@ -79,11 +75,11 @@ public class PresentationServiceImpl implements PresentationService {
 
     @Override
     public SimpleResponse deletePresentation(Long presentationId) {
-        logger.info("Presentation with id : " + presentationId + " not found");
-        Presentation presentation = presentationRepository.findById(presentationId).orElseThrow(() ->
-                new NotFoundException(String.format("Presentation with id : " + presentationId + " not found")));
+        Presentation presentation = presentationRepository.findById(presentationId).orElseThrow(() -> {
+            logger.error("Presentation with id : " + presentationId + " not found");
+            throw   new NotFoundException("Презентация с идентификатором: " + presentationId + " не найдена");});
         presentationRepository.delete(presentation);
         logger.info("Successfully deleted");
-        return SimpleResponse.builder().httpStatus(HttpStatus.OK).message("Successfully deleted").build();
+        return SimpleResponse.builder().httpStatus(HttpStatus.OK).message("Успешно удалено").build();
     }
 }

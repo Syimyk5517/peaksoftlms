@@ -23,10 +23,10 @@ public class Student {
     private FormLearning formLearning;
     private Boolean isBlocked;
     private Long rating;
-    @OneToOne(mappedBy = "student", cascade = {PERSIST, MERGE, REFRESH, DETACH})
+    @OneToOne(mappedBy = "student", cascade = {ALL})
     @JoinColumn(name = "user_id")
     private User user;
-    @ManyToOne(cascade = {PERSIST, MERGE, REFRESH, DETACH})
+    @ManyToOne(cascade = {PERSIST, MERGE, REFRESH, DETACH},fetch = FetchType.LAZY)
     @JoinColumn(name = "group_id")
     private Group group;
 

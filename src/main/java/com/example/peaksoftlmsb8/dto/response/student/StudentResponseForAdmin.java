@@ -16,4 +16,5 @@ public class StudentResponseForAdmin {
     private String password;
     private FormLearning formLearning;
     private String groupName;
+    private String groupId;
 }

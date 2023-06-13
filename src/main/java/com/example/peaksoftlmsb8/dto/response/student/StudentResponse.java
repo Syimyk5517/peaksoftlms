@@ -15,4 +15,5 @@ public class StudentResponse {
     private String email;
     private FormLearning formLearning;
     private String groupName;
+    private Long groupId;
 }

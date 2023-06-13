@@ -13,7 +13,7 @@ services:
       POSTGRES_USER: peaksoftlmsdbuser
       POSTGRES_PASSWORD: peaksoftlmsdb2023
   database:
-    image: postgres:latest
+    image: postgres:15
     restart: always
     container_name: database
     ports:

@@ -34,9 +34,6 @@ public class Course {
     @ManyToMany(mappedBy = "courses", cascade = {ALL}, fetch = FetchType.LAZY)
     private List<Instructor> instructors;
     @ManyToMany(cascade = ALL)
-    @JoinTable(name = "groups_courses",
-            joinColumns = @JoinColumn(name = "group_id"),
-            inverseJoinColumns = @JoinColumn(name = "courses_id"))
     private List<Group> groups;
 
     @OneToMany(mappedBy = "course", cascade = ALL)

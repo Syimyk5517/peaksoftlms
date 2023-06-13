@@ -1,4 +1,8 @@
 package com.example.peaksoftlmsb8.service.impl;
+
+import lombok.extern.log4j.Log4j2;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -12,9 +16,12 @@ import java.io.IOException;
 import java.util.Map;
 
 @Service
+@Log4j2
 public class S3Service {
 
     private final S3Client s3;
+    private static final Logger logger = LogManager.getLogger(StudentServiceImpl.class);
+
 
     @Value("${aws.bucket.name}")
     private String bucketName;
@@ -47,6 +54,7 @@ public class S3Service {
                 .build();
 
         s3.putObject(por, RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
+        logger.info("Link",bucketPath + key);
         return Map.of(
                 "link", bucketPath + key
         );
@@ -65,7 +73,7 @@ public class S3Service {
         } catch (Exception e) {
             throw new IllegalStateException(e.getMessage());
         }
-
+        logger.info("message",fileLink + " has been deleted");
         return Map.of(
                 "message", fileLink + " has been deleted"
         );

@@ -31,41 +31,41 @@ public class VideoLessonServiceImpl implements VideoLessonService {
     @Override
     public SimpleResponse save(VideoLessonRequest videoLessonRequest, Long lessonId) {
         if (videoLessonRepository.existsByName(videoLessonRequest.getName())) {
-            logger.info("Video with Name: " + videoLessonRequest.getName() + " is already saved!");
-            throw new BadRequestException("Video with Name: " + videoLessonRequest.getName() + " is already saved!");
+            logger.error("Video with Name: " + videoLessonRequest.getName() + " is already saved!");
+            throw new BadRequestException("Видео с названием: " + videoLessonRequest.getName() + " уже сохранено!");
         }
         if (videoLessonRepository.existsByLink(videoLessonRequest.getVideoLink())) {
-            logger.info("Video with Link: " + videoLessonRequest.getVideoLink() + " is already saved!");
-            throw new BadRequestException("Video with Link: " + videoLessonRequest.getVideoLink() + " is already saved!");
+            logger.error("Video with Link: " + videoLessonRequest.getVideoLink() + " is already saved!");
+            throw new BadRequestException("Видео со ссылкой: " + videoLessonRequest.getVideoLink() + " уже сохранено!");
         }
         VideoLesson videoLesson = new VideoLesson();
         videoLesson.setName(videoLessonRequest.getName());
         videoLesson.setDescription(videoLessonRequest.getDescription());
         videoLesson.setLink(videoLessonRequest.getVideoLink());
-        logger.info("Lesson with ID: " + lessonId + " is not found!");
-        Lesson lesson = lessonRepository.findById(lessonId).orElseThrow(
-                () -> new NotFoundException("Lesson with ID: " + lessonId + " is not found!"));
+        Lesson lesson = lessonRepository.findById(lessonId).orElseThrow(() -> {
+            logger.error("Lesson with ID: " + lessonId + " is not found!");
+            throw new NotFoundException("Урок с идентификатором: " + lessonId + " не найден!");});
         videoLesson.setLesson(lesson);
         lesson.getVideoLessons().add(videoLesson);
         logger.info("Lesson's Video with name: " + videoLessonRequest.getName() + " is successfully saved!");
         return SimpleResponse.builder()
                 .httpStatus(HttpStatus.OK)
-                .message("Lesson's Video with name: " + videoLessonRequest.getName() + " is successfully saved!")
+                .message("Видео урока с названием: " + videoLessonRequest.getName() + " успешно сохранено!")
                 .build();
     }
 
     @Override
     public VideoLessonResponse getVideoLessonById(Long videoLessonId) {
-        logger.info("Video with ID: " + videoLessonId + " is not found!");
-        return videoLessonRepository.findVideoById(videoLessonId).orElseThrow(
-                () -> new NotFoundException("Video with ID: " + videoLessonId + " is not found!"));
+        return videoLessonRepository.findVideoById(videoLessonId).orElseThrow(() ->{
+            logger.error("Video with ID: " + videoLessonId + " is not found!");
+            throw new NotFoundException("Видео с идентификатором: " + videoLessonId + " не найдено!");});
     }
 
     @Override
     public List<VideoLessonResponse> findAllVideos() {
         if (videoLessonRepository.findAllVideos().isEmpty()) {
-            logger.info("Videos not found...");
-            throw new NotFoundException("Videos not found...");
+            logger.error("Videos not found...");
+            throw new NotFoundException("Видео не найдено...");
         }
         return videoLessonRepository.findAllVideos();
     }
@@ -73,25 +73,25 @@ public class VideoLessonServiceImpl implements VideoLessonService {
     @Override
     public List<VideoLessonResponse> findByLessonId(Long lessonId) {
         if (!lessonRepository.existsById(lessonId)) {
-            logger.info("Not found Lesson with ID: " + lessonId);
-            throw new NotFoundException("Not found Lesson with ID: " + lessonId);
+            logger.error("Not found Lesson with ID: " + lessonId);
+            throw new NotFoundException("Не найден урок с идентификатором: " + lessonId);
         }
         if (videoLessonRepository.findByLessonId(lessonId).isEmpty()) {
-            logger.info("Videos not found with Lesson's ID:" + lessonId);
-            throw new NotFoundException("Videos not found with Lesson's ID:" + lessonId);
+            logger.error("Videos not found with Lesson's ID:" + lessonId);
+            throw new NotFoundException("Видео не найдено с идентификатором урока:" + lessonId);
         }
         return videoLessonRepository.findByLessonId(lessonId);
     }
 
     @Override
     public SimpleResponse update(Long videoLessonId, VideoLessonRequest videoLessonRequest) {
-        logger.info("Video with ID: " + videoLessonId + " is not found!");
-        VideoLesson videoLesson = videoLessonRepository.findById(videoLessonId).orElseThrow(
-                () -> new NotFoundException("Video with ID: " + videoLessonId + " is not found!"));
+        VideoLesson videoLesson = videoLessonRepository.findById(videoLessonId).orElseThrow(() -> {
+                    logger.error("Video with ID: " + videoLessonId + " is not found!");
+                    throw new NotFoundException("Видео с идентификатором: " + videoLessonId + " не найдено!");});
         if (!videoLessonRequest.getName().equals(videoLesson.getName())) {
             if (videoLessonRepository.existsByName(videoLessonRequest.getName())) {
-                logger.info("Video with Name: " + videoLessonRequest.getName() + " is already saved!");
-                throw new BadRequestException("Video with Name: " + videoLessonRequest.getName() + " is already saved!");
+                logger.error("Video with Name: " + videoLessonRequest.getName() + " is already saved!");
+                throw new BadRequestException("Видео с названием: " + videoLessonRequest.getName() + " уже сохранено!");
             }
             videoLesson.setName(videoLessonRequest.getName());
         }
@@ -100,29 +100,29 @@ public class VideoLessonServiceImpl implements VideoLessonService {
         }
         if (!videoLessonRequest.getVideoLink().equals(videoLesson.getLink())) {
             if (videoLessonRepository.existsByLink(videoLessonRequest.getVideoLink())) {
-                logger.info("Video with Link: " + videoLessonRequest.getVideoLink() + " is already saved!");
-                throw new BadRequestException("Video with Link: " + videoLessonRequest.getVideoLink() + " is already saved!");
+                logger.error("Video with Link: " + videoLessonRequest.getVideoLink() + " is already saved!");
+                throw new BadRequestException("Видео со ссылкой: " + videoLessonRequest.getVideoLink() + " уже сохранено!");
             }
             videoLesson.setLink(videoLessonRequest.getVideoLink());
         }
         logger.info("Video with ID: " + videoLessonId + " is successfully updated!");
         return SimpleResponse.builder()
                 .httpStatus(HttpStatus.OK)
-                .message("Video with ID: " + videoLessonId + " is successfully updated!")
+                .message("Видео с идентификатором: " + videoLessonId + " успешно обновлено!")
                 .build();
     }
 
     @Override
     public SimpleResponse delete(Long videoLessonId) {
         if (!videoLessonRepository.existsById(videoLessonId)) {
-            logger.info("Video with ID: " + videoLessonId + " is not found!");
-            throw new NotFoundException("Video with ID: " + videoLessonId + " is not found!");
+            logger.error("Video with ID: " + videoLessonId + " is not found!");
+            throw new NotFoundException("Видео с идентификатором: " + videoLessonId + " не найдено!");
         }
         videoLessonRepository.deleteById(videoLessonId);
         logger.info("Video with ID: " + videoLessonId + " is successfully deleted!");
         return SimpleResponse.builder()
                 .httpStatus(HttpStatus.OK)
-                .message("Video with ID: " + videoLessonId + " is successfully deleted!")
+                .message("Видео с идентификатором: " + videoLessonId + " успешно удалено!")
                 .build();
     }
 }

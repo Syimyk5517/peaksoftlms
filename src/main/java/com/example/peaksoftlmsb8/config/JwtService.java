@@ -92,8 +92,8 @@ public class JwtService {
         String login = authentication.getName();
         log.info("Token has been taken!");
         return userRepository.findByEmail(login).orElseThrow(() -> {
-            log.error("User not found!");
-            throw new NotFoundException("User not found!");
+            log.error("Пользователь не найден!");
+            throw new NotFoundException("Пользователь не найден!");
         });
     }
 }

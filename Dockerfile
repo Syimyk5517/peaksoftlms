@@ -9,3 +9,4 @@ WORKDIR /app
 COPY --from=build /app/target/peaksoftlms-b8-0.0.1-SNAPSHOT.jar .
 CMD ["java", "-jar", "peaksoftlms-b8-0.0.1-SNAPSHOT.jar"]
 EXPOSE 2023
+

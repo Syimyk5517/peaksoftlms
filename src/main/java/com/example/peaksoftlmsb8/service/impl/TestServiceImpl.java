@@ -41,8 +41,6 @@ public class TestServiceImpl implements TestService {
     private final JdbcTemplate jdbcTemplate;
     private final ResultOfTestRepository resultOfTestRepository;
     private final JwtService jwtService;
-
-
     private static final Logger logger = LogManager.getLogger(TestServiceImpl.class);
 
     @Override
@@ -114,8 +112,10 @@ public class TestServiceImpl implements TestService {
 
     @Override
     public SimpleResponse saveTest(TestRequest request) {
-        Lesson lesson = lessonRepository.findById(request.getLessonId()).orElseThrow(
-                () -> new NotFoundException("Lesson with id : " + request.getLessonId() + " not found !"));
+        Lesson lesson = lessonRepository.findById(request.getLessonId()).orElseThrow(() -> {
+                    logger.error("Lesson with id: " +request.getLessonId()+ " not found!");
+                  throw  new NotFoundException("Урок с идентификатором: " + request.getLessonId() + " не найден !");
+                });
         if (lesson.getTest() == null) {
             Test test = new Test();
             List<Question> questions = questionList(request.getQuestionRequests(), test);
@@ -124,33 +124,41 @@ public class TestServiceImpl implements TestService {
             test.setQuestions(questions);
             testRepository.save(test);
         } else {
-            logger.info("There is already a test in this lesson !");
-            throw new AlReadyExistException("There is already a test in this lesson !");
+            logger.error("There is already a test in this lesson !");
+            throw new AlReadyExistException("В этом уроке уже есть тест!");
         }
         logger.info("Test with name: " + request.getTestName() + " successfully saved !");
-        return SimpleResponse.builder().httpStatus(HttpStatus.OK).message(String.format("Test with name: %s successfully saved !", request.getTestName())).build();
+        return SimpleResponse.builder().httpStatus(HttpStatus.OK).message(String.format("Тест с именем: %s успешно сохранен!", request.getTestName())).build();
     }
 
 
     @Override
     public SimpleResponse updateTest(TestUpdateRequest testUpdateRequest) {
         Test test = testRepository.findById(testUpdateRequest.getTestId()).orElseThrow(
-                () -> new NotFoundException("Test with id : " + testUpdateRequest.getTestId() + " not found !"));
+                () ->{ logger.error("Test with id: "+testUpdateRequest.getTestId()+ " not found!");
+                    throw new NotFoundException("Тест с идентификатором: " + testUpdateRequest.getTestId() + " не найден!");});
 
         Lesson lesson = lessonRepository.findById(testUpdateRequest.getLessonId()).orElseThrow(
-                () -> new NotFoundException("Lesson with id : " + testUpdateRequest.getLessonId() + " not found!"));
+                () -> {
+                    logger.error("Lesson with id: " +testUpdateRequest.getTestId()+ " not found!");
+                    throw new NotFoundException("Урок с идентификатором: " + testUpdateRequest.getLessonId() + " не найден!");
+                });
 
         if (!testUpdateRequest.getDeleteQuestionsIds().isEmpty()) {
             for (Long questionId : testUpdateRequest.getDeleteQuestionsIds()) {
                 Question question = questionRepository.findById(questionId).orElseThrow(
-                        () -> new NotFoundException("Question with id: " + questionId + " not found !"));
+                        () -> { logger.error("Question with id: "+questionId+" not found!");
+                            throw new NotFoundException("Вопрос с id: " + questionId + " не найден !");});
                 questionRepository.delete(question);
             }
         }
         if (!testUpdateRequest.getDeleteOptionsIds().isEmpty()) {
             for (Long optionId : testUpdateRequest.getDeleteOptionsIds()) {
                 Option option = optionRepository.findById(optionId).orElseThrow(
-                        () -> new NotFoundException("Option with id: " + optionId + "not found !"));
+                        () -> {
+                            logger.error("Option with id: "+optionId+" not found!");
+                            throw new NotFoundException("Вариант с идентификатором: " + optionId + " не найден!");
+                        });
                 optionRepository.delete(option);
             }
         }
@@ -159,7 +167,8 @@ public class TestServiceImpl implements TestService {
         for (QuestionUpdateRequest questionUpdateRequest : testUpdateRequest.getQuestionRequests()) {
 
             Question question = questionRepository.findById(questionUpdateRequest.getQuestionId()).orElseThrow(
-                    () -> new NotFoundException("Question with id : " + questionUpdateRequest.getQuestionId() + "not found !"));
+                    () -> { logger.error("Question with id: "+questionUpdateRequest.getQuestionId()+" not found!");
+                        throw new NotFoundException("Вопрос с идентификатором: " + questionUpdateRequest.getQuestionId() + " не найден!");});
             question.setTest(test);
 
             if (questionUpdateRequest.getQuestionName() != null) {
@@ -178,11 +187,11 @@ public class TestServiceImpl implements TestService {
                     }
                     if (counterIsTrue < 1) {
                         logger.info("You must choose one correct answer !");
-                        throw new BadRequestException("You must choose one correct answer !");
+                        throw new BadRequestException("Вы должны выбрать один правильный ответ!");
                     }
                     if (counterIsTrue > 1) {
                         logger.info("You can only choose one correct answer !");
-                        throw new BadRequestException("You can only choose one correct answer !");
+                        throw new BadRequestException("Вы можете выбрать только один правильный ответ!");
                     }
                 } else {
                     if (optionUpdateRequest.getIsTrue().equals(true)) {
@@ -190,16 +199,17 @@ public class TestServiceImpl implements TestService {
                     }
                     if (counterIsTrue < 1) {
                         logger.info("You must choose one correct answer !");
-                        throw new BadRequestException("You must choose one correct answer !");
+                        throw new BadRequestException("Вы должны выбрать один правильный ответ!");
                     }
                     if (counterIsTrue > 2) {
                         logger.info("You can only choose two correct answers !");
-                        throw new BadRequestException("You can only choose two correct answers !");
+                        throw new BadRequestException("Вы можете выбрать только два правильных ответа!");
                     }
 
                 }
                 Option option = optionRepository.findById(optionUpdateRequest.getOptionId()).orElseThrow(
-                        () -> new NotFoundException("Option with id : " + optionUpdateRequest.getOptionId() + "not found !"));
+                        () ->{ logger.error("Option with id: "+optionUpdateRequest.getOptionId()+" not found!");
+                            throw new NotFoundException("Вариант с идентификатором: " + optionUpdateRequest.getOptionId() + " не найден!");});
                 if (optionUpdateRequest.getText() != null) {
                     option.setText(optionUpdateRequest.getText());
                 }
@@ -218,24 +228,28 @@ public class TestServiceImpl implements TestService {
         test.setLesson(lesson);
         test.setQuestions(questions);
         testRepository.save(test);
+        logger.info("Test with name: %s successfully update",test.getName());
         return SimpleResponse.builder().
                 httpStatus(HttpStatus.OK).
-                message(String.format("Test with name : %s successfully updated !", test.getName())).build();
+                message(String.format("Тест с именем: %s успешно обновлен!", test.getName())).build();
     }
 
     @Override
     public SimpleResponse deleteById(Long testId) {
         Test test = testRepository.findById(testId).orElseThrow(
-                () -> new NotFoundException("Test with id : " + testId + " not found !"));
-        logger.info("Test with id:" + testId + "not found");
+                () ->{
+                    logger.error("Test with id:" + testId + "not found");
+                    throw new NotFoundException("Тест с идентификатором: " + testId + " не найден!");});
         ResultOfTest result = resultOfTestRepository.findResultOfTestById(test.getId()).orElseThrow(
-                () -> new NotFoundException("Result of test with id : " + testId + " not found !" ));
+                () -> {
+                    logger.error("Result with id:" + testId + "not found");
+                    throw new NotFoundException("Результат теста с идентификатором: " + testId + " не найден!");});
         resultOfTestRepository.delete(result);
         testRepository.delete(test);
         logger.info("Test with id  : " + testId + " successfully deleted !");
         return SimpleResponse.builder().
                 httpStatus(HttpStatus.OK).
-                message(String.format("Test with id  : %s successfully deleted !", testId)).build();
+                message(String.format("Тест с идентификатором: %s успешно удален!", testId)).build();
 
     }
 
@@ -244,7 +258,9 @@ public class TestServiceImpl implements TestService {
         User accountInToken = jwtService.getAccountInToken();
         if (accountInToken.getRole().equals(Role.STUDENT)) {
             Test test = testRepository.findById(testId).orElseThrow(
-                    () -> new NotFoundException("Test with id : " + testId + " not found !"));
+                    () ->  {
+                        logger.error("Result with id:" + testId + "not found");
+                        throw new NotFoundException("Тест с идентификатором: " + testId + " не найден!");});
             List<QuestionResponse> questionResponses = questionResponses(test.getQuestions());
             return TestResponseForInstructor.builder().
                     lessonId(test.getLesson().getId()).
@@ -332,7 +348,8 @@ public class TestServiceImpl implements TestService {
                     optionType(questionRequest.getOptionType()).build();
             int counter = 0;
             if (questionRequest.getOptionRequests().isEmpty()) {
-                throw new BadRequestException("You created a question but did not write answers");
+                logger.error("You created a question but did not write answers");
+                throw new BadRequestException("Вы создали вопрос, но не написали ответы");
             }
             for (OptionRequest o : questionRequest.getOptionRequests()) {
                 if (questionRequest.getOptionType().equals(OptionType.SINGLETON)) {
@@ -341,10 +358,12 @@ public class TestServiceImpl implements TestService {
                         ++counter;
                     }
                     if (counter < 1) {
-                        throw new BadRequestException("You must choose one correct answer !");
+                        logger.error("You must choose one correct answer!");
+                        throw new BadRequestException("Вы должны выбрать один правильный ответ!");
                     }
                     if (counter > 1) {
-                        throw new BadRequestException("You can only choose one correct answer !");
+                        logger.error("You must choose one correct answer!");
+                        throw new BadRequestException("Вы можете выбрать только один правильный ответ!");
                     }
                 } else {
 
@@ -352,10 +371,12 @@ public class TestServiceImpl implements TestService {
                         counter++;
                     }
                     if (counter < 1) {
-                        throw new BadRequestException("You must choose one correct answer !");
+                        logger.error("You must choose one correct answer!");
+                        throw new BadRequestException("Вы должны выбрать один правильный ответ!");
                     }
                     if (counter > 2) {
-                        throw new BadRequestException("You can only choose two correct answers !");
+                        logger.error("You must choose two correct answer!");
+                        throw new BadRequestException("Вы можете выбрать только два правильных ответа!");
                     }
 
                 }
@@ -366,4 +387,4 @@ public class TestServiceImpl implements TestService {
         }
         return questions;
     }
-  }
+}
