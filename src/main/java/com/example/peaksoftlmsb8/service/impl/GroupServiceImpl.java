@@ -3,31 +3,29 @@ package com.example.peaksoftlmsb8.service.impl;
 import com.example.peaksoftlmsb8.db.entity.Course;
 import com.example.peaksoftlmsb8.db.entity.Group;
 import com.example.peaksoftlmsb8.db.entity.Student;
-import com.example.peaksoftlmsb8.exception.AlReadyExistException;
-import com.example.peaksoftlmsb8.exception.NotFoundException;
 import com.example.peaksoftlmsb8.dto.request.group.GroupRequest;
+import com.example.peaksoftlmsb8.dto.response.SimpleResponse;
 import com.example.peaksoftlmsb8.dto.response.group.GroupPaginationResponse;
 import com.example.peaksoftlmsb8.dto.response.group.GroupResponse;
-import com.example.peaksoftlmsb8.dto.response.SimpleResponse;
+import com.example.peaksoftlmsb8.exception.AlReadyExistException;
+import com.example.peaksoftlmsb8.exception.NotFoundException;
 import com.example.peaksoftlmsb8.repository.CourseRepository;
 import com.example.peaksoftlmsb8.repository.GroupRepository;
 import com.example.peaksoftlmsb8.repository.ResultOfTestRepository;
 import com.example.peaksoftlmsb8.repository.UserRepository;
 import com.example.peaksoftlmsb8.service.GroupService;
-import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.stereotype.Service;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Service
 @Transactional
@@ -37,7 +35,6 @@ public class GroupServiceImpl implements GroupService {
     private final CourseRepository courseRepository;
     private final GroupRepository groupRepository;
     private final ResultOfTestRepository resultOfTestRepository;
-    private final UserRepository userRepository;
     private static final Logger logger = LogManager.getLogger(GroupServiceImpl.class);
 
     @Override
@@ -118,7 +115,6 @@ public class GroupServiceImpl implements GroupService {
         if (group.getCourses().contains(course)) {
             throw new AlReadyExistException("There is already such a course in this group");
         } else {
-            group.addCourse(course);
             course.assignCourse(group);
             groupRepository.save(group);
             logger.info("Successfully saved!");

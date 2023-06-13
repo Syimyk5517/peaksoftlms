@@ -9,10 +9,10 @@ import lombok.Data;
 @Builder
 public class OptionUpdateRequest {
     private Long optionId;
-    @NotNull(message = "Text should not be null")
-    @NotBlank(message = "Text name can't be empty!")
+    @NotNull(message = "Текстовое поля не может быть пустым!")
+    @NotBlank(message = "Текстовое поля не может быть пустым!")
     private String text;
-    @NotNull(message = "Is true  should not be null")
+
     private Boolean isTrue;
 
 }

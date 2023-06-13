@@ -12,10 +12,11 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AuthenticationRequest {
-    @EmailValid
-    @NotBlank(message = "email can't be empty!")
+    @NotBlank(message = "Электронная почта не должна быть пустым.")
+    @NotNull(message = "Электронная почта не должна быть пустым.")
+    @EmailValid(message = "Электронная почта должна содержать @ ")
     private String email;
-    @PasswordValid
-    @NotBlank(message = "password can't be empty!")
+    @NotBlank(message = "Пароль не должна быть пустым.")
+    @NotNull(message = "Пароль не должна быть пустым.")
     private String password;
 }

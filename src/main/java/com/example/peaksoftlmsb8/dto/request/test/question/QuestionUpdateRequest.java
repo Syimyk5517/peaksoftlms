@@ -11,12 +11,11 @@ import java.util.List;
 @Data
 @Builder
 public class QuestionUpdateRequest {
-    @NotNull(message = "Question name should not be null")
-    @NotBlank(message = "Question name can't be empty!")
+    @NotNull(message = "Название вопроса не должно быть пустым")
+    @NotBlank(message = "Название вопроса не должно быть пустым")
     private String questionName;
     private Long questionId;
     private List<OptionUpdateRequest> optionRequests;
-    @NotNull(message = "Option type should not be null")
-    @NotBlank(message = "Option type can't be empty!")
+
     private OptionType optionType;
 }

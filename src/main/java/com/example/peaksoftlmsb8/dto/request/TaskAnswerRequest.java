@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class TaskAnswerRequest {
-    @NotNull(message = "Task value should not be null")
-    @NotBlank(message = "Task value can't be empty!")
+    @NotNull(message = "Значение задачи не должно быть пустым")
+    @NotBlank(message = "Значение задачи не должно быть пустым")
     private String taskValue;
 }

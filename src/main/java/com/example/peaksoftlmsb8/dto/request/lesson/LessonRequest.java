@@ -12,10 +12,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class LessonRequest {
-    @NotNull(message = "Name should not be null")
-    @NotBlank(message = "Name can't be empty!")
+    @NotNull(message = "Имя урока не может быть пустым!")
+    @NotBlank(message = "Имя урока не может быть пустым!")
     private String name;
-    @NotNull(message = "Course id should not be null")
-    @NotBlank(message = "Course id can't be empty!")
+    @NotNull(message = "Идентификатор курса не должен быть пустым.")
+    @NotBlank(message = "Идентификатор курса не должен быть пустым.")
     private Long courseId;
 }

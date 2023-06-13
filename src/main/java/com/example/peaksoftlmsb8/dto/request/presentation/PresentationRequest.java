@@ -12,16 +12,16 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PresentationRequest {
-    @NotNull(message = "Name should not be null")
-    @NotBlank(message = "Name can't be empty!")
+    @NotNull(message = "Имя презентация  не должно быть пустым")
+    @NotBlank(message = "Имя презентация  не должно быть пустым")
     private String name;
-    @NotBlank(message = "Description can't be empty!")
-    @NotNull(message = "Description should not be null")
+    @NotBlank(message = "Описание не должно быть пустым.")
+    @NotNull(message = "Описание не должно быть пустым.")
     private String description;
-    @NotBlank(message = "FormatPPT can't be empty!")
-    @NotNull(message = "FormatPPT should not be null")
+    @NotBlank(message = "Необходимо указать FormatPPT!")
+    @NotNull(message = "Необходимо указать FormatPPT!")
     private String formatPPT;
-    @NotBlank(message = "Lesson id can't be empty!")
-    @NotNull(message = "Lesson id should not be null")
+    @NotBlank(message = "Укажите идентификатор урока!")
+    @NotNull(message = "Укажите идентификатор урока!")
     private Long lessonId;
 }

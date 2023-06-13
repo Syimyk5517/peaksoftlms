@@ -2,11 +2,10 @@ package com.example.peaksoftlmsb8.service.impl;
 
 import com.example.peaksoftlmsb8.db.entity.Lesson;
 import com.example.peaksoftlmsb8.db.entity.Presentation;
-import com.example.peaksoftlmsb8.exception.AlReadyExistException;
-import com.example.peaksoftlmsb8.exception.NotFoundException;
 import com.example.peaksoftlmsb8.dto.request.presentation.PresentationRequest;
-import com.example.peaksoftlmsb8.dto.response.presentation.PresentationResponse;
 import com.example.peaksoftlmsb8.dto.response.SimpleResponse;
+import com.example.peaksoftlmsb8.dto.response.presentation.PresentationResponse;
+import com.example.peaksoftlmsb8.exception.NotFoundException;
 import com.example.peaksoftlmsb8.repository.LessonRepository;
 import com.example.peaksoftlmsb8.repository.PresentationRepository;
 import com.example.peaksoftlmsb8.service.PresentationService;
@@ -62,10 +61,6 @@ public class PresentationServiceImpl implements PresentationService {
         logger.info("Presentation with id : " + presentationId + " not found");
         Presentation presentation = presentationRepository.findById(presentationId).orElseThrow(() ->
                 new NotFoundException(String.format("Presentation with id : " + presentationId + " not found")));
-
-        if (!presentationRepository.existsPresentationsByFormatPPT(presentationUpdateRequest.getFormatPPT())) {
-            presentation.setFormatPPT(presentationUpdateRequest.getFormatPPT());
-        }
         presentation.setName(presentationUpdateRequest.getName());
         presentation.setDescription(presentationUpdateRequest.getDescription());
         presentationRepository.save(presentation);

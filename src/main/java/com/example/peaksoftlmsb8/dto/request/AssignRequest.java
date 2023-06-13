@@ -14,8 +14,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AssignRequest {
-    @NotBlank(message = "Instructors ids should not be null")
+
     private List<Long> instructorIds;
-    @NotBlank(message = "Course id should not be null")
+
     private Long courseId;
 }

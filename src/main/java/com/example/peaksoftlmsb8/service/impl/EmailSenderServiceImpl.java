@@ -35,7 +35,7 @@ public class EmailSenderServiceImpl implements EmailSenderService {
                 });
         Context context = new Context();
         context.setVariable("firstMessage", String.format("Здравствуйте %s %s", user.getFirstName(), user.getLastName()));
-        context.setVariable("link", link);
+        context.setVariable("link", link+user.getId());
         String htmlContent = templateEngine.process("emailSend.html", context);
         try {
             MimeMessage message = javaMailSender.createMimeMessage();

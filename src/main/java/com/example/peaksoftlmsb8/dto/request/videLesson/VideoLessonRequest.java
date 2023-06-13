@@ -11,15 +11,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class VideoLessonRequest {
-    @NotBlank(message = "Video name can't be empty!")
-    @NotNull(message = "Video name should not be null")
+    @NotBlank(message = "Название видео не может быть пустым!")
+    @NotNull(message = "Название видео не может быть пустым!")
     private String name;
-    @NotBlank(message = "Description description can't be empty!")
-    @NotNull(message = "Description should not be null")
+    @NotBlank(message = "Описание не может быть пустым!")
+    @NotNull(message = "Описание не может быть пустым!")
     private String description;
-    @NotBlank(message = "Video link can't be empty!")
+    @NotBlank(message = "Ссылка на видео не может быть пустой!")
     @Pattern(regexp = "https?:\\/\\/[\\w\\d-]+(\\.[\\w\\d-]+)+([\\w\\d.,@?^=%&:/~+#-]*[\\w\\d@?^=%&/~+#-])?",
-            message = "Invalid URL")
-    @NotNull(message = "Video link should not be null")
+            message = "Неверная ссылка")
+    @NotNull(message = "Ссылка на видео не может быть пустой")
     private String videoLink;
 }

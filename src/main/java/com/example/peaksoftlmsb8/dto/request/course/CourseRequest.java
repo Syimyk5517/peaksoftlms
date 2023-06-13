@@ -1,6 +1,8 @@
 package com.example.peaksoftlmsb8.dto.request.course;
 
+import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,11 +15,15 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CourseRequest {
-    @NotBlank(message = "Name should not be null")
+    @NotNull(message = "Имя курса не может быть пустым!")
+    @NotBlank(message = "Имя курса не может быть пустым!")
     private String name;
-    @NotBlank(message = "Image should not be null")
+    @NotNull(message = "Изображение не может быть пустым!")
+    @NotBlank(message = "Изображение не может быть пустым!")
     private String image;
-    @NotBlank(message = "Description should not be null")
+    @NotNull(message = "Идентификатор курса не должен быть пустым.")
+    @NotBlank(message = "Идентификатор курса не должен быть пустым.")
     private String description;
+    @Future(message = "Дата окончания должен быть будущей датой")
     private LocalDate finishDate;
 }
