@@ -20,21 +20,21 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
     Boolean existsByPhoneNumber(String phoneNumber);
 
     @Query("select new com.example.peaksoftlmsb8.dto.response.student.StudentResponse(" +
-            "s.id,concat(u.firstName,' ',u.lastName),u.phoneNumber,u.email,s.formLearning,s.group.name) " +
+            "s.id,concat(u.firstName,' ',u.lastName),u.phoneNumber,u.email,s.formLearning,s.group.name,s.group.id) " +
             "from Student s join User u on s.id=u.student.id where s.id=:studentId")
     Optional<StudentResponse> findStudentById(Long studentId);
     @Query("select new com.example.peaksoftlmsb8.dto.response.student.StudentResponse(" +
-            "s.id,concat(s.user.firstName,' ',s.user.lastName),s.user.phoneNumber,s.user.email,s.formLearning,s.group.name) " +
+            "s.id,concat(s.user.firstName,' ',s.user.lastName),s.user.phoneNumber,s.user.email,s.formLearning,s.group.name,s.group.id) " +
             "from Student s  JOIN s.group g JOIN g.courses c WHERE c.id = :courseId")
     List<StudentResponse> findAllStudentsByCourseId(Long courseId);
     @Query("SELECT new com.example.peaksoftlmsb8.dto.response.student.StudentResponse(" +
-            "s.id, CONCAT(s.user.firstName, ' ', s.user.lastName), s.user.phoneNumber, s.user.email, s.formLearning, g.name) " +
+            "s.id, CONCAT(s.user.firstName, ' ', s.user.lastName), s.user.phoneNumber, s.user.email, s.formLearning, g.name,g.id) " +
             "FROM Student s join s.group g " +
             "WHERE s.formLearning = :formatStudy " +
             "order by s.id desc ")
     List<StudentResponse> findAllStudentsByCourseIdWithSort(@Param("formatStudy") FormLearning formatStudy);
     @Query("SELECT new com.example.peaksoftlmsb8.dto.response.student.StudentResponse(" +
-            "s.id, CONCAT(s.user.firstName, ' ', s.user.lastName), s.user.phoneNumber, s.user.email, s.formLearning, g.name) " +
+            "s.id, CONCAT(s.user.firstName, ' ', s.user.lastName), s.user.phoneNumber, s.user.email, s.formLearning, g.name,g.id) " +
             "FROM Student s join s.group g " +
             "order by s.id desc ")
     List<StudentResponse> getAll();
