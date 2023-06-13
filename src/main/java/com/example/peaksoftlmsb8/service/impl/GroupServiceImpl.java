@@ -12,7 +12,6 @@ import com.example.peaksoftlmsb8.exception.NotFoundException;
 import com.example.peaksoftlmsb8.repository.CourseRepository;
 import com.example.peaksoftlmsb8.repository.GroupRepository;
 import com.example.peaksoftlmsb8.repository.ResultOfTestRepository;
-import com.example.peaksoftlmsb8.repository.UserRepository;
 import com.example.peaksoftlmsb8.service.GroupService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;

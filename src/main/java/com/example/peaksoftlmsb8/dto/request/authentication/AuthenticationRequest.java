@@ -1,7 +1,4 @@
 package com.example.peaksoftlmsb8.dto.request.authentication;
-
-import com.example.peaksoftlmsb8.validation.email.EmailValid;
-import com.example.peaksoftlmsb8.validation.password.PasswordValid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -14,7 +11,7 @@ import lombok.*;
 public class AuthenticationRequest {
     @NotBlank(message = "Электронная почта не должна быть пустым.")
     @NotNull(message = "Электронная почта не должна быть пустым.")
-    @EmailValid(message = "Электронная почта должна содержать @ ")
+    @Email(message = "Электронная почта должна содержать @ ")
     private String email;
     @NotBlank(message = "Пароль не должна быть пустым.")
     @NotNull(message = "Пароль не должна быть пустым.")

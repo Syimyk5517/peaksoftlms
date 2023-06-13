@@ -1,7 +1,7 @@
 package com.example.peaksoftlmsb8.dto.request.instructor;
 
-import com.example.peaksoftlmsb8.validation.email.EmailValid;
 import com.example.peaksoftlmsb8.validation.phoneNumber.PhoneNumberValid;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -26,7 +26,7 @@ public class InstructorRequest {
     private String phoneNumber;
     @NotBlank(message = "Электронная почта не должна быть пустым.")
     @NotNull(message = "Электронная почта не должна быть пустым.")
-    @EmailValid(message = "Электронная почта должна содержать @ ")
+    @Email
     private String email;
     @NotBlank(message = "Специальное значение не должно быть пустым.")
     @NotNull(message = "Необходимо указать специальное значение.")
