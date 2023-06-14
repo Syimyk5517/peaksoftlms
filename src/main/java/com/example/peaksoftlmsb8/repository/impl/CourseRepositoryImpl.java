@@ -24,7 +24,7 @@ public class CourseRepositoryImpl implements CourseRepo {
                            c.name as course_name,
                            c.description as course_description,
                            c.created_at as course_created_at,
-                           c.final_date as course_finish_date
+                           c.finish_date as course_finish_date
                     from courses c join groups_courses gc on c.id = gc.courses_id where gc.group_id =:? limit ? offset ?;
                     """;
         List<CourseResponse> courseResponses = jdbcTemplate.query(sql, (resultSet, i) -> {
