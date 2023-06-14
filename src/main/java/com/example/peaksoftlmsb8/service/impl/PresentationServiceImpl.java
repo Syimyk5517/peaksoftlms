@@ -2,11 +2,10 @@ package com.example.peaksoftlmsb8.service.impl;
 
 import com.example.peaksoftlmsb8.db.entity.Lesson;
 import com.example.peaksoftlmsb8.db.entity.Presentation;
-import com.example.peaksoftlmsb8.db.exception.NotFoundException;
 import com.example.peaksoftlmsb8.dto.request.presentation.PresentationRequest;
-import com.example.peaksoftlmsb8.dto.request.presentation.PresentationUpdateRequest;
-import com.example.peaksoftlmsb8.dto.response.presentation.PresentationResponse;
 import com.example.peaksoftlmsb8.dto.response.SimpleResponse;
+import com.example.peaksoftlmsb8.dto.response.presentation.PresentationResponse;
+import com.example.peaksoftlmsb8.exception.NotFoundException;
 import com.example.peaksoftlmsb8.repository.LessonRepository;
 import com.example.peaksoftlmsb8.repository.PresentationRepository;
 import com.example.peaksoftlmsb8.service.PresentationService;
@@ -58,17 +57,15 @@ public class PresentationServiceImpl implements PresentationService {
 
     @Override
     @Transactional
-    public SimpleResponse updatePresentation(PresentationUpdateRequest presentationUpdateRequest) {
-        Presentation presentation = presentationRepository.findById(presentationUpdateRequest.getPresentationId()).orElseThrow(() ->{
-            logger.error("Presentation with id : " + presentationUpdateRequest.getPresentationId() + " not found");
-            throw new NotFoundException("Презентация с идентификатором:" + presentationUpdateRequest.getPresentationId() + "не найдена");});
-        presentation.setId(presentationUpdateRequest.getPresentationId());
+    public SimpleResponse updatePresentation(Long presentationId, PresentationRequest presentationUpdateRequest) {
+        logger.info("Presentation with id : " + presentationId + " not found");
+        Presentation presentation = presentationRepository.findById(presentationId).orElseThrow(() ->
+                new NotFoundException(String.format("Presentation with id : " + presentationId + " not found")));
         presentation.setName(presentationUpdateRequest.getName());
         presentation.setDescription(presentationUpdateRequest.getDescription());
-        presentation.setFormatPPT(presentationUpdateRequest.getFormatPPT());
         presentationRepository.save(presentation);
         logger.info("Successfully updated");
-        return SimpleResponse.builder().httpStatus(HttpStatus.OK).message("Успешно обновлено").build();
+        return SimpleResponse.builder().httpStatus(HttpStatus.OK).message("Successfully updated").build();
     }
 
     @Override

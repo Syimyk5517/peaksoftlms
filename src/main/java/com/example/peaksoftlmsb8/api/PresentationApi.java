@@ -1,7 +1,6 @@
 package com.example.peaksoftlmsb8.api;
 
 import com.example.peaksoftlmsb8.dto.request.presentation.PresentationRequest;
-import com.example.peaksoftlmsb8.dto.request.presentation.PresentationUpdateRequest;
 import com.example.peaksoftlmsb8.dto.response.presentation.PresentationResponse;
 import com.example.peaksoftlmsb8.dto.response.SimpleResponse;
 import com.example.peaksoftlmsb8.service.PresentationService;
@@ -46,8 +45,8 @@ public class PresentationApi {
     @PutMapping
     @PreAuthorize("hasAnyAuthority('ADMIN','INSTRUCTOR')")
     @Operation(summary = "Update a presentation", description = "Update a presentation with the provided presentationId using the information provided in the request body")
-    public SimpleResponse updatePresentation(@RequestBody @Valid PresentationUpdateRequest presentationUpdateRequest) {
-        return presentationService.updatePresentation(presentationUpdateRequest);
+    public SimpleResponse updatePresentation(@RequestParam Long presentationId,@RequestBody @Valid PresentationRequest presentationUpdateRequest) {
+        return presentationService.updatePresentation(presentationId,presentationUpdateRequest);
     }
 
     @DeleteMapping

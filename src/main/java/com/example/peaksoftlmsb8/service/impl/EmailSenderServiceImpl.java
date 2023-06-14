@@ -1,7 +1,7 @@
 package com.example.peaksoftlmsb8.service.impl;
 
 import com.example.peaksoftlmsb8.db.entity.User;
-import com.example.peaksoftlmsb8.db.exception.NotFoundException;
+import com.example.peaksoftlmsb8.exception.NotFoundException;
 import com.example.peaksoftlmsb8.repository.UserRepository;
 import com.example.peaksoftlmsb8.service.EmailSenderService;
 import jakarta.mail.MessagingException;
@@ -15,6 +15,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
+
 
 @Service
 @RequiredArgsConstructor
@@ -34,7 +35,7 @@ public class EmailSenderServiceImpl implements EmailSenderService {
                 });
         Context context = new Context();
         context.setVariable("firstMessage", String.format("Здравствуйте %s %s", user.getFirstName(), user.getLastName()));
-        context.setVariable("link", link);
+        context.setVariable("link", link+user.getId());
         String htmlContent = templateEngine.process("emailSend.html", context);
         try {
             MimeMessage message = javaMailSender.createMimeMessage();

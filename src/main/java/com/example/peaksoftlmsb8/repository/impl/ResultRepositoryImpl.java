@@ -16,7 +16,6 @@ public class ResultRepositoryImpl implements ResultRepository {
 
     @Override
     public List<ResultOfTestResponseForInstructor> resultTest(Long testId) {
-        System.out.println("hjdkfalg;");
         String sql = """
     SELECT
         r.id AS result_of_test_id,
@@ -43,5 +42,3 @@ public class ResultRepositoryImpl implements ResultRepository {
         }, testId);
     }
 }
-//    concat(u.first_name,' ', u.last_name) as full_name,
-//join users u on s.id = u.student_id

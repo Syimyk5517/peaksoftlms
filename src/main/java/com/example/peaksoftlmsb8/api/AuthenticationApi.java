@@ -35,7 +35,7 @@ public class  AuthenticationApi {
     }
 
     @PostMapping("/reset_password")
-    public SimpleResponse resetPassword(@RequestParam PasswordRequest newPassword) {
+    public SimpleResponse resetPassword(@RequestParam @Valid PasswordRequest newPassword) {
         return authenticationService.resetPassword(newPassword);
     }
 

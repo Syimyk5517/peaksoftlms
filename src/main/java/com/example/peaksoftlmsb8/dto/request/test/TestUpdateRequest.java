@@ -13,8 +13,8 @@ import java.util.List;
 public class TestUpdateRequest {
 
     private Long testId;
-    @NotNull(message = "Test name should not be null")
-    @NotBlank(message = "Test name can't be empty!")
+    @NotNull(message = "Имя теста не должно быть пустым")
+    @NotBlank(message = "Имя теста не должно быть пустым")
     private String testName;
     private Long lessonId;
     private List<QuestionUpdateRequest> questionRequests;

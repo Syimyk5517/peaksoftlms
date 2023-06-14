@@ -7,7 +7,6 @@ import com.example.peaksoftlmsb8.repository.GroupRepository;
 import com.example.peaksoftlmsb8.service.impl.GroupServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.InjectMocks;
-import com.example.peaksoftlmsb8.dto.request.group.GroupUpdateRequest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -48,8 +47,7 @@ public class GroupServiceImplTest {
     @Test
     public void testUpdateGroup_GroupExists() {
         long groupId = 25;
-        GroupUpdateRequest updateRequest = new GroupUpdateRequest();
-        updateRequest.setGroupId(groupId);
+        GroupRequest updateRequest = new GroupRequest();
         updateRequest.setName("Updated Group");
         updateRequest.setDescription("Updated description");
         updateRequest.setImage("updated-image.jpg");
@@ -62,7 +60,7 @@ public class GroupServiceImplTest {
         existingGroup.setFinishDate(LocalDate.of(2023, 12, 12));
         Mockito.when(groupRepository.findById(groupId))
                 .thenReturn(Optional.of(existingGroup));
-        SimpleResponse response = groupService.updateGroup(updateRequest);
+        SimpleResponse response = groupService.updateGroup(groupId,updateRequest);
         Assertions.assertEquals(HttpStatus.OK, response.getHttpStatus());
         Assertions.assertEquals("Successfully updated", response.getMessage());
         Assertions.assertEquals(updateRequest.getName(), existingGroup.getName());

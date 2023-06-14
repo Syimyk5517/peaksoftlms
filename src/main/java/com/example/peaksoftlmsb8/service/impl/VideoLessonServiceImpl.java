@@ -2,8 +2,8 @@ package com.example.peaksoftlmsb8.service.impl;
 
 import com.example.peaksoftlmsb8.db.entity.Lesson;
 import com.example.peaksoftlmsb8.db.entity.VideoLesson;
-import com.example.peaksoftlmsb8.db.exception.BadRequestException;
-import com.example.peaksoftlmsb8.db.exception.NotFoundException;
+import com.example.peaksoftlmsb8.exception.BadRequestException;
+import com.example.peaksoftlmsb8.exception.NotFoundException;
 import com.example.peaksoftlmsb8.dto.request.videLesson.VideoLessonRequest;
 import com.example.peaksoftlmsb8.dto.response.SimpleResponse;
 import com.example.peaksoftlmsb8.dto.response.videLesson.VideoLessonResponse;

@@ -2,7 +2,7 @@ package com.example.peaksoftlmsb8.config;
 
 import com.example.peaksoftlmsb8.db.entity.User;
 
-import com.example.peaksoftlmsb8.db.exception.NotFoundException;
+import com.example.peaksoftlmsb8.exception.NotFoundException;
 import com.example.peaksoftlmsb8.repository.UserRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

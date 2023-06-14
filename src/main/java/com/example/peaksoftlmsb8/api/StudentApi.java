@@ -74,7 +74,7 @@ public class StudentApi {
     @PutMapping
     @PreAuthorize("hasAnyAuthority('ADMIN,INSTRUCTOR')")
     public SimpleResponse update(@RequestParam Long studentId,
-                                 @RequestBody StudentRequest newStudentRequest) {
+                                 @RequestBody @Valid StudentRequest newStudentRequest) {
         return studentService.update(newStudentRequest, studentId);
     }
 

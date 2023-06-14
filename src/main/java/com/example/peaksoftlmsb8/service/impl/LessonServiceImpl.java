@@ -4,10 +4,9 @@ import com.example.peaksoftlmsb8.db.entity.Course;
 import com.example.peaksoftlmsb8.db.entity.Lesson;
 import com.example.peaksoftlmsb8.db.entity.ResultOfTest;
 import com.example.peaksoftlmsb8.db.entity.Test;
-import com.example.peaksoftlmsb8.db.exception.AlReadyExistException;
-import com.example.peaksoftlmsb8.db.exception.NotFoundException;
+import com.example.peaksoftlmsb8.exception.AlReadyExistException;
+import com.example.peaksoftlmsb8.exception.NotFoundException;
 import com.example.peaksoftlmsb8.dto.request.lesson.LessonRequest;
-import com.example.peaksoftlmsb8.dto.request.lesson.LessonUpdateRequest;
 import com.example.peaksoftlmsb8.dto.response.*;
 import com.example.peaksoftlmsb8.dto.response.lesson.LessonPaginationResponse;
 import com.example.peaksoftlmsb8.dto.response.lesson.LessonResponse;
@@ -78,11 +77,16 @@ public class LessonServiceImpl implements LessonService {
 
     @Override
     @Transactional
-    public SimpleResponse updateLesson(LessonUpdateRequest lessonUpdateRequest) {
-        Lesson lesson = lessonRepository.findById(lessonUpdateRequest.getLessonId()).orElseThrow(() ->{
-            logger.error("Lesson with id: " + lessonUpdateRequest.getLessonId() + " not found");
-            throw  new NotFoundException("Урок с идентификатором: " + lessonUpdateRequest.getLessonId() + " не найден");});
-        lesson.setId(lessonUpdateRequest.getLessonId());
+    public SimpleResponse updateLesson(Long lessonId,LessonRequest lessonUpdateRequest) {
+        logger.info("Lesson with id: " + lessonId + " not found");
+        Lesson lesson = lessonRepository.findById(lessonId).orElseThrow(() ->
+                new NotFoundException(String.format("Lesson with id: " + lessonId + " not found")));
+        Course course = courseRepository.findById(lessonUpdateRequest.getCourseId()).orElseThrow(() ->
+                new NotFoundException(String.format("Course with id : " + lessonUpdateRequest.getCourseId() + " not found")));
+        if (!lesson.getCourse().equals(course)){
+            lesson.setCourse(course);
+        }
+
         lesson.setName(lessonUpdateRequest.getName());
         lessonRepository.save(lesson);
         logger.info("Successfully updated");

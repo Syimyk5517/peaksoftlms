@@ -15,15 +15,15 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class GroupRequest {
-    @NotNull(message = "Name should not be null")
-    @NotBlank(message = "Name can't be empty!")
+    @NotNull(message = "Имя група не должно быть пустым")
+    @NotBlank(message = "Имя група не должно быть пустым!")
     private String name;
-    @NotBlank(message = "Description should not be null")
-    @NotNull(message = "Description can't be empty")
+    @NotBlank(message = "Описание не должно быть пустым.")
+    @NotNull(message = "Описание не должно быть пустым.")
     private String description;
-    @NotBlank(message = " Image should not be null")
-    @NotNull(message = "Image can't be empty")
+    @NotBlank(message = "Изображение не должно быть пустым.")
+    @NotNull(message = "Изображение не должно быть пустым.")
     private String image;
-    @Future(message = "Finish date should be future date")
+    @Future(message = "Дата окончания должна быть будущей датой")
     private LocalDate finishDate;
 }

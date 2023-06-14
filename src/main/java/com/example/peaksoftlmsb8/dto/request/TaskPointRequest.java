@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class TaskPointRequest {
     @Positive
-    @NotNull(message = "Point should not be null")
+    @NotNull(message = "Балы не должна быть нулевой.")
     private Integer point;
     private Long taskAnswerId;
 }

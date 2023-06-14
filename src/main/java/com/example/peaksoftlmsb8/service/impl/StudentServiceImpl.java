@@ -5,13 +5,13 @@ import com.example.peaksoftlmsb8.db.entity.Student;
 import com.example.peaksoftlmsb8.db.entity.User;
 import com.example.peaksoftlmsb8.db.enums.FormLearning;
 import com.example.peaksoftlmsb8.db.enums.Role;
-import com.example.peaksoftlmsb8.db.exception.AlReadyExistException;
-import com.example.peaksoftlmsb8.db.exception.BadRequestException;
-import com.example.peaksoftlmsb8.db.exception.NotFoundException;
 import com.example.peaksoftlmsb8.dto.request.student.StudentExcelRequest;
 import com.example.peaksoftlmsb8.dto.request.student.StudentRequest;
 import com.example.peaksoftlmsb8.dto.response.SimpleResponse;
 import com.example.peaksoftlmsb8.dto.response.student.StudentResponse;
+import com.example.peaksoftlmsb8.exception.AlReadyExistException;
+import com.example.peaksoftlmsb8.exception.BadRequestException;
+import com.example.peaksoftlmsb8.exception.NotFoundException;
 import com.example.peaksoftlmsb8.repository.GroupRepository;
 import com.example.peaksoftlmsb8.repository.ResultOfTestRepository;
 import com.example.peaksoftlmsb8.repository.StudentRepository;
@@ -22,6 +22,7 @@ import com.poiji.bind.Poiji;
 import com.poiji.exception.PoijiExcelType;
 import com.poiji.option.PoijiOptions;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.LogManager;
@@ -58,6 +59,7 @@ public class StudentServiceImpl implements StudentService {
 
             PoijiOptions poijiOptions = PoijiOptions.PoijiOptionsBuilder.settings().build();
             InputStream inputStream = multipartFile.getInputStream();
+            @Valid
             List<StudentExcelRequest> excelRequests = Poiji.fromExcel(inputStream, PoijiExcelType.XLSX, StudentExcelRequest.class, poijiOptions);
             for (StudentExcelRequest excelRequest : excelRequests) {
                 if (userRepository.existsByEmail(excelRequest.getEmail())) {

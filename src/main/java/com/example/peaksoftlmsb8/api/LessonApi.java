@@ -1,7 +1,6 @@
 package com.example.peaksoftlmsb8.api;
 
 import com.example.peaksoftlmsb8.dto.request.lesson.LessonRequest;
-import com.example.peaksoftlmsb8.dto.request.lesson.LessonUpdateRequest;
 import com.example.peaksoftlmsb8.dto.response.*;
 import com.example.peaksoftlmsb8.dto.response.lesson.LessonPaginationResponse;
 import com.example.peaksoftlmsb8.dto.response.lesson.LessonResponse;
@@ -46,8 +45,8 @@ public class LessonApi {
 
     @PutMapping
     @PreAuthorize("hasAnyAuthority('ADMIN','INSTRUCTOR')")
-    public SimpleResponse updateLesson(@RequestBody @Valid LessonUpdateRequest lessonUpdateRequest) {
-        return lessonService.updateLesson(lessonUpdateRequest);
+    public SimpleResponse updateLesson(@RequestParam Long lessonId,@RequestBody @Valid LessonRequest lessonUpdateRequest) {
+        return lessonService.updateLesson(lessonId,lessonUpdateRequest);
     }
 
     @DeleteMapping("/{lessonId}")

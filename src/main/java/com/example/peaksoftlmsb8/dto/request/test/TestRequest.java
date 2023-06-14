@@ -11,8 +11,8 @@ import java.util.List;
 @Data
 @Builder
 public class TestRequest {
-    @NotNull(message = "Test name should not be null")
-    @NotBlank(message = "Test name can't be empty!")
+    @NotNull(message = "Имя теста не должно быть пустым")
+    @NotBlank(message = "Имя теста не должно быть пустым")
     private String testName;
     private Long lessonId;
     private List<QuestionRequest> questionRequests;
