@@ -65,7 +65,7 @@ public class StudentApi {
 
     @Operation(summary = "This method can get Student with Group ID",
             description = "You can get Student with ID")
-    @GetMapping()
+    @GetMapping("/groupId")
     @PreAuthorize("hasAnyAuthority('ADMIN,INSTRUCTOR')")
     public List<StudentResponse> findAllStudentsGroupId(@RequestParam Long groupId) {
         return studentService.findAllStudentsByGroupId(groupId);
