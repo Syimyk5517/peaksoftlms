@@ -16,6 +16,7 @@ public interface StudentService {
     StudentResponse findById(Long studentId);
 
     List<StudentResponse> findAllStudentsByCourse(Long courseId);
+    List<StudentResponse> findAllStudentsByGroupId(Long groupId);
 
     List<StudentResponse> findAllStudentsByCourseIdWithSort(String formatStudy);
 

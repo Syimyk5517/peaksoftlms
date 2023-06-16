@@ -25,6 +25,7 @@ import java.util.List;
 @PostAuthorize("hasAnyAuthority('ADNIN,INSTRUCTOR')")
 public class StudentApi {
     private final StudentService studentService;
+
     @PostMapping(
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE,
@@ -32,9 +33,9 @@ public class StudentApi {
     @Operation(summary = "This method import excel file to database",
             description = "Add students from excel file by administrator")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public SimpleResponse importExcel(@RequestParam Long id,@RequestParam (name = "link")String link,
+    public SimpleResponse importExcel(@RequestParam Long id, @RequestParam(name = "link") String link,
                                       @RequestParam(name = "file") MultipartFile multipartFile) throws IOException {
-        return studentService.importExcel(id,link,multipartFile);
+        return studentService.importExcel(id, link, multipartFile);
     }
 
     @Operation(summary = "This method can save Students",
@@ -53,19 +54,28 @@ public class StudentApi {
     public StudentResponse findById(@RequestParam Long studentId) {
         return studentService.findById(studentId);
     }
+
+    @Operation(summary = "This method can get Student with Course ID",
+            description = "You can get Student with ID")
+    @GetMapping()
+    @PreAuthorize("hasAnyAuthority('ADMIN,INSTRUCTOR')")
+    public List<StudentResponse> findAllStudentsByCourseId(@RequestParam Long courseId) {
+        return studentService.findAllStudentsByCourse(courseId);
+    }
+
     @Operation(summary = "This method can get Student with Group ID",
             description = "You can get Student with ID")
     @GetMapping()
     @PreAuthorize("hasAnyAuthority('ADMIN,INSTRUCTOR')")
-    public List<StudentResponse> findAllStudentsByGroupId(@RequestParam Long courseId) {
-        return studentService.findAllStudentsByCourse(courseId);
+    public List<StudentResponse> findAllStudentsGroupId(@RequestParam Long groupId) {
+        return studentService.findAllStudentsByGroupId(groupId);
     }
+
     @Operation(summary = "This method can get Students",
             description = "You can get Students")
     @GetMapping("/getAllForAdmin")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public List<StudentResponse> findAllStudentsByGroupIdAdmin(
-                                                               @RequestParam(required = false) String formStudy) {
+    public List<StudentResponse> findAllStudents(@RequestParam(required = false) String formStudy) {
         return studentService.findAllStudentsByCourseIdWithSort(formStudy);
     }
 

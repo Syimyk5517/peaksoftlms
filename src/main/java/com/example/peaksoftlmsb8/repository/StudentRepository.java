@@ -27,6 +27,10 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
             "s.id,concat(s.user.firstName,' ',s.user.lastName),s.user.phoneNumber,s.user.email,s.formLearning,s.group.name,s.group.id) " +
             "from Student s  JOIN s.group g JOIN g.courses c WHERE c.id = :courseId")
     List<StudentResponse> findAllStudentsByCourseId(Long courseId);
+    @Query("select new com.example.peaksoftlmsb8.dto.response.student.StudentResponse(" +
+            "s.id,concat(s.user.firstName,' ',s.user.lastName),s.user.phoneNumber,s.user.email,s.formLearning,s.group.name,s.group.id) " +
+            "from Student s  WHERE s.group.id = :groupId")
+    List<StudentResponse> findAllStudentsByGroupId(Long groupId);
     @Query("SELECT new com.example.peaksoftlmsb8.dto.response.student.StudentResponse(" +
             "s.id, CONCAT(s.user.firstName, ' ', s.user.lastName), s.user.phoneNumber, s.user.email, s.formLearning, g.name,g.id) " +
             "FROM Student s join s.group g " +

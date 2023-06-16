@@ -150,6 +150,11 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
+    public List<StudentResponse> findAllStudentsByGroupId(Long groupId) {
+        return studentRepository.findAllStudentsByGroupId(groupId);
+    }
+
+    @Override
     public List<StudentResponse> findAllStudentsByCourseIdWithSort(String formatStudy) {
         if (formatStudy.equalsIgnoreCase("все")){
             return studentRepository.getAll();
