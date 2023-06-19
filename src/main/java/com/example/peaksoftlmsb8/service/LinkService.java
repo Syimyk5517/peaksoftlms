@@ -8,13 +8,13 @@ import com.example.peaksoftlmsb8.dto.response.SimpleResponse;
 import java.util.List;
 
 public interface LinkService {
-    SimpleResponse addLinkToLesson(Long lessonId, String key, String value);
+    SimpleResponse addLinkToLesson(LinkRequest linkRequest);
 
-    SimpleResponse removeLinkFromLesson(Long lessonId, String key,String value);
+    SimpleResponse removeLinkFromLesson(Long lessonId);
 
-    SimpleResponse updateLinkInLesson(Long lessonId, String key, String value);
+    SimpleResponse updateLinkInLesson(LinkRequest linkRequest);
 
-    LinkResponse getLinkFromLesson(Long lessonId,String key);
+    LinkResponse getLinkFromLesson(Long lessonId);
 }
 
 

@@ -11,6 +11,7 @@ import java.util.Map;
 @AllArgsConstructor
 @NoArgsConstructor
 public class LinkResponse {
+    private Long lessonId;
     private Map<String, String> link;
 
 

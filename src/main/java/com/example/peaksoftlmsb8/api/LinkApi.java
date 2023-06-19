@@ -1,39 +1,47 @@
 package com.example.peaksoftlmsb8.api;
 
+import com.example.peaksoftlmsb8.dto.request.LinkRequest;
 import com.example.peaksoftlmsb8.dto.response.LinkResponse;
 import com.example.peaksoftlmsb8.dto.response.SimpleResponse;
 import com.example.peaksoftlmsb8.service.LinkService;
-import lombok.AllArgsConstructor;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.connector.Response;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@AllArgsConstructor
-@RequestMapping("/lessons/{lessonId}/links")
+@CrossOrigin
+@RequestMapping("/api/link")
+@RequiredArgsConstructor
+@Tag(name = "Links")
+@PostAuthorize("hasAnyAuthority ('INSTRUCTOR','STUDENT')")
 public class LinkApi {
-
 
     private final LinkService linkService;
 
+    @GetMapping
+    @PreAuthorize("hasAnyAuthority('INSTRUCTOR','STUDENT')")
+    public LinkResponse getLink(@RequestParam Long lessonId) {
+        return linkService.getLinkFromLesson(lessonId);
+    }
 
     @PostMapping
-    public SimpleResponse addLinkToLesson(@RequestParam Long lessonId, @RequestParam String key, @RequestParam String value) {
-       return linkService.addLinkToLesson(lessonId, key, value);
+    @PreAuthorize("hasAuthority('INSTRUCTOR')")
+    public SimpleResponse saveLinkLesson(@RequestBody LinkRequest linkRequest) {
+        return linkService.addLinkToLesson(linkRequest);
     }
 
-    @DeleteMapping("/{key}")
-    public SimpleResponse removeLinkFromLesson(@RequestParam Long lessonId, @PathVariable String key,@PathVariable String value) {
-        return linkService.removeLinkFromLesson(lessonId, key,value);
+
+    @PutMapping
+    @PreAuthorize("hasAuthority('INSTRUCTOR')")
+    public SimpleResponse updateLinkInLesson(@RequestBody LinkRequest linkRequest) {
+        return linkService.updateLinkInLesson(linkRequest);
     }
 
-    @PutMapping("/{key}")
-    public SimpleResponse updateLinkInLesson(@RequestParam Long lessonId, @PathVariable String key, @RequestParam String value) {
-        return linkService.updateLinkInLesson(lessonId, key, value);
-    }
-
-    @GetMapping("/{key}")
-    public LinkResponse getLinkFromLesson(@RequestParam Long lessonId, String key) {
-        return  linkService.getLinkFromLesson(lessonId,key);
+    @DeleteMapping
+    @PreAuthorize("hasAuthority('INSTRUCTOR')")
+    public SimpleResponse removeLinkLesson(@RequestParam Long lessonId) {
+        return linkService.removeLinkFromLesson(lessonId);
     }
 }

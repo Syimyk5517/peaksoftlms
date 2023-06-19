@@ -45,9 +45,10 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public SimpleResponse assignInstructorToCourse(Boolean isAssigned, AssignRequest assignRequest) {
-        Course course = courseRepository.findById(assignRequest.getCourseId()).orElseThrow(() ->{
+        Course course = courseRepository.findById(assignRequest.getCourseId()).orElseThrow(() -> {
             logger.error("Course with id : " + assignRequest.getCourseId() + " not found");
-          throw   new NotFoundException("Курс с идентификатором: " + assignRequest.getCourseId() + " не найден");});
+            throw new NotFoundException("Курс с идентификатором: " + assignRequest.getCourseId() + " не найден");
+        });
         List<Instructor> instructors = instructorRepository.findAllById(assignRequest.getInstructorIds());
         if (isAssigned.equals(true)) {
             for (Instructor instructor : instructors) {
@@ -93,7 +94,8 @@ public class CourseServiceImpl implements CourseService {
     public CourseResponse findByCourseId(Long courseId) {
         return courseRepository.findByCourseId(courseId).orElseThrow(() -> {
             logger.error("Course id: " + courseId + " not found");
-           throw  new NotFoundException("Идентификатор курса:  " + courseId + " не найден");});
+            throw new NotFoundException("Идентификатор курса:  " + courseId + " не найден");
+        });
     }
 
     @Override
@@ -135,9 +137,10 @@ public class CourseServiceImpl implements CourseService {
     @Override
     @Transactional
     public SimpleResponse deleteCourse(Long courseId) {
-        Course course = courseRepository.findById(courseId).orElseThrow(() ->{
+        Course course = courseRepository.findById(courseId).orElseThrow(() -> {
             logger.error("Course with id: " + courseId + " not found");
-            throw  new NotFoundException("Курс с идентификатором: " + courseId + " не найден");});
+            throw new NotFoundException("Курс с идентификатором: " + courseId + " не найден");
+        });
         for (Lesson lesson : course.getLessons()) {
             Test test = lesson.getTest();
             if (test != null) {

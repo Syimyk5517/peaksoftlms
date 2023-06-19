@@ -31,7 +31,7 @@ public class Course {
     private LocalDate createdAt;
     private LocalDate finishDate;
 
-    @ManyToMany(mappedBy = "courses", cascade = {ALL}, fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "courses", cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     private List<Instructor> instructors;
     @ManyToMany(cascade = ALL)
     private List<Group> groups;
