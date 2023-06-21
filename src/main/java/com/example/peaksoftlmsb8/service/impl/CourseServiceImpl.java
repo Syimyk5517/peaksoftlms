@@ -67,6 +67,9 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public CoursePaginationResponse getAllCourse(int size, int page) {
         User user = jwtService.getAccountInToken();
+        if (user==null){
+            throw new NotFoundException("Ползиватель не найден!");
+        }
         if (user.getRole().equals(Role.STUDENT)) {
             return courseRepo.getAllCourses(user, size, page);
         } else {

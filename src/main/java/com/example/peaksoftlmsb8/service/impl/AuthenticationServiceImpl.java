@@ -29,7 +29,8 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Transactional
 @Log4j2
-public class AuthenticationServiceImpl implements AuthenticationService {
+public class
+AuthenticationServiceImpl implements AuthenticationService {
 
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager manager;

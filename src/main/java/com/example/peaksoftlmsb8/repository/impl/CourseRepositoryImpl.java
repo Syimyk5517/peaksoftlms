@@ -4,6 +4,7 @@ import com.example.peaksoftlmsb8.db.entity.Group;
 import com.example.peaksoftlmsb8.db.entity.User;
 import com.example.peaksoftlmsb8.dto.response.course.CoursePaginationResponse;
 import com.example.peaksoftlmsb8.dto.response.course.CourseResponse;
+import com.example.peaksoftlmsb8.exception.NotFoundException;
 import com.example.peaksoftlmsb8.repository.CourseRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -18,6 +19,9 @@ public class CourseRepositoryImpl implements CourseRepo {
     @Override
     public CoursePaginationResponse getAllCourses(User user, int size, int page) {
         int offset = size * page;
+        if (user.getStudent().getGroup()==null){
+            throw new NotFoundException("В это студенте пока что курсы нету");
+        }
         Group group = user.getStudent().getGroup();
         String sql = """
                     select c.id as course_id,

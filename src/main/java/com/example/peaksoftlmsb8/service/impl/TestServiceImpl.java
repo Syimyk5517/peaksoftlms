@@ -256,7 +256,7 @@ public class TestServiceImpl implements TestService {
     @Override
     public TestResponse findById(Long testId) {
         User accountInToken = jwtService.getAccountInToken();
-        if (accountInToken.getRole().equals(Role.STUDENT)) {
+        if (accountInToken.getRole().equals(Role.INSTRUCTOR)) {
             Test test = testRepository.findById(testId).orElseThrow(
                     () ->  {
                         logger.error("Result with id:" + testId + "not found");
