@@ -69,27 +69,28 @@ public class CourseServiceImpl implements CourseService {
         User user = jwtService.getAccountInToken();
         if (user==null){
             throw new NotFoundException("Ползиватель не найден!");
-        }
-        if (user.getRole().equals(Role.STUDENT)) {
-            return courseRepo.getAllCourses(user, size, page);
-        } else {
+        }else {
+            if (user.getRole().equals(Role.STUDENT)) {
+                return courseRepo.getAllCourses(user, size, page);
+            } else {
 
-            Pageable pageable = PageRequest.of(page - 1, size);
-            Page<CourseResponse> coursePage = courseRepository.getAllCourses(pageable);
-            List<CourseResponse> courseResponseList = new ArrayList<>(coursePage.getContent().stream()
-                    .map(c -> new CourseResponse(
-                            c.getId(),
-                            c.getName(),
-                            c.getImage(),
-                            c.getDescription(),
-                            c.getCreatedAt(),
-                            c.getFinishDate()
-                    )).toList());
-            CoursePaginationResponse coursePaginationResponse = new CoursePaginationResponse();
-            coursePaginationResponse.setCourseResponses(courseResponseList);
-            coursePaginationResponse.setPageSize(coursePage.getNumber());
-            coursePaginationResponse.setCurrentPage(coursePage.getSize());
-            return coursePaginationResponse;
+                Pageable pageable = PageRequest.of(page - 1, size);
+                Page<CourseResponse> coursePage = courseRepository.getAllCourses(pageable);
+                List<CourseResponse> courseResponseList = new ArrayList<>(coursePage.getContent().stream()
+                        .map(c -> new CourseResponse(
+                                c.getId(),
+                                c.getName(),
+                                c.getImage(),
+                                c.getDescription(),
+                                c.getCreatedAt(),
+                                c.getFinishDate()
+                        )).toList());
+                CoursePaginationResponse coursePaginationResponse = new CoursePaginationResponse();
+                coursePaginationResponse.setCourseResponses(courseResponseList);
+                coursePaginationResponse.setPageSize(coursePage.getNumber());
+                coursePaginationResponse.setCurrentPage(coursePage.getSize());
+                return coursePaginationResponse;
+            }
         }
     }
 
