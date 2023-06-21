@@ -21,7 +21,6 @@ public class PresentationRequest {
     @NotBlank(message = "Необходимо указать FormatPPT!")
     @NotNull(message = "Необходимо указать FormatPPT!")
     private String formatPPT;
-    @NotBlank(message = "Укажите идентификатор урока!")
-    @NotNull(message = "Укажите идентификатор урока!")
+
     private Long lessonId;
 }

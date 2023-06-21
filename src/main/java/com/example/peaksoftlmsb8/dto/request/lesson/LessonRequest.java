@@ -15,7 +15,5 @@ public class LessonRequest {
     @NotNull(message = "Имя урока не может быть пустым!")
     @NotBlank(message = "Имя урока не может быть пустым!")
     private String name;
-    @NotNull(message = "Идентификатор курса не должен быть пустым.")
-    @NotBlank(message = "Идентификатор курса не должен быть пустым.")
     private Long courseId;
 }

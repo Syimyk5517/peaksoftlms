@@ -27,8 +27,7 @@ public class StudentRequest {
     @NotNull(message = "Электронная почта не должна быть пустым.")
     @Email(message = "Электронная почта должна содержать @ ")
     private String email;
-    @NotBlank(message = "Group id should not be null")
-    @NotNull(message = "Group id can't be empty")
+
     private Long groupId;
     private FormLearning formLearning;
     @NotBlank(message = "Имя ссылки не может быть пустым")
