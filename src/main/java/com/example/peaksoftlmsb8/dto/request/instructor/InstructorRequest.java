@@ -31,7 +31,5 @@ public class InstructorRequest {
     @NotBlank(message = "Специальное значение не должно быть пустым.")
     @NotNull(message = "Необходимо указать специальное значение.")
     private String special;
-    @NotBlank(message = "Имя ссылки не может быть пустым")
-    @NotNull(message = "Имя ссылки не может быть пустым")
     private String link;
 }
