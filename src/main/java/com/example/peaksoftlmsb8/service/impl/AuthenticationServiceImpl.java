@@ -92,15 +92,8 @@ AuthenticationServiceImpl implements AuthenticationService {
         logger.info("This id : " + passwordRequest.getId() + " is not found !");
         User user = userRepository.findById(passwordRequest.getId())
                 .orElseThrow(() -> new NotFoundException("This id : " + passwordRequest.getId() + " is not found !"));
-        int dotIndex = user.getEmail().indexOf(".");
-        String modifiedEmail = user.getEmail().substring(0, dotIndex).replace("@", "");
-        if (user.getPassword().equals(modifiedEmail)){
-           throw new BadRequestException("");
-        }else {
         user.setPassword(passwordEncoder.encode(passwordRequest.getPassword()));
         userRepository.save(user);
-        }
-
         logger.info("Password successfully updated");
         return SimpleResponse.builder()
                 .httpStatus(HttpStatus.OK)
