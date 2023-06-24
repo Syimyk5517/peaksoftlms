@@ -27,7 +27,6 @@ import java.util.List;
 public class ResultOfTestServiceImpl implements ResultOfTestService {
     private final TestRepository testRepository;
     private final QuestionRepository questionRepository;
-    private final OptionRepository optionRepository;
     private final ResultOfTestRepository resultOfTestRepository;
     private final ResultRepository resultRepository;
     private final JwtService jwtService;
@@ -38,55 +37,55 @@ public class ResultOfTestServiceImpl implements ResultOfTestService {
     public ResultOfTestResponseForStudent findResultOfTestByTestIdForStudent(Long testId) {
         User accountInToken = jwtService.getAccountInToken();
         Student student = accountInToken.getStudent();
-        Test test = testRepository.findById(testId).orElseThrow(
-                () ->{logger.error("Test with id: "+testId+ " not found!");
-                        throw new NotFoundException("Тест с идентификатором: " + testId + " не найден!");});
-        ResultOfTest resultOfTest = resultOfTestRepository.findByStudentId(student.getId()).orElseThrow(
-                () -> {
-                    logger.error("Result of test with id "+ student.getId()+ " not found");
-                 throw new NotFoundException("Результат теста с идентификатором: " + student.getId() + " не найден!");});
+
+        Test test = testRepository.findById(testId)
+                .orElseThrow(() -> {
+                    String errorMessage = "Test with id: " + testId + " not found!";
+                    logger.error(errorMessage);
+                    throw new NotFoundException(errorMessage);
+                });
+
+        ResultOfTest resultOfTest = resultOfTestRepository.findByStudentId(student.getId())
+                .orElseThrow(() -> {
+                    String errorMessage = "Result of test with id " + student.getId() + " not found";
+                    logger.error(errorMessage);
+                    throw new NotFoundException(errorMessage);
+                });
+
+        if (!resultOfTest.getTest().getId().equals(test.getId())) {
+            return null;
+        }
 
         List<ResultQuestionResponse> resultQuestionResponses = new ArrayList<>();
-
         int countCorrectStudentAnswers = 0;
 
-        if (resultOfTest.getTest().getId().equals(test.getId())) {
-            for (Question question : test.getQuestions()) {
-                ResultQuestionResponse questionResponse = new ResultQuestionResponse();
-                questionResponse.setQuestionId(question.getId());
-                questionResponse.setQuestionName(question.getQuestionName());
-                questionResponse.setOptionType(question.getOptionType());
+        for (Question question : test.getQuestions()) {
+            ResultQuestionResponse questionResponse = new ResultQuestionResponse();
+            questionResponse.setQuestionId(question.getId());
+            questionResponse.setQuestionName(question.getQuestionName());
+            questionResponse.setOptionType(question.getOptionType());
 
-                List<ResultOptionResponse> optionResponses = new ArrayList<>();
+            List<ResultOptionResponse> optionResponses = new ArrayList<>();
 
-                for (Option option : question.getOptions()) {
-                    ResultOptionResponse resultOptionResponse = new ResultOptionResponse();
-                    resultOptionResponse.setOptionId(option.getId());
-                    resultOptionResponse.setText(option.getText());
-                    resultOptionResponse.setIsTrue(option.getIsTrue());
-                    optionResponses.add(resultOptionResponse);
+            for (Option option : question.getOptions()) {
+                ResultOptionResponse resultOptionResponse = new ResultOptionResponse();
+                resultOptionResponse.setOptionId(option.getId());
+                resultOptionResponse.setText(option.getText());
+                resultOptionResponse.setIsTrue(option.getIsTrue());
+                optionResponses.add(resultOptionResponse);
+
+                if (resultOfTest.getStudentAnswers().contains(option.getId())) {
+                    int pointsToAdd = (question.getOptionType() == OptionType.SINGLETON) ? 10 : 5;
+                    questionResponse.setPoint(questionResponse.getPoint() + pointsToAdd);
+                    questionResponse.getStudentAnswers().add(option.getId());
+                    countCorrectStudentAnswers += pointsToAdd;
                 }
-                for (Long studentAnswers : resultOfTest.getStudentAnswers()) {
-                    for (Option option : question.getOptions()) {
-                        if (question.getOptionType().equals(OptionType.SINGLETON)) {
-                            if (studentAnswers.equals(option.getId())) {
-                                questionResponse.setPoint(10);
-                                questionResponse.getStudentAnswers().add(option.getId());
-                                countCorrectStudentAnswers += 10;
-                            }
-                        } else {
-                            if (studentAnswers.equals(option.getId())) {
-                                questionResponse.setPoint(questionResponse.getPoint() + 5);
-                                questionResponse.getStudentAnswers().add(option.getId());
-                                countCorrectStudentAnswers += 5;
-                            }
-                        }
-                    }
-                }
-                questionResponse.setOptionResponses(optionResponses);
-                resultQuestionResponses.add(questionResponse);
             }
+
+            questionResponse.setOptionResponses(optionResponses);
+            resultQuestionResponses.add(questionResponse);
         }
+
         return ResultOfTestResponseForStudent.builder()
                 .resultOfTestId(resultOfTest.getId())
                 .testId(test.getId())
@@ -100,26 +99,19 @@ public class ResultOfTestServiceImpl implements ResultOfTestService {
     @Override
     public ResultOfTestResponseForStudent passTest(PassTestRequest passTestRequest) {
         User accountInToken = jwtService.getAccountInToken();
-
         Student student = accountInToken.getStudent();
+        Test test = testRepository.findById(passTestRequest.getTestId())
+                .orElseThrow(() -> new NotFoundException("Тест с идентификатором: " + passTestRequest.getTestId() + " не найден!"));
 
         ResultOfTest resultOfTest = new ResultOfTest();
-
-        Test test = testRepository.findById(passTestRequest.getTestId()).orElseThrow(
-                () -> {
-                    logger.error("Test with id: "+ passTestRequest.getTestId()+" not found!");
-                    throw new NotFoundException("Тест с идентификатором:" + passTestRequest.getTestId() + " не найден!");
-                });
-
         List<ResultQuestionResponse> resultQuestionResponses = new ArrayList<>();
-
         int countCorrectAnswer = 0;
         int countCorrect = 0;
         int countInCorrect = 0;
+
         for (PassQuestionRequest questionRequest : passTestRequest.getPassQuestionRequest()) {
-            Question question = questionRepository.findById(questionRequest.getQuestionId()).orElseThrow(
-                    () ->{  logger.error("Question with id: "+ questionRequest.getQuestionId()+ " not found");
-                       throw   new NotFoundException("Вопрос с идентификатором: " + questionRequest.getQuestionId() + " не найден");});
+            Question question = questionRepository.findById(questionRequest.getQuestionId())
+                    .orElseThrow(() -> new NotFoundException("Вопрос с идентификатором: " + questionRequest.getQuestionId() + " не найден"));
 
             ResultQuestionResponse questionResponse = new ResultQuestionResponse();
             questionResponse.setQuestionId(question.getId());
@@ -131,50 +123,26 @@ public class ResultOfTestServiceImpl implements ResultOfTestService {
 
             List<ResultOptionResponse> optionResponses = new ArrayList<>();
 
-            if (questionRequest.getOptionId().isEmpty()) {
+            for (Option option : question.getOptions()) {
+                ResultOptionResponse resultOptionResponse = new ResultOptionResponse();
+                resultOptionResponse.setOptionId(option.getId());
+                resultOptionResponse.setText(option.getText());
+                resultOptionResponse.setIsTrue(option.getIsTrue());
+                optionResponses.add(resultOptionResponse);
 
-                for (Option option : question.getOptions()) {
-                    ResultOptionResponse resultOptionResponse = new ResultOptionResponse();
-                    resultOptionResponse.setOptionId(option.getId());
-                    resultOptionResponse.setText(option.getText());
-                    resultOptionResponse.setIsTrue(option.getIsTrue());
-                    optionResponses.add(resultOptionResponse);
-                }
-            } else {
-                for (Option theOptionIsInTheDatabase : question.getOptions()) {
-                    ResultOptionResponse resultOptionResponse = new ResultOptionResponse();
-                    resultOptionResponse.setOptionId(theOptionIsInTheDatabase.getId());
-                    resultOptionResponse.setText(theOptionIsInTheDatabase.getText());
-                    resultOptionResponse.setIsTrue(theOptionIsInTheDatabase.getIsTrue());
-
-                    for (Long optionId : questionRequest.getOptionId()) {
-                        Option option = optionRepository.findById(optionId).orElseThrow(
-                                () -> { logger.error("Option with id: "+ optionId+ " not found!");
-                                   throw   new NotFoundException("Вариант с идентификатором: " + optionId + " не найдена!");
-                                });
-
-
-                        if (question.getOptionType().equals(OptionType.SINGLETON)) {
-                            if (option.getIsTrue().equals(theOptionIsInTheDatabase.getIsTrue())) {
-                                questionResponse.setPoint(10);
-                                countCorrect++;
-                                countCorrectAnswer += 10;
-                            }
-                        } else {
-                            if (option.getIsTrue().equals(theOptionIsInTheDatabase.getIsTrue())) {
-                                questionResponse.setPoint(questionResponse.getPoint() + 5);
-                                countCorrect++;
-                                countCorrectAnswer += 5;
-                            }
-                        }
-
-                    }
+                if (questionRequest.getOptionId().contains(option.getId()) && option.getIsTrue().equals(true)) {
+                    int pointsToAdd = (question.getOptionType() == OptionType.SINGLETON) ? 10 : 5;
+                    questionResponse.setPoint(questionResponse.getPoint() + pointsToAdd);
+                    countCorrect++;
+                    countCorrectAnswer += pointsToAdd;
                 }
 
             }
+
             if (questionResponse.getPoint() == 0) {
                 countInCorrect++;
             }
+
             questionResponse.setOptionResponses(optionResponses);
             resultQuestionResponses.add(questionResponse);
         }
@@ -191,6 +159,7 @@ public class ResultOfTestServiceImpl implements ResultOfTestService {
                 .resultQuestionResponses(resultQuestionResponses)
                 .studentPoint(countCorrectAnswer)
                 .build();
+
     }
 
     @Override

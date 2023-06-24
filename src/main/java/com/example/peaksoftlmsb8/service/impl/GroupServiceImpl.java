@@ -30,7 +30,7 @@ import java.time.LocalDate;
 @Transactional
 @RequiredArgsConstructor
 @Log4j2
-public class GroupServiceImpl implements GroupService {
+public class  GroupServiceImpl implements GroupService {
     private final CourseRepository courseRepository;
     private final GroupRepository groupRepository;
     private final ResultOfTestRepository resultOfTestRepository;
