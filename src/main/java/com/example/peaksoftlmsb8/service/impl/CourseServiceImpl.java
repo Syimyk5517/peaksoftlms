@@ -44,13 +44,12 @@ public class CourseServiceImpl implements CourseService {
     private static final Logger logger = LogManager.getLogger(CourseServiceImpl.class);
 
     @Override
-    public SimpleResponse assignInstructorToCourse(Boolean isAssigned, AssignRequest assignRequest) {
+    public SimpleResponse assignInstructorToCourse(AssignRequest assignRequest) {
         Course course = courseRepository.findById(assignRequest.getCourseId()).orElseThrow(() -> {
             logger.error("Course with id : " + assignRequest.getCourseId() + " not found");
             throw new NotFoundException("Курс с идентификатором: " + assignRequest.getCourseId() + " не найден");
         });
         List<Instructor> instructors = instructorRepository.findAllById(assignRequest.getInstructorIds());
-        if (isAssigned.equals(true)) {
             for (Instructor instructor : instructors) {
                 course.addInstructor(instructor);
                 instructor.addCourse(course);
@@ -58,10 +57,6 @@ public class CourseServiceImpl implements CourseService {
             courseRepository.save(course);
             logger.info("Successfully assigned");
             return SimpleResponse.builder().httpStatus(HttpStatus.OK).message("Успешно назначено").build();
-        } else {
-            logger.info("Not assigned ");
-            return SimpleResponse.builder().httpStatus(HttpStatus.OK).message("Не назначен ").build();
-        }
     }
 
     @Override

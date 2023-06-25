@@ -9,7 +9,7 @@ import com.example.peaksoftlmsb8.dto.response.course.CourseResponse;
 
 public interface CourseService {
 
-    SimpleResponse assignInstructorToCourse(Boolean isAssigned, AssignRequest assignRequest);
+    SimpleResponse assignInstructorToCourse(AssignRequest assignRequest);
 
     CoursePaginationResponse getAllCourse(int size, int page);
 

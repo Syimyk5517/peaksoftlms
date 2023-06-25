@@ -25,8 +25,8 @@ public class CourseApi {
     @PostMapping("/assign")
     @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "This method assign Instructor to Course",description = "You can assign Instructor to Course. Access to this method: ADMIN")
-    public SimpleResponse assignInstructorToCourse(@RequestParam Boolean isAssigned, @RequestBody @Valid AssignRequest assignRequest) {
-        return courseService.assignInstructorToCourse(isAssigned, assignRequest);
+    public SimpleResponse assignInstructorToCourse(@RequestBody @Valid AssignRequest assignRequest) {
+        return courseService.assignInstructorToCourse(assignRequest);
     }
 
 

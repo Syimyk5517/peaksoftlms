@@ -89,7 +89,6 @@ AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public SimpleResponse resetPassword(PasswordRequest passwordRequest) {
-        System.out.println("hdjfk");
         logger.info("This id : " + passwordRequest.getId() + " is not found !");
         User user = userRepository.findById(passwordRequest.getId())
                 .orElseThrow(() -> new NotFoundException("This id : " + passwordRequest.getId() + " is not found !"));
