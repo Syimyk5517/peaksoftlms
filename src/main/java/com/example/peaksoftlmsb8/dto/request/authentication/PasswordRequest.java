@@ -14,6 +14,5 @@ public class PasswordRequest {
     private Long id;
     @NotBlank(message = "Пароль не должна быть пустым.")
     @NotNull(message = "Пароль не должна быть пустым.")
-    @PasswordValid
     private String password;
 }
