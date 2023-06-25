@@ -36,7 +36,6 @@ public class  AuthenticationApi {
 
     @PostMapping("/reset_password")
     public SimpleResponse resetPassword(@RequestBody @Valid PasswordRequest newPassword) {
-        System.out.println("syimyk");
         return authenticationService.resetPassword(newPassword);
     }
 
