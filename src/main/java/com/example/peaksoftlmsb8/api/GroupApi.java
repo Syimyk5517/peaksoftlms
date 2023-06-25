@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/groups")
 @RequiredArgsConstructor
 @Tag(name = "Groups")
+@PostAuthorize("hasAuthority ('ADMIN')")
 public class GroupApi {
     private final GroupService groupService;
 
@@ -57,7 +59,7 @@ public class GroupApi {
     }
 
     @PostMapping("/assign")
-    @PreAuthorize("hasAnyAuthority('ADMIN','INSTRUCTOR')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "Assign group to course", description = "Assigns a group to a course by their respective IDs")
     public SimpleResponse assignGroupToCourse(@RequestParam (name ="groupId")Long groupId, @RequestParam Long courseId) {
         return groupService.assignGroupToCourse(groupId,courseId);

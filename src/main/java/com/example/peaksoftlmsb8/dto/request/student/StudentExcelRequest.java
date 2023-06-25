@@ -1,6 +1,7 @@
 package com.example.peaksoftlmsb8.dto.request.student;
 
 import com.example.peaksoftlmsb8.db.enums.FormLearning;
+import com.example.peaksoftlmsb8.validation.name.NameValid;
 import com.example.peaksoftlmsb8.validation.phoneNumber.PhoneNumberValid;
 import com.poiji.annotation.ExcelCellName;
 import jakarta.validation.constraints.Email;
@@ -13,10 +14,12 @@ public class StudentExcelRequest {
     @ExcelCellName("First name")
     @NotBlank(message = "Имя не должно быть пустым")
     @NotNull(message = "Имя не должно быть пустым")
+    @NameValid
     private String firstNAme;
     @ExcelCellName("Last name")
     @NotBlank(message = "Фамилия не должна быть пустым")
     @NotNull(message = "Фамилия не должна быть пустым")
+    @NameValid
     private String lastName;
     @ExcelCellName("Phone number")
     @NotBlank(message = "Номер телефона не должна быть пустым.")

@@ -1,11 +1,10 @@
-
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
     <style>
-        .main{
+        .main {
             width: 30%;
             margin: 12% auto;
             display: flex;
@@ -15,25 +14,27 @@
             box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
         }
 
-        .image-container{
+        .image-container {
             display: flex;
             flex-direction: column;
         }
-        img{
-            width:200px;
+
+        img {
+            width: 200px;
             height: 200px;
         }
 
-        a{
+        a {
             text-decoration: none;
             align-self: center;
             color: white;
 
         }
-        button{
+
+        button {
             border: none;
-            background-color:#1292cd;
-            padding:5px ;
+            background-color: #1292cd;
+            padding: 5px;
             border-radius: 10px;
         }
     </style>
@@ -41,22 +42,21 @@
 <body>
 <div class="main">
     <div>
-        <p>
-            Welcome to Peaksoft House
-        </p>
-        <h1 th:text="${firstMessage}">Title</h1>
+        <h1>
+            Добро пожаловать в Peaksoft House
+        </h1>
     </div>
 
     <div class="image-container">
         <img src="https://st-1.akipress.org/cdn-st-0/qd3/S/md-356.jpg" alt="image"/>
-        <p>Чтобы создать пароль нажмите на ссылку внизу</p>
+        <h1 th:text="${firstMessage}">Title</h1>
+        <h1>Чтобы создать пароль нажмите на ссылку внизу</h1>
         <button>
             <a th:text="${link}">Создать пароль</a>
         </button>
 
     </div>
 </div>
-
 
 
 </body>

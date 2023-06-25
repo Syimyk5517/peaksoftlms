@@ -1,6 +1,5 @@
 package com.example.peaksoftlmsb8.validation.password;
 
-import com.example.peaksoftlmsb8.validation.password.PasswordValid;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
