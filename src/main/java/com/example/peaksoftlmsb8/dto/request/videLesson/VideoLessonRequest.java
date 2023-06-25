@@ -18,8 +18,6 @@ public class VideoLessonRequest {
     @NotNull(message = "Описание не может быть пустым!")
     private String description;
     @NotBlank(message = "Ссылка на видео не может быть пустой!")
-    @Pattern(regexp = "https?:\\/\\/[\\w\\d-]+(\\.[\\w\\d-]+)+([\\w\\d.,@?^=%&:/~+#-]*[\\w\\d@?^=%&/~+#-])?",
-            message = "Неверная ссылка")
     @NotNull(message = "Ссылка на видео не может быть пустой")
     private String videoLink;
 }

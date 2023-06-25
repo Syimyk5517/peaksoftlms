@@ -85,7 +85,6 @@ public class StudentServiceImpl implements StudentService {
                 group.setStudents(List.of(student));
                 user.setStudent(student);
                 studentRepository.save(student);
-                emailSenderService.emailSender(excelRequest.getEmail(), link);
             }
 
 

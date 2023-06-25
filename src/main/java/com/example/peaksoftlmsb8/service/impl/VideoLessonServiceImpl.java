@@ -46,7 +46,7 @@ public class VideoLessonServiceImpl implements VideoLessonService {
             logger.error("Lesson with ID: " + lessonId + " is not found!");
             throw new NotFoundException("Урок с идентификатором: " + lessonId + " не найден!");});
         videoLesson.setLesson(lesson);
-        lesson.getVideoLessons().add(videoLesson);
+        videoLessonRepository.save(videoLesson);
         logger.info("Lesson's Video with name: " + videoLessonRequest.getName() + " is successfully saved!");
         return SimpleResponse.builder()
                 .httpStatus(HttpStatus.OK)
