@@ -1,6 +1,7 @@
 package com.example.peaksoftlmsb8.api;
 
 import com.example.peaksoftlmsb8.dto.request.authentication.AuthenticationRequest;
+import com.example.peaksoftlmsb8.dto.request.authentication.ForgotPasswordRequest;
 import com.example.peaksoftlmsb8.dto.request.authentication.PasswordRequest;
 import com.example.peaksoftlmsb8.dto.response.authentication.AuthenticationResponse;
 import com.example.peaksoftlmsb8.dto.response.SimpleResponse;
@@ -29,9 +30,8 @@ public class  AuthenticationApi {
     }
 
     @PostMapping("/forgot_password")
-    public SimpleResponse forgotPassword(@RequestParam String email,
-                                         @RequestParam String link) throws MessagingException {
-        return authenticationService.forgotPassword(email, link);
+    public SimpleResponse forgotPassword(@RequestBody @Valid ForgotPasswordRequest passwordRequest) throws MessagingException {
+        return authenticationService.forgotPassword(passwordRequest);
     }
 
     @PostMapping("/reset_password")

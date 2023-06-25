@@ -2,6 +2,7 @@ package com.example.peaksoftlmsb8.service.impl;
 
 import com.example.peaksoftlmsb8.config.JwtService;
 import com.example.peaksoftlmsb8.db.entity.User;
+import com.example.peaksoftlmsb8.dto.request.authentication.ForgotPasswordRequest;
 import com.example.peaksoftlmsb8.exception.BadRequestException;
 import com.example.peaksoftlmsb8.exception.NotFoundException;
 import com.example.peaksoftlmsb8.dto.request.authentication.AuthenticationRequest;
@@ -66,18 +67,18 @@ AuthenticationServiceImpl implements AuthenticationService {
 
 
     @Override
-    public SimpleResponse forgotPassword(String email, String link) throws MessagingException {
-        User user = userRepository.findByEmail(email)
+    public SimpleResponse forgotPassword(ForgotPasswordRequest forgotPasswordRequest) throws MessagingException {
+        User user = userRepository.findByEmail(forgotPasswordRequest.getEmail())
                 .orElseThrow(() -> {
-                    logger.error("This email : " + email + " is not found !");
-                    throw  new NotFoundException("Пользователь с электронной почтой : " + email + " не найден!");});
+                    logger.error("This email : " + forgotPasswordRequest.getEmail() + " is not found !");
+                    throw  new NotFoundException("Пользователь с электронной почтой : " + forgotPasswordRequest.getEmail() + " не найден!");});
 
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage);
-        mimeMessageHelper.setSubject("Password reset request");
-        mimeMessageHelper.setFrom("peaksoftLMS@gmail.com");
-        mimeMessageHelper.setTo(email);
-        mimeMessageHelper.setText(link + "/" + user.getId(), true);
+        mimeMessageHelper.setSubject("Forgot password");
+        mimeMessageHelper.setFrom("peaksoftlmsjava8@gmail.com");
+        mimeMessageHelper.setTo(forgotPasswordRequest.getEmail());
+        mimeMessageHelper.setText(forgotPasswordRequest.getLink() + "/" + user.getId(), true);
         mailSender.send(mimeMessage);
         logger.info("SMS sent to mail !");
         return SimpleResponse.builder()
