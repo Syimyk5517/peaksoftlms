@@ -28,6 +28,7 @@ public class TaskApi {
     }
 
     @PreAuthorize("hasAnyAuthority('INSTRUCTOR,STUDENT')")
+    @GetMapping()
     @Operation(summary = "This method can get Task by Lesson id", description = "You can get Task with sort desk")
     public List<TaskResponse> getTaskByLessonId(@RequestParam Long lessonId) {
         return taskService.getAllTaskByLessonId(lessonId);
