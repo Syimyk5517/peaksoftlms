@@ -59,7 +59,6 @@ public class StudentServiceImpl implements StudentService {
 
             PoijiOptions poijiOptions = PoijiOptions.PoijiOptionsBuilder.settings().build();
             InputStream inputStream = multipartFile.getInputStream();
-            @Valid
             List<StudentExcelRequest> excelRequests = Poiji.fromExcel(inputStream, PoijiExcelType.XLSX, StudentExcelRequest.class, poijiOptions);
             for (StudentExcelRequest excelRequest : excelRequests) {
                 if (userRepository.existsByEmail(excelRequest.getEmail())) {
