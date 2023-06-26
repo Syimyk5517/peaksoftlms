@@ -5,6 +5,7 @@ import com.example.peaksoftlmsb8.dto.response.SimpleResponse;
 import com.example.peaksoftlmsb8.dto.response.task.TaskResponse;
 import com.example.peaksoftlmsb8.service.TaskService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PostAuthorize;
@@ -14,8 +15,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/task")
+@CrossOrigin
+@RequestMapping("/api/tasks")
 @RequiredArgsConstructor
+@Tag(name = "Tasks")
 @PostAuthorize("hasAnyAuthority('STUDENT,INSTRUCTOR')")
 public class TaskApi {
     private final TaskService taskService;
@@ -28,7 +31,7 @@ public class TaskApi {
     }
 
     @PreAuthorize("hasAnyAuthority('INSTRUCTOR,STUDENT')")
-    @GetMapping("getLessonById")
+    @GetMapping("/getLessonById")
     @Operation(summary = "This method can get Task by Lesson id", description = "You can get Task with sort desk")
     public List<TaskResponse> getTaskByLessonId(@RequestParam Long lessonId) {
         return taskService.getAllTaskByLessonId(lessonId);

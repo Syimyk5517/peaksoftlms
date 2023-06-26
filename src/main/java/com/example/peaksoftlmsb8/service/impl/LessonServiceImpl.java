@@ -101,12 +101,15 @@ public class LessonServiceImpl implements LessonService {
         Test test = testRepository.findById(lesson.getTest().getId()).orElseThrow(() ->{
             logger.error("Test with id: " + lesson.getTest().getId() + " not found");
             throw new NotFoundException("Тест с идентификатором:" + lesson.getTest().getId() + " не найден");});
+
         ResultOfTest result = resultOfTestRepository.findResultOfTestById(test.getId())
                 .orElseThrow(() -> {
                     logger.error("lesson with id: "+test.getId()+ " not found!");
                     throw new NotFoundException("Урок с идентификатором: " + test.getId() + " не найден");
                 });
+        if (result!=null){
         resultOfTestRepository.delete(result);
+        }
         testRepository.delete(test);
         lessonRepository.delete(lesson);
         logger.info("Успешно удалено");
