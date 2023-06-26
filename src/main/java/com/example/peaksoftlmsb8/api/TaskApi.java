@@ -26,8 +26,8 @@ public class TaskApi {
     @PostMapping()
     @PreAuthorize("hasAnyAuthority('INSTRUCTOR,STUDENT')")
     @Operation(summary = "This method can save Tasks", description = "You can save Tasks in Database. Access to this method : ADMIN and INSTRUCTOR")
-    public SimpleResponse saveTask(@RequestBody @Valid TaskRequest taskRequest) {
-        return taskService.saveTask(taskRequest);
+    public SimpleResponse saveTask(@RequestParam Long lessonId,@RequestBody @Valid TaskRequest taskRequest) {
+        return taskService.saveTask(lessonId,taskRequest);
     }
 
     @PreAuthorize("hasAnyAuthority('INSTRUCTOR,STUDENT')")

@@ -12,7 +12,7 @@ public interface TaskService {
 
     List<TaskResponse> getAllTaskByLessonId(Long lessonId);
 
-    SimpleResponse saveTask(TaskRequest taskRequest);
+    SimpleResponse saveTask(Long lessonId,TaskRequest taskRequest);
 
     SimpleResponse updateTask(Long taskId, TaskRequest newTaskRequest);
 

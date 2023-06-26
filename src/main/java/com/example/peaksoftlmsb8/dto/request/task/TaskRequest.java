@@ -23,5 +23,4 @@ public class TaskRequest {
     private String file;
     @Future(message = "Крайний срок должен быть будущей датой")
     private LocalDate deadline;
-    private Long lessonId;
 }
