@@ -15,7 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 public class AssignRequest {
 
-    private List<Long> instructorIds;
+    private Long instructorId;
 
     private Long courseId;
 }

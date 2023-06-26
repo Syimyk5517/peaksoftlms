@@ -49,22 +49,28 @@ public class CourseServiceImpl implements CourseService {
             logger.error("Course with id : " + assignRequest.getCourseId() + " not found");
             throw new NotFoundException("Курс с идентификатором: " + assignRequest.getCourseId() + " не найден");
         });
-        List<Instructor> instructors = instructorRepository.findAllById(assignRequest.getInstructorIds());
-            for (Instructor instructor : instructors) {
-                course.addInstructor(instructor);
-                instructor.addCourse(course);
-            }
+        Instructor instructor = instructorRepository.findById(assignRequest.getInstructorId())
+                .orElseThrow(() -> {
+                    logger.error("this id = " + assignRequest.getInstructorId() + " not found !");
+                    throw new NotFoundException("Этот идентификатор = " + assignRequest.getInstructorId() + " не найден!");
+                });
+        if (course.getInstructors().contains(instructor)) {
+            throw new AlReadyExistException(String.format("Инструктор %s уже назначен", instructor.getUser().getFirstName()));
+        } else {
+            instructor.addCourse(course);
+            course.addInstructor(instructor);
             courseRepository.save(course);
-            logger.info("Successfully assigned");
-            return SimpleResponse.builder().httpStatus(HttpStatus.OK).message("Успешно назначено").build();
+        }
+        logger.info("Successfully assigned");
+        return SimpleResponse.builder().httpStatus(HttpStatus.OK).message("Успешно назначено").build();
     }
 
     @Override
     public CoursePaginationResponse getAllCourse(int size, int page) {
         User user = jwtService.getAccountInToken();
-        if (user==null){
+        if (user == null) {
             throw new NotFoundException("Ползиватель не найден!");
-        }else {
+        } else {
             if (user.getRole().equals(Role.STUDENT)) {
                 return courseRepo.getAllCourses(user, size, page);
             } else {
