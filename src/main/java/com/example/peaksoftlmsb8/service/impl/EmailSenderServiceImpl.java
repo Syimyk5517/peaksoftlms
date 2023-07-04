@@ -40,7 +40,7 @@ public class EmailSenderServiceImpl implements EmailSenderService {
         try {
             MimeMessage message = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-            helper.setFrom("peaksoftlmsjava8@gmail.com");
+            helper.setFrom("peaksoftjava8@gmail.com");
             helper.setText("create password");
             helper.setTo(toEmail);
             helper.setText(htmlContent, true);

@@ -31,6 +31,7 @@ public class CourseApi {
 
 
     @PostMapping()
+    @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "This method save Course", description = "You can save Course")
     public SimpleResponse saveCourse(@RequestBody @Valid CourseRequest courseRequest) {
         return courseService.saveCourse(courseRequest);
@@ -52,13 +53,14 @@ public class CourseApi {
     }
 
     @PutMapping()
-    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "This method update Course",description = "you can update Course. Access to this method: ADMIN")
     public SimpleResponse updateCourse( @RequestParam Long courseId,@RequestBody @Valid CourseRequest courseUpdateRequest) {
         return courseService.updateCourse(courseId,courseUpdateRequest);
     }
 
     @DeleteMapping("/{courseId}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public SimpleResponse deleteCourse(@PathVariable Long courseId) {
         return courseService.deleteCourse(courseId);
 
